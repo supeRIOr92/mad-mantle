@@ -1,0 +1,335 @@
+# scheduler.py — APScheduler: 15-min default, 5-min watch, 1-hr digest
+# Orchestrates full scan pipeline per interval
+# Watch mode: auto-escalate when S_final > POLL_WATCH_TRIGGER
+
+import logging
+import asyncio
+from datetime import datetime, timezone
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.interval import IntervalTrigger
+from apscheduler.triggers.cron import CronTrigger
+
+from config import (
+    POLL_DEFAULT_MIN,
+    POLL_WATCH_MIN,
+    POLL_WATCH_TRIGGER,
+    POLL_WATCH_DEESCALATE,
+    DIGEST_HOUR_UTC,
+    SUBGRAPH_URL,
+)
+from data_sources import agni, moe, fluxion
+from data_sources.agents import fetch_all_agents, build_agent_map
+from detector import run_detection
+from scorer import score_and_persist, fetch_dexscreener_volumes
+from wallet_profiler import profile_top_wallets, flag_capital_flows
+from alerter import broadcast_signal, broadcast_digest
+from database import init_db
+
+logger = logging.getLogger(__name__)
+
+# ── State ─────────────────────────────────────────────────
+
+class ScanState:
+    def __init__(self):
+        self.watch_mode: bool = False
+        self.watch_deescalate_count: int = 0
+        self.last_scan_ts: datetime | None = None
+        self.agent_map: dict = {}
+        self.agent_map_refreshed_at: datetime | None = None
+        self.start_date: str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        self.scan_count: int = 0
+
+state = ScanState()
+
+
+# ── Agent Map Refresh ─────────────────────────────────────
+
+async def refresh_agent_map():
+    """Refresh ERC-8004 agent map every hour."""
+    try:
+        loop = asyncio.get_event_loop()
+        agents = await loop.run_in_executor(None, fetch_all_agents)
+        state.agent_map = build_agent_map(agents)
+        state.agent_map_refreshed_at = datetime.now(timezone.utc)
+        logger.info(f"[scheduler] Agent map refreshed — {len(state.agent_map)} agents")
+    except Exception as e:
+        logger.error(f"[scheduler] Agent map refresh failed: {e}")
+
+
+# ── Pool Discovery ────────────────────────────────────────
+
+async def discover_pools() -> dict[str, list]:
+    """
+    Fetch top pools from all DEXes.
+    Returns { "agni": [...], "moe": [...], "fluxion": [...] }
+    """
+    loop = asyncio.get_event_loop()
+    try:
+        agni_pools = await loop.run_in_executor(None, agni.fetch_top_pools, 10)
+    except Exception as e:
+        logger.error(f"[scheduler] Agni pool discovery failed: {e}")
+        agni_pools = []
+
+    try:
+        moe_pools = await loop.run_in_executor(None, moe.fetch_top_pools, 10)
+    except Exception as e:
+        logger.error(f"[scheduler] Moe pool discovery failed: {e}")
+        moe_pools = []
+
+    try:
+        fluxion_pools = await loop.run_in_executor(None, fluxion.fetch_top_pools, 10)
+    except Exception as e:
+        logger.error(f"[scheduler] Fluxion pool discovery failed: {e}")
+        fluxion_pools = []
+
+    return {
+        "agni": agni_pools,
+        "moe": moe_pools,
+        "fluxion": fluxion_pools,
+    }
+
+
+# ── Per-Pool Scan ─────────────────────────────────────────
+
+async def scan_pool(
+    dex: str,
+    pool_id: str,
+    since_ts: int,
+) -> dict | None:
+    """Run full detection pipeline for a single pool."""
+    loop = asyncio.get_event_loop()
+
+    try:
+        # Fetch data
+        if dex == "agni":
+            swaps = await loop.run_in_executor(None, agni.fetch_recent_swaps, since_ts)
+            buckets = await loop.run_in_executor(None, agni.fetch_volume_buckets, pool_id, since_ts)
+            daily = await loop.run_in_executor(None, agni.fetch_daily_snapshots, pool_id, 7)
+        elif dex == "moe":
+            swaps = await loop.run_in_executor(None, moe.fetch_recent_swaps, since_ts)
+            buckets = await loop.run_in_executor(None, moe.fetch_tx_count_buckets, pool_id, since_ts)
+            daily = await loop.run_in_executor(None, moe.fetch_daily_snapshots, pool_id, 7)
+        elif dex == "fluxion":
+            swaps = await loop.run_in_executor(None, fluxion.fetch_recent_swaps, since_ts)
+            buckets = await loop.run_in_executor(None, fluxion.fetch_volume_buckets, pool_id, since_ts)
+            daily = await loop.run_in_executor(None, fluxion.fetch_daily_snapshots, pool_id, 7)
+        else:
+            return None
+
+        if not swaps:
+            return None
+
+        # Run detection
+        result = await run_detection(
+            dex=dex,
+            pool_id=pool_id,
+            swaps=swaps,
+            buckets=buckets,
+            daily_snapshots=daily,
+            agent_map=state.agent_map,
+        )
+
+        return result
+    except Exception as e:
+        logger.error(f"[scheduler] scan_pool failed — {dex}/{pool_id}: {e}")
+        return None
+
+
+# ── Main Scan Cycle ───────────────────────────────────────
+
+async def run_scan():
+    """
+    Full scan cycle across all DEXes + pools.
+    Called every POLL_DEFAULT_MIN or POLL_WATCH_MIN.
+    """
+    state.scan_count += 1
+    now = datetime.now(timezone.utc)
+    since_ts = int(now.timestamp()) - (POLL_DEFAULT_MIN * 60)
+
+    logger.info(
+        f"[scheduler] Scan #{state.scan_count} started — "
+        f"{'WATCH MODE' if state.watch_mode else 'normal'} — {now.strftime('%H:%M:%S')} UTC"
+    )
+
+    if not SUBGRAPH_URL:
+        logger.error("[scheduler] SUBGRAPH_URL not set — skipping scan")
+        return
+
+    # Refresh agent map if stale (>1h)
+    if (
+        not state.agent_map_refreshed_at
+        or (now - state.agent_map_refreshed_at).seconds > 3600
+    ):
+        await refresh_agent_map()
+
+    # Discover pools
+    pools = await discover_pools()
+    all_results = []
+    all_tx_hashes = []
+    all_pool_ids = []
+
+    # Scan each pool
+    for dex, pool_list in pools.items():
+        for pool in pool_list:
+            pool_id = pool.get("id", "").lower()
+            if not pool_id:
+                continue
+
+            result = await scan_pool(dex, pool_id, since_ts)
+            if result:
+                all_results.append(result)
+                all_pool_ids.append(pool_id)
+
+                # Collect tx hashes from result (if available)
+                for m in result.get("l2_methods", []):
+                    pass  # tx hashes come from swaps — future: track per result
+
+    if not all_results:
+        logger.info("[scheduler] Scan complete — no data")
+        return
+
+    # Fetch DexScreener volumes for dynamic weighting
+    loop = asyncio.get_event_loop()
+    try:
+        ds_volumes = await loop.run_in_executor(
+            None,
+            fetch_dexscreener_volumes,
+            all_pool_ids,
+        )
+    except Exception:
+        ds_volumes = {}
+
+    # Compute final score
+    from scorer import compute_final_score, is_phase1
+    phase1 = is_phase1(state.start_date)
+    final = compute_final_score(all_results, ds_volumes, phase1=phase1)
+    s_final = final["s_final"]
+    alert_level = final["alert_level"]
+
+    logger.info(
+        f"[scheduler] Scan #{state.scan_count} complete — "
+        f"s_final={s_final:.1f} level={alert_level} "
+        f"pools={len(all_results)}"
+    )
+
+    # Profile top wallets (non-blocking, best effort)
+    best_result = max(all_results, key=lambda r: r.get("s_dex", 0))
+    if alert_level != "none":
+        try:
+            # Capital flow flags
+            cap_flags = flag_capital_flows(best_result.get("swaps", []))
+            if cap_flags["total_flags"] > 0:
+                logger.info(f"[scheduler] Capital flow flags: {cap_flags['total_flags']}")
+        except Exception:
+            pass
+
+    # Persist + broadcast
+    if alert_level != "none":
+        signal_record = {
+            **final,
+            "dex": best_result.get("dex"),
+            "pool_address": best_result.get("pool_id"),
+            "l1_score": best_result.get("l1_score", 0),
+            "l2_score": best_result.get("l2_score", 0),
+            "l3_score": best_result.get("l3_score", 0),
+            "s_dex": best_result.get("s_dex", 0),
+            "volume_usd": best_result.get("volume_usd", 0),
+            "l1_methods": best_result.get("l1_methods", []),
+            "l2_methods": best_result.get("l2_methods", []),
+            "l3_methods": best_result.get("l3_methods", []),
+            "top_wallets": best_result.get("top_wallets", []),
+            "corroboration": final.get("corroboration", 1),
+            "phase1_active": phase1,
+            "created_at": now.strftime("%Y-%m-%d %H:%M:%S"),
+        }
+
+        verbose = alert_level == "high_conf"
+        await broadcast_signal(signal_record, verbose=verbose)
+
+    # Watch mode management
+    _update_watch_mode(s_final, scheduler)
+
+    state.last_scan_ts = now
+
+
+def _update_watch_mode(s_final: float, scheduler: AsyncIOScheduler):
+    """Auto-escalate/de-escalate watch mode based on S_final."""
+    if s_final >= POLL_WATCH_TRIGGER and not state.watch_mode:
+        state.watch_mode = True
+        state.watch_deescalate_count = 0
+        _set_interval(scheduler, POLL_WATCH_MIN)
+        logger.info(f"[scheduler] ⚡ Watch mode ON — interval={POLL_WATCH_MIN}min")
+
+    elif s_final < POLL_WATCH_DEESCALATE and state.watch_mode:
+        state.watch_deescalate_count += 1
+        if state.watch_deescalate_count >= 2:
+            state.watch_mode = False
+            state.watch_deescalate_count = 0
+            _set_interval(scheduler, POLL_DEFAULT_MIN)
+            logger.info(f"[scheduler] Watch mode OFF — back to {POLL_DEFAULT_MIN}min")
+    else:
+        state.watch_deescalate_count = 0
+
+
+def _set_interval(scheduler: AsyncIOScheduler, minutes: int):
+    """Update scan job interval dynamically."""
+    try:
+        scheduler.reschedule_job(
+            "scan_job",
+            trigger=IntervalTrigger(minutes=minutes),
+        )
+    except Exception as e:
+        logger.warning(f"[scheduler] reschedule failed: {e}")
+
+
+# ── Scheduler Setup ───────────────────────────────────────
+
+scheduler = AsyncIOScheduler(timezone="UTC")
+
+
+def setup_scheduler():
+    """Register all jobs."""
+
+    # Main scan job — default 15 min
+    scheduler.add_job(
+        run_scan,
+        trigger=IntervalTrigger(minutes=POLL_DEFAULT_MIN),
+        id="scan_job",
+        name="RealClaw Main Scan",
+        max_instances=1,
+        coalesce=True,
+        misfire_grace_time=60,
+    )
+
+    # Hourly digest
+    scheduler.add_job(
+        broadcast_digest,
+        trigger=CronTrigger(hour=DIGEST_HOUR_UTC, minute=0, timezone="UTC"),
+        id="digest_job",
+        name="RealClaw Hourly Digest",
+        max_instances=1,
+    )
+
+    # Agent map refresh — every hour
+    scheduler.add_job(
+        refresh_agent_map,
+        trigger=IntervalTrigger(hours=1),
+        id="agent_refresh_job",
+        name="ERC-8004 Agent Map Refresh",
+        max_instances=1,
+    )
+
+    logger.info(
+        f"[scheduler] Jobs registered — "
+        f"scan={POLL_DEFAULT_MIN}min | "
+        f"digest=00:{DIGEST_HOUR_UTC:02d} UTC | "
+        f"agent_refresh=1h"
+    )
+
+
+def start_scheduler():
+    """Start scheduler (non-blocking)."""
+    init_db()
+    setup_scheduler()
+    scheduler.start()
+    logger.info("[scheduler] Scheduler started ✅")

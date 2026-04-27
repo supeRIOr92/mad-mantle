@@ -1,0 +1,81 @@
+# schema.graphql — RealClaw Custom Subgraph
+# Unified index: Agni + Merchant Moe LB 2.2 + Fluxion (UniV3)
+# Chain: Mantle (chain_id 5000)
+
+# ── Swap Event ────────────────────────────────────────────
+type Swap @entity {
+    id:           ID!          # txHash-logIndex
+    timestamp:    BigInt!      # block timestamp (unix)
+    blockNumber:  BigInt!
+    dex:          String!      # "agni" | "moe" | "fluxion"
+    pool:         Pool!
+    sender:       Wallet!
+    recipient:    Wallet!
+    amountUSD:    BigDecimal!
+    amount0:      BigDecimal!  # token0 amount (signed)
+    amount1:      BigDecimal!  # token1 amount (signed)
+    sqrtPriceX96: BigInt       # UniV3/Fluxion only
+    tick:         Int          # UniV3/Fluxion only
+    txHash:       String!
+    logIndex:     Int!
+}
+
+# ── Pool ──────────────────────────────────────────────────
+type Pool @entity {
+    id:           ID!          # pool contract address
+    dex:          String!      # "agni" | "moe" | "fluxion"
+    token0:       String!      # token address
+    token1:       String!      # token address
+    token0Symbol: String
+    token1Symbol: String
+    feeTier:      Int          # fee in bps
+    createdAt:    BigInt!
+    swaps:        [Swap!]!     @derivedFrom(field: "pool")
+
+    # Rolling stats (updated on each swap)
+    totalVolumeUSD: BigDecimal! @default(value: "0")
+    txCount:        BigInt!     @default(value: "0")
+    lastSwapAt:     BigInt
+}
+
+# ── Wallet ────────────────────────────────────────────────
+type Wallet @entity {
+    id:            ID!          # wallet address (lowercase)
+    firstSeenAt:   BigInt!
+    lastSeenAt:    BigInt!
+    totalVolumeUSD: BigDecimal! @default(value: "0")
+    txCount:        BigInt!     @default(value: "0")
+
+    # Cross-DEX activity
+    swapsAsSender:    [Swap!]! @derivedFrom(field: "sender")
+    swapsAsRecipient: [Swap!]! @derivedFrom(field: "recipient")
+
+    # ERC-8004 agent data (populated if detected)
+    isAgent:      Boolean! @default(value: false)
+    agentTokenId: String   # ERC-8004 token ID
+}
+
+# ── 15-Min Volume Bucket ──────────────────────────────────
+# Pre-aggregated buckets — faster L1 queries
+type VolumeBucket @entity {
+    id:            ID!          # poolAddress-bucketTimestamp
+    pool:          Pool!
+    dex:           String!
+    bucketStart:   BigInt!      # floored to 15-min boundary
+    volumeUSD:     BigDecimal!  @default(value: "0")
+    txCount:       BigInt!      @default(value: "0")
+    uniqueSenders: Int!         @default(value: 0)
+}
+
+# ── Daily Pool Snapshot ───────────────────────────────────
+# For Bollinger baseline (7d rolling)
+type DailyPoolSnapshot @entity {
+    id:           ID!           # poolAddress-date (YYYY-MM-DD)
+    pool:         Pool!
+    dex:          String!
+    date:         String!
+    volumeUSD:    BigDecimal!   @default(value: "0")
+    txCount:      BigInt!       @default(value: "0")
+    highVolumeUSD: BigDecimal   # daily high (for adaptive Bollinger)
+    lowVolumeUSD:  BigDecimal   # daily low
+}
