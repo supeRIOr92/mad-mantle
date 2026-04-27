@@ -1,0 +1,42 @@
+- Apply migrations
+  [90mSkip migration: Bump mapping apiVersion from 0.0.1 to 0.0.2[39m
+- Apply migrations
+  [90mSkip migration: Bump mapping apiVersion from 0.0.2 to 0.0.3[39m
+- Apply migrations
+  [90mSkip migration: Bump mapping apiVersion from 0.0.3 to 0.0.4[39m
+- Apply migrations
+  [90mSkip migration: Bump mapping apiVersion from 0.0.4 to 0.0.5[39m
+- Apply migrations
+  [90mSkip migration: Bump mapping apiVersion from 0.0.5 to 0.0.6[39m
+- Apply migrations
+  [90mSkip migration: Bump manifest specVersion from 0.0.1 to 0.0.2[39m
+- Apply migrations
+  [90mSkip migration: Bump manifest specVersion from 0.0.2 to 0.0.4[39m
+- Apply migrations
+[32m√[39m Apply migrations
+- Load subgraph from subgraph.yaml
+[32m√[39m Load subgraph from subgraph.yaml
+- Compile subgraph
+  [90mCompile data source: AgniFactory => build\AgniFactory\AgniFactory.wasm[39m
+- Compile subgraph
+[31m×[39m Failed to compile subgraph: Failed to compile data source mapping: 1 compile error(s)
+Error: EEXIT: 1
+    at Object.exit (C:\Users\USER\AppData\Roaming\npm\node_modules\@graphprotocol\graph-cli\node_modules\@oclif\core\lib\errors\exit.js:6:11)
+    at BuildCommand.exit (C:\Users\USER\AppData\Roaming\npm\node_modules\@graphprotocol\graph-cli\node_modules\@oclif\core\lib\command.js:213:16)
+    at BuildCommand.run (file:///C:/Users/USER/AppData/Roaming/npm/node_modules/@graphprotocol/graph-cli/dist/commands/build.js:89:22)
+    at async BuildCommand._run (C:\Users\USER\AppData\Roaming\npm\node_modules\@graphprotocol\graph-cli\node_modules\@oclif\core\lib\command.js:181:22)
+    at async Config.runCommand (C:\Users\USER\AppData\Roaming\npm\node_modules\@graphprotocol\graph-cli\node_modules\@oclif\core\lib\config\config.js:456:25)
+    at async run (C:\Users\USER\AppData\Roaming\npm\node_modules\@graphprotocol\graph-cli\node_modules\@oclif\core\lib\main.js:97:16)
+    at async file:///C:/Users/USER/AppData/Roaming/npm/node_modules/@graphprotocol/graph-cli/bin/run.js:14:1
+Error: The AssemblyScript compiler crashed when compiling this file: 'mappings\factory.ts'
+Suggestion: try to comment the whole file and uncomment it little by little while re-running the graph-cli until you isolate the line where the problem happens.
+Also, please contact us so we can make the CLI better by handling errors like this. You can reach out in any of these links:
+- Discord channel: https://discord.gg/eM8CA6WA9r
+- Github issues: https://github.com/graphprotocol/graph-tooling/issues/new/choose
+    at process.<anonymous> (file:///C:/Users/USER/AppData/Roaming/npm/node_modules/@graphprotocol/graph-cli/dist/compiler/asc.js:3:11)
+    at process.emit (node:events:508:28)
+    at process.exit (node:internal/process/per_thread:236:15)
+    at Object.exit (C:\Users\USER\AppData\Roaming\npm\node_modules\@graphprotocol\graph-cli\node_modules\@oclif\core\lib\errors\handle.js:23:17)
+    at handle (C:\Users\USER\AppData\Roaming\npm\node_modules\@graphprotocol\graph-cli\node_modules\@oclif\core\lib\errors\handle.js:53:22)
+    at C:\Users\USER\AppData\Roaming\npm\node_modules\@graphprotocol\graph-cli\node_modules\@oclif\core\lib\execute.js:60:53
+    at async file:///C:/Users/USER/AppData/Roaming/npm/node_modules/@graphprotocol/graph-cli/bin/run.js:14:1

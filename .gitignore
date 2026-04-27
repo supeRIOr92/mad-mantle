@@ -1,0 +1,7 @@
+subgraph/node_modules/ 
+subgraph/build/ 
+subgraph/generated/ 
+__pycache__/ 
+*.pyc 
+.env 
+*.db 

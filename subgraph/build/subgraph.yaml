@@ -1,11 +1,7 @@
-# subgraph/subgraph.yaml — MAD: Mantle Anomaly Detector
-# Unified index: Agni Finance + Merchant Moe LB 2.2 + Fluxion (UniV3)
-# Chain: Mantle (chain_id 5000)
 specVersion: 0.0.5
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
-  # ── Agni Finance Factory ───────────────────────────────
   - kind: ethereum
     name: AgniFactory
     network: mantle
@@ -21,14 +17,13 @@ dataSources:
         - Pool
       abis:
         - name: AgniFactory
-          file: ./abis/AgniFactory.json
+          file: AgniFactory\AgniFactory.json
         - name: AgniPool
-          file: ./abis/AgniPool.json
+          file: AgniFactory\AgniPool.json
       eventHandlers:
         - event: PoolCreated(indexed address,indexed address,indexed uint24,int24,address)
           handler: handleAgniPoolCreated
-      file: ./mappings/factory.ts
-  # ── Agni Pool (dynamic, created by Factory) ───────────
+      file: AgniFactory\AgniFactory.wasm
   - kind: ethereum/contract
     name: AgniPool
     network: mantle
@@ -46,12 +41,12 @@ dataSources:
         - DailyPoolSnapshot
       abis:
         - name: AgniPool
-          file: ./abis/AgniPool.json
+          file: AgniPool\AgniPool.json
       eventHandlers:
-        - event: Swap(indexed address,indexed address,int256,int256,uint160,uint128,int24,uint128,uint128)
+        - event: Swap(indexed address,indexed
+            address,int256,int256,uint160,uint128,int24,uint128,uint128)
           handler: handleAgniSwap
-      file: ./mappings/factory.ts
-  # ── Merchant Moe LB Factory ────────────────────────────
+      file: AgniFactory\AgniFactory.wasm
   - kind: ethereum
     name: MoeLBFactory
     network: mantle
@@ -67,14 +62,13 @@ dataSources:
         - Pool
       abis:
         - name: MoeLBFactory
-          file: ./abis/MoeLBFactory.json
+          file: MoeLBFactory\MoeLBFactory.json
         - name: MoeLBPair
-          file: ./abis/MoeLBPair.json
+          file: MoeLBFactory\MoeLBPair.json
       eventHandlers:
         - event: LBPairCreated(indexed address,indexed address,indexed uint256,address,uint256)
           handler: handleMoePairCreated
-      file: ./mappings/factory.ts
-  # ── Merchant Moe LB Pair (dynamic) ────────────────────
+      file: AgniFactory\AgniFactory.wasm
   - kind: ethereum/contract
     name: MoeLBPair
     network: mantle
@@ -92,13 +86,11 @@ dataSources:
         - DailyPoolSnapshot
       abis:
         - name: MoeLBPair
-          file: ./abis/MoeLBPair.json
+          file: MoeLBPair\MoeLBPair.json
       eventHandlers:
         - event: Swap(indexed address,indexed address,uint24,bytes32,bytes32,uint24,bytes32,bytes32)
           handler: handleMoeSwap
-      file: ./mappings/factory.ts
-  # ── Fluxion Pool (static — Factory address unverified) ─
-  # Tracking known pool directly; Factory to be added in Phase 2
+      file: AgniFactory\AgniFactory.wasm
   - kind: ethereum
     name: FluxionPool
     network: mantle
@@ -118,8 +110,8 @@ dataSources:
         - DailyPoolSnapshot
       abis:
         - name: FluxionPool
-          file: ./abis/FluxionPool.json
+          file: FluxionPool\FluxionPool.json
       eventHandlers:
         - event: Swap(indexed address,indexed address,int256,int256,uint160,uint128,int24)
           handler: handleFluxionSwap
-      file: ./mappings/factory.ts
+      file: AgniFactory\AgniFactory.wasm
