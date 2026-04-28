@@ -208,7 +208,7 @@ def open_borrow_gte(wallet: str, min_usd: float, fresh_min: int) -> bool:
     # Debt position check via getUserAccountData
     try:
         pool = _get_pool()
-data = pool.functions.getUserAccountData(
+        data = pool.functions.getUserAccountData(
             Web3.to_checksum_address(wallet)
         ).call()
         # totalDebtBase is in USD with 8 decimals (Aave v3 standard)
