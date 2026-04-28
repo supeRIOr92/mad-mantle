@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from config import TELEGRAM_BOT_TOKEN, SUBGRAPH_URL
 from database import init_db
 from scheduler import start_scheduler, scheduler, run_scan
-from alerter import build_bot_app
+# alerter uses direct httpx — no bot app needed
 
 # ── Logging Setup ─────────────────────────────────────────
 
@@ -60,26 +60,12 @@ def handle_shutdown(sig, frame):
 # ── Bot Runner ────────────────────────────────────────────
 
 async def run_bot():
-    """Run Telegram bot in async context alongside scheduler."""
+    """Alerter uses direct httpx — no bot polling needed."""
     if not TELEGRAM_BOT_TOKEN:
-        logger.warning("[main] No bot token — Telegram bot disabled")
-        await shutdown_event.wait()
-        return
-
-    app = build_bot_app()
-
-    async with app:
-        await app.start()
-        logger.info("[main] Telegram bot started ✅")
-        await app.updater.start_polling(drop_pending_updates=True)
-
-        # Wait for shutdown signal
-        await shutdown_event.wait()
-
-        logger.info("[main] Stopping Telegram bot...")
-        await app.updater.stop()
-        await app.stop()
-
+        logger.warning("[main] No bot token — alerts disabled")
+    else:
+        logger.info("[main] Alerter ready (direct httpx mode) ✅")
+    await shutdown_event.wait()
 
 # ── Scheduler Runner ──────────────────────────────────────
 

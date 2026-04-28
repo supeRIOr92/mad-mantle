@@ -111,3 +111,9 @@ FEATURE_TX_DENSITY_NORM      = 10.0   # tx_per_minute / 10 -> 0-1
 
 # ── Database ──────────────────────────────────────────
 DB_PATH = os.getenv("DB_PATH", "mad.db")
+
+DEX_WEIGHTS = {
+    "agni":    0.40,
+    "moe":     0.45,
+    "fluxion": 0.15,
+}
