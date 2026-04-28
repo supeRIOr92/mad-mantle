@@ -295,7 +295,7 @@ def setup_scheduler():
         run_scan,
         trigger=IntervalTrigger(minutes=POLL_DEFAULT_MIN),
         id="scan_job",
-        name="RealClaw Main Scan",
+        name="AMD Main Scan",
         max_instances=1,
         coalesce=True,
         misfire_grace_time=60,
@@ -306,7 +306,7 @@ def setup_scheduler():
         broadcast_digest,
         trigger=CronTrigger(hour=DIGEST_HOUR_UTC, minute=0, timezone="UTC"),
         id="digest_job",
-        name="RealClaw Hourly Digest",
+        name="MAD Hourly Digest",
         max_instances=1,
     )
 
