@@ -16,66 +16,98 @@ SUBGRAPH_URL = os.getenv("SUBGRAPH_URL", "https://api.goldsky.com/api/public/pro
 MANTLESCAN_API_KEY = os.getenv("MANTLESCAN_API_KEY")
 DEXSCREENER_BASE = "https://api.dexscreener.com/latest/dex"
 
+# ── Supabase ──────────────────────────────────────────
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")  # anon/service role key
+
 # ── Contract Addresses ────────────────────────────────
-ERC8004_IDENTITY_REGISTRY = "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
+ERC8004_IDENTITY_REGISTRY  = "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
 ERC8004_REPUTATION_REGISTRY = "0x8004BAa17C55a88189AE136b182e5fdA19dE9b63"
 
-AGNI_FACTORY = "0x25780dc8Fc3cfBD75F33bFDAB65e969b603b2035"
+AGNI_FACTORY  = "0x25780dc8Fc3cfBD75F33bFDAB65e969b603b2035"
 MOE_LB_FACTORY = "0xa6630671775c4EA2743840F9A5016dCf2A104054"
-FLUXION_POOL = "0x560d064493de5a23e72ed916caf92ec6e8924948"
+FLUXION_POOL  = "0x560d064493de5a23e72ed916caf92ec6e8924948"
 
 # ── Detection Parameters ──────────────────────────────
 # L1
-ZSCORE_PRIMARY_WINDOW_MIN = 15 # minutes
-ZSCORE_SECONDARY_WINDOW_MIN = 60 # minutes
+ZSCORE_PRIMARY_WINDOW_MIN    = 15
+ZSCORE_SECONDARY_WINDOW_MIN  = 60
 ZSCORE_ROLLING_BASELINE_DAYS = 7
-BOLLINGER_PERIOD = 20 # candles
-BOLLINGER_SIGMA_BASELINE = 2.0
-BOLLINGER_SIGMA_ADAPTIVE = 2.5 # if daily_range > 3x 7d avg
-BOLLINGER_ADAPTIVE_TRIGGER = 3.0 # multiplier vs 7d avg range
-POISSON_BASELINE_DAYS = 7
-RATE_OF_CHANGE_MULTIPLIER = 5.0 # 5x 7d avg tx count
+BOLLINGER_PERIOD             = 20
+BOLLINGER_SIGMA_BASELINE     = 2.0
+BOLLINGER_SIGMA_ADAPTIVE     = 2.5   # if daily_range > 3x 7d avg
+BOLLINGER_ADAPTIVE_TRIGGER   = 3.0
+POISSON_BASELINE_DAYS        = 7
+RATE_OF_CHANGE_MULTIPLIER    = 5.0
 
-# L2
-WASH_RATIO_EPSILON = 1e-9
-SENDER_CONCENTRATION_TOP_N = 5 # top-5 wallets
-WASH_RATIO_HIGH_THRESHOLD = 10.0 # ratio > 10x = full 25 pts
-WASH_RATIO_MID_THRESHOLD = 5.0 # ratio 5-10x = partial pts
-ERC8004_HIGH_RISK_THRESHOLD = 30 # score < 30 = high risk multiplier
+# L2 — Wash ratio 3-way gate (v2.0)
+WASH_RATIO_EPSILON           = 1e-9
+WASH_RATIO_HIGH_THRESHOLD    = 10.0   # ratio > 10x = full 25 pts
+WASH_RATIO_MID_THRESHOLD     = 5.0    # ratio 5-10x = partial pts
+WASH_NET_FLOW_CIRCULAR       = 0.05   # net_flow < 0.05 = circular (suspicious)
+WASH_NET_FLOW_DIRECTIONAL    = 0.30   # net_flow > 0.30 = directional (likely bot/arb)
+WASH_CONCENTRATION_THRESHOLD = 0.60   # top-wallet concentration > 60%
+SENDER_CONCENTRATION_TOP_N   = 5
+ERC8004_HIGH_RISK_THRESHOLD  = 30     # rep score < 30 = high risk
 
 # L3
-L3_TRIGGER_THRESHOLD = 50 # L1+L2 combined > 50 to run L3
-CYCLE_WINDOW_MIN = (5, 60) # A→B→A must complete in 5-60 min
-CYCLE_MAX_HOPS = 4 # max cycle length
-BENFORD_PVALUE_THRESHOLD = 0.05 # p < 0.05 = significant
+L3_TRIGGER_THRESHOLD         = 50
+CYCLE_WINDOW_MIN             = (5, 60)
+CYCLE_MAX_HOPS               = 4
+BENFORD_PVALUE_THRESHOLD     = 0.05
 
 # ── Scoring ───────────────────────────────────────────
-L1_MAX = 60
-L2_MAX = 55
-L3_MAX = 50
-SCORE_DENOMINATOR = 165 # L1+L2+L3 max
+L1_MAX           = 60
+L2_MAX           = 55
+L3_MAX           = 50
+SCORE_DENOMINATOR = 165
 
 CORROBORATION_MODIFIER = {1: 1.0, 2: 0.6, 3: 0.3}
-DEXSCREENER_WEIGHT_FLOOR = 0.05 # w < 5% → auto-zero
+DEXSCREENER_WEIGHT_FLOOR = 0.05
+
+# ── Aave Detection Windows ────────────────────────────
+AAVE_FLASH_LOAN_WINDOW_BLOCKS = 1      # same block only
+AAVE_COLLATERAL_DUMP_WINDOW_MIN = 15   # borrow -> sell collateral < 15 min
+AAVE_OPEN_BORROW_MIN_USD = 10_000      # min borrow to trigger x1.2
+AAVE_OPEN_BORROW_FRESH_MIN = 15        # borrow must be < 15 min old
+AAVE_MODIFIER_CAP = 1.5               # hard cap
 
 # ── Thresholds ────────────────────────────────────────
-THRESHOLD_WATCHING = 41
-THRESHOLD_ALERT = 71
+THRESHOLD_WATCHING  = 41
+THRESHOLD_ALERT     = 71
 THRESHOLD_HIGH_CONF = 86
-THRESHOLD_PHASE1 = 80 # first 7 days — conservative
-PHASE1_DAYS = 7
+THRESHOLD_PHASE1    = 80   # first 7 days — conservative
+PHASE1_DAYS         = 7
 
-# ── Scheduler ────────────────────────────────────────
-POLL_DEFAULT_MIN = 15
-POLL_WATCH_MIN = 5
-POLL_WATCH_TRIGGER = 70 # S_final > 70 → watch mode
-POLL_WATCH_DEESCALATE = 50 # S_final < 50 for 2 polls → back to default
-DIGEST_HOUR_UTC = 0 # daily digest at 00:00 UTC
+# ── Scheduler ─────────────────────────────────────────
+POLL_DEFAULT_MIN       = 15
+POLL_WATCH_MIN         = 5
+POLL_WATCH_TRIGGER     = 70
+POLL_WATCH_DEESCALATE  = 50
+DIGEST_HOUR_UTC        = 8   # daily digest at 08:00 UTC
 
 # ── Capital Flow ──────────────────────────────────────
-CAPITAL_FLOW_SINGLE_MULTIPLIER = 5.0 # single swap > 5x pool avg
-CAPITAL_FLOW_COORDINATED_USD = 10000 # 3+ wallets combined > $10K in 15min
-CAPITAL_FLOW_COORDINATED_WALLETS = 3
+CAPITAL_FLOW_SINGLE_MULTIPLIER     = 5.0
+CAPITAL_FLOW_COORDINATED_USD       = 10_000
+CAPITAL_FLOW_COORDINATED_WALLETS   = 3
+
+# ── Smart Money ───────────────────────────────────────
+SMART_MONEY_ROI_MIN          = 15.0   # ROI 7d > 15% = smart money candidate
+SMART_MONEY_WASH_MAX         = 3.0    # wash_ratio < 3x = clean
+SMART_MONEY_HEURISTIC_MIN    = 2      # need >= 2 heuristics to be PROBABLE AGENT
+AGENT_HIGH_FREQ_TX_MIN       = 10     # >= 10 swaps in window
+AGENT_ROUND_AMOUNT_PCT       = 0.50   # > 50% of amounts are round numbers
+AGENT_EXEC_TIME_MAX_SEC      = 3      # < 3s execution time
+AGENT_CV_MAX                 = 0.10   # coefficient of variation < 0.10
+
+# ── Risk Prediction Engine (v2.0) ─────────────────────
+PREDICTOR_TOP_K              = 5      # top-K nearest neighbors
+PREDICTOR_MIN_EVENTS         = 3      # < 3 events = LOW confidence
+PREDICTOR_CONFIDENCE_SCALE   = 10     # confidence = min(similar / 10, 1.0)
+FEATURE_CYCLE_NORM           = 5.0    # cycle_count / 5 -> 0-1
+FEATURE_AAVE_NORM_OFFSET     = 1.0    # (aave_mod - 1.0) / 0.5 -> 0-1
+FEATURE_AAVE_NORM_SCALE      = 0.5
+FEATURE_TX_DENSITY_NORM      = 10.0   # tx_per_minute / 10 -> 0-1
 
 # ── Database ──────────────────────────────────────────
 DB_PATH = os.getenv("DB_PATH", "mad.db")

@@ -1,265 +1,364 @@
-# scorer.py — Dynamic Weighting + Final Score + Alert Level
-# Corroboration modifier: signal confirmed across multiple DEXes = higher confidence
-# DexScreener: real-time vol_24h for dynamic weight adjustment
+"""
+wallet_profiler.py
+Per-wallet behavioral profiling: agent classification, smart money scoring,
+ROI tracking, Aave exposure, and archetype assignment.
+"""
 
 import logging
-import requests
+import time
+import math
+from typing import Optional
 from config import (
-    DEX_WEIGHTS,
-    DEXSCREENER_BASE,
-    DEXSCREENER_WEIGHT_FLOOR,
-    CORROBORATION_MODIFIER,
-    THRESHOLD_WATCHING,
-    THRESHOLD_ALERT,
-    THRESHOLD_HIGH_CONF,
-    THRESHOLD_PHASE1,
-    PHASE1_DAYS,
-    L1_MAX, L2_MAX, L3_MAX,
+    AGENT_HIGH_FREQ_TX_MIN,
+    AGENT_ROUND_AMOUNT_PCT,
+    AGENT_EXEC_TIME_MAX_SEC,
+    AGENT_CV_MAX,
+    SMART_MONEY_HEURISTIC_MIN,
+    SMART_MONEY_ROI_MIN,
+    SMART_MONEY_WASH_MAX,
+    WASH_RATIO_HIGH_THRESHOLD,
+    WASH_NET_FLOW_CIRCULAR,
+    WASH_NET_FLOW_DIRECTIONAL,
+    WASH_CONCENTRATION_THRESHOLD,
+    ERC8004_HIGH_RISK_THRESHOLD,
+    AAVE_OPEN_BORROW_FRESH_MIN,
 )
-from database import log_signal
+from data_sources.agents import get_agent_identity, get_agent_reputation
+from data_sources.mantlescan import get_wallet_roi
+from data_sources.aave import get_wallet_aave_summary
 
 logger = logging.getLogger(__name__)
 
+# ── Labels ────────────────────────────────────────────────────────────────────
 
-# ── DexScreener ───────────────────────────────────────────
+AGENT_TYPE_CONFIRMED   = "CONFIRMED AGENT"
+AGENT_TYPE_PROBABLE    = "PROBABLE AGENT"
+AGENT_TYPE_MANIPULATOR = "MANIPULATOR"
+AGENT_TYPE_SMART_MONEY = "SMART MONEY"
+AGENT_TYPE_UNKNOWN     = "UNKNOWN WALLET"
 
-def fetch_dexscreener_volumes(pool_addresses: list[str]) -> dict[str, float]:
+ARCHETYPE_FLASH_WASH = "FLASH_WASH"
+ARCHETYPE_COORD_WASH = "COORDINATED_WASH"
+ARCHETYPE_PUMP_DUMP  = "PUMP_DUMP"
+ARCHETYPE_MULTI_DEX  = "COMPLEX_MULTI_DEX"
+ARCHETYPE_ARB        = "ARB_PATTERN"
+ARCHETYPE_UNKNOWN    = "UNKNOWN"
+
+WASH_LABEL_HIGH  = "HIGH_CONFIDENCE_WASH"
+WASH_LABEL_BOT   = "POSSIBLE_BOT"
+WASH_LABEL_MON   = "MONITORING"
+WASH_LABEL_CLEAN = "CLEAN"
+
+
+# ── SECTION 1 — Agent heuristics ─────────────────────────────────────────────
+
+def _check_heuristics(swaps: list[dict]) -> int:
     """
-    Fetch vol_24h for each pool from DexScreener.
-    Returns { pool_address: vol_24h_usd }
-    Falls back to subgraph totalVolumeUSD if DexScreener fails.
+    Returns count of heuristics matched (0-4).
+      1. High frequency  — >= AGENT_HIGH_FREQ_TX_MIN swaps in window
+      2. Round amounts   — > AGENT_ROUND_AMOUNT_PCT of amounts are round numbers
+      3. Fast execution  — avg time between swaps < AGENT_EXEC_TIME_MAX_SEC
+      4. Low variance    — coefficient of variation (CV) < AGENT_CV_MAX
     """
-    volumes = {}
-    try:
-        # DexScreener supports up to 30 addresses per call
-        chunk = ",".join(pool_addresses[:30])
-        url = f"{DEXSCREENER_BASE}/pairs/mantle/{chunk}"
-        resp = requests.get(url, timeout=10)
-        resp.raise_for_status()
-        data = resp.json()
+    if not swaps:
+        return 0
 
-        for pair in data.get("pairs", []):
-            addr = pair.get("pairAddress", "").lower()
-            vol = float(pair.get("volume", {}).get("h24", 0))
-            volumes[addr] = vol
+    score = 0
 
-    except Exception as e:
-        logger.warning(f"[scorer] DexScreener fetch failed: {e} — using baseline weights")
+    # 1. High frequency
+    if len(swaps) >= AGENT_HIGH_FREQ_TX_MIN:
+        score += 1
 
-    return volumes
+    # 2. Round amounts
+    amounts = [s.get("amount_usd", 0) for s in swaps if s.get("amount_usd", 0) > 0]
+    if amounts:
+        round_count = sum(
+            1 for a in amounts if a >= 10 and round(a, 0) == round(a, 2)
+        )
+        if (round_count / len(amounts)) > AGENT_ROUND_AMOUNT_PCT:
+            score += 1
+
+    # 3. Fast execution
+    timestamps = sorted([s.get("timestamp", 0) for s in swaps])
+    if len(timestamps) >= 2:
+        deltas = [timestamps[i+1] - timestamps[i] for i in range(len(timestamps) - 1)]
+        avg_delta = sum(deltas) / len(deltas)
+        if avg_delta < AGENT_EXEC_TIME_MAX_SEC:
+            score += 1
+
+    # 4. Low CV
+    if len(amounts) >= 3:
+        mean = sum(amounts) / len(amounts)
+        if mean > 0:
+            std = math.sqrt(sum((a - mean) ** 2 for a in amounts) / len(amounts))
+            cv = std / mean
+            if cv < AGENT_CV_MAX:
+                score += 1
+
+    return score
 
 
-def compute_dynamic_weights(
-    dex_results: list[dict],
-    ds_volumes: dict[str, float],
-) -> dict[str, float]:
+# ── SECTION 2 — Agent type classification ────────────────────────────────────
+
+def classify_agent_type(
+    wallet: str,
+    swaps: list[dict],
+    anomaly_score: float,
+    wash_ratio: float,
+    cycle_detected: bool,
+    roi_7d: Optional[float] = None,
+) -> str:
     """
-    Adjust DEX weights based on real vol_24h from DexScreener.
-    If a DEX pool vol < DEXSCREENER_WEIGHT_FLOOR (5%) of total → weight = 0.
-    Renormalize remaining weights to sum = 1.0.
+    Classify wallet into one of 5 agent types.
+    Priority order (deterministic):
+      1. MANIPULATOR    — (confirmed or probable) + manipulation signals
+      2. SMART MONEY    — (confirmed or probable) + clean ROI >= 15%
+      3. CONFIRMED AGENT — ERC-8004 registry match
+      4. PROBABLE AGENT  — >= 2 heuristics matched
+      5. UNKNOWN WALLET
     """
-    # Start with baseline weights
-    weights = dict(DEX_WEIGHTS)
+    identity     = get_agent_identity(wallet)
+    is_confirmed = identity is not None
 
-    # Map dex → pool vol from DexScreener
-    dex_vols: dict[str, float] = {}
-    for r in dex_results:
-        pool_id = r.get("pool_id", "").lower()
-        dex = r.get("dex", "")
-        vol = ds_volumes.get(pool_id, 0.0)
-        dex_vols[dex] = dex_vols.get(dex, 0.0) + vol
+    heuristic_count = _check_heuristics(swaps)
+    is_probable = (not is_confirmed) and (heuristic_count >= SMART_MONEY_HEURISTIC_MIN)
 
-    total_vol = sum(dex_vols.values())
+    is_agent = is_confirmed or is_probable
 
-    if total_vol > 0:
-        for dex in weights:
-            vol_share = dex_vols.get(dex, 0.0) / total_vol
-            if vol_share < DEXSCREENER_WEIGHT_FLOOR:
-                logger.info(f"[scorer] {dex} vol share {vol_share:.2%} < floor — zeroing weight")
-                weights[dex] = 0.0
-            else:
-                weights[dex] = vol_share
+    manipulation = (
+        wash_ratio > WASH_RATIO_HIGH_THRESHOLD or
+        cycle_detected or
+        anomaly_score >= 71
+    )
 
-    # Renormalize
-    total_w = sum(weights.values())
-    if total_w > 0:
-        weights = {k: v / total_w for k, v in weights.items()}
-    else:
-        # All zeroed — fall back to baseline
-        weights = dict(DEX_WEIGHTS)
+    if is_agent and manipulation:
+        return AGENT_TYPE_MANIPULATOR
 
-    return weights
+    if is_agent and roi_7d is not None:
+        if roi_7d >= SMART_MONEY_ROI_MIN and wash_ratio <= SMART_MONEY_WASH_MAX:
+            return AGENT_TYPE_SMART_MONEY
+
+    if is_confirmed:
+        return AGENT_TYPE_CONFIRMED
+
+    if is_probable:
+        return AGENT_TYPE_PROBABLE
+
+    return AGENT_TYPE_UNKNOWN
 
 
-# ── Corroboration ─────────────────────────────────────────
+# ── SECTION 3 — Wash label ────────────────────────────────────────────────────
 
-def compute_corroboration(dex_results: list[dict], threshold: float = 40.0) -> int:
+def compute_wash_label(
+    wash_ratio: float,
+    inflow: float,
+    outflow: float,
+    total_volume: float,
+    concentration: float,
+) -> str:
     """
-    Count how many DEXes flagged a signal above threshold.
-    1 DEX = modifier 1.0, 2 DEX = 0.6, 3 DEX = 0.3
-    (Corroboration reduces false positive weight — same anomaly on multiple DEXes
-    may indicate market-wide event, not manipulation.)
+    3-way wash confidence gate (v2.0 Fix #13 + #14).
+
+    HIGH_CONFIDENCE_WASH — ratio >10x + net_flow <0.05 + concentration >0.60
+    POSSIBLE_BOT         — ratio >10x + net_flow >0.30 (directional = likely arb)
+    MONITORING           — elevated but not confirmed
+    CLEAN                — ratio < 3x
     """
-    flagged = sum(1 for r in dex_results if r.get("s_dex", 0) >= threshold)
-    return max(flagged, 1)
+    if wash_ratio < 3.0:
+        return WASH_LABEL_CLEAN
+
+    net_flow = abs(inflow - outflow) / (total_volume + 1e-9)
+
+    if (wash_ratio > WASH_RATIO_HIGH_THRESHOLD
+            and net_flow < WASH_NET_FLOW_CIRCULAR
+            and concentration > WASH_CONCENTRATION_THRESHOLD):
+        return WASH_LABEL_HIGH
+
+    if wash_ratio > WASH_RATIO_HIGH_THRESHOLD and net_flow > WASH_NET_FLOW_DIRECTIONAL:
+        return WASH_LABEL_BOT
+
+    return WASH_LABEL_MON
 
 
-# ── Phase 1 Conservative Mode ─────────────────────────────
+# ── SECTION 4 — Smart Money Score ─────────────────────────────────────────────
 
-def is_phase1(start_date: str) -> bool:
+def compute_smart_score(
+    roi_7d: float,
+    wash_ratio: float,
+    reputation_score: float,
+) -> float:
     """
-    Returns True if we're within PHASE1_DAYS of system start.
-    start_date: ISO format string (YYYY-MM-DD)
+    Smart Money Score v9.0.
+    smart_score = (1 + max(roi_7d/100, -1.0))
+                x (1 - clamp(wash_ratio/20, 0.0, 1.0))
+                x (reputation_score / 100)
+
+    Range: 0.0 to ~2.0
     """
-    from datetime import datetime, date
-    try:
-        start = date.fromisoformat(start_date)
-        delta = (date.today() - start).days
-        return delta < PHASE1_DAYS
-    except Exception:
-        return False
+    roi_factor   = 1.0 + max(roi_7d / 100.0, -1.0)
+    wash_penalty = min(max(wash_ratio / 20.0, 0.0), 1.0)
+    rep_factor   = reputation_score / 100.0
+
+    return round(roi_factor * (1.0 - wash_penalty) * rep_factor, 4)
 
 
-def apply_phase1_threshold(s_final: float) -> float:
+# ── SECTION 5 — Archetype assignment ─────────────────────────────────────────
+
+def classify_archetype(
+    aave_modifier: float,
+    wash_ratio: float,
+    cycle_count: int,
+    volume_spike_x: float,
+    corroboration: int,
+    tx_per_minute: float,
+) -> str:
     """
-    During Phase 1: use conservative threshold.
-    Scores below THRESHOLD_PHASE1 are treated as THRESHOLD_WATCHING max.
+    Deterministic priority-order archetype (v2.0 Fix #11).
+      1. FLASH_WASH        — flash loan (aave x1.5) + wash ratio >10x
+      2. COORDINATED_WASH  — cycle_count >= 3
+      3. PUMP_DUMP         — volume spike >15x + no wash cycle
+      4. COMPLEX_MULTI_DEX — all 3 DEXes flagged (corroboration == 3)
+      5. ARB_PATTERN       — high freq + low wash (NOT flagged as manipulation)
+      6. UNKNOWN
     """
-    if s_final >= THRESHOLD_PHASE1:
-        return s_final
-    return min(s_final, float(THRESHOLD_WATCHING))
+    if aave_modifier >= 1.5 and wash_ratio > WASH_RATIO_HIGH_THRESHOLD:
+        return ARCHETYPE_FLASH_WASH
+
+    if cycle_count >= 3:
+        return ARCHETYPE_COORD_WASH
+
+    if volume_spike_x > 15 and cycle_count == 0:
+        return ARCHETYPE_PUMP_DUMP
+
+    if corroboration == 3:
+        return ARCHETYPE_MULTI_DEX
+
+    if tx_per_minute > 10 and wash_ratio < 3.0:
+        return ARCHETYPE_ARB
+
+    return ARCHETYPE_UNKNOWN
 
 
-# ── Alert Level ───────────────────────────────────────────
+# ── SECTION 6 — Full wallet profile ──────────────────────────────────────────
 
-def get_alert_level(s_final: float, phase1: bool = False) -> str:
-    """
-    Map final score to alert level.
-    Phase 1: conservative — cap at 'alert' (no high_conf for first 7 days).
-    """
-    if phase1:
-        s_final = apply_phase1_threshold(s_final)
-
-    if s_final >= THRESHOLD_HIGH_CONF and not phase1:
-        return "high_conf"
-    elif s_final >= THRESHOLD_ALERT:
-        return "alert"
-    elif s_final >= THRESHOLD_WATCHING:
-        return "watching"
-    else:
-        return "none"
-
-
-# ── Final Score ───────────────────────────────────────────
-
-def compute_final_score(
-    dex_results: list[dict],
-    ds_volumes: dict[str, float] = None,
-    phase1: bool = False,
+def build_wallet_profile(
+    wallet: str,
+    swaps: list[dict],
+    anomaly_score: float,
+    wash_ratio: float,
+    inflow: float,
+    outflow: float,
+    total_volume: float,
+    concentration: float,
+    cycle_count: int,
+    volume_spike_x: float,
+    corroboration: int,
+    aave_modifier: float,
+    tx_per_minute: float,
 ) -> dict:
     """
-    Compute weighted S_final from per-DEX S_DEX scores.
-
-    S_final = Σ (w_dex × S_DEX) × corroboration_modifier
-
-    Returns full scoring breakdown dict.
+    Build full wallet profile dict.
+    Called by scorer.py after scoring pipeline.
+    Persisted to Supabase wallet_profiles table.
     """
-    if not dex_results:
-        return {
-            "s_final": 0.0,
-            "alert_level": "none",
-            "weights_used": {},
-            "corroboration": 1,
-            "dex_scores": [],
-        }
+    # ROI from MantleScan
+    roi_7d = None
+    try:
+        roi_7d = get_wallet_roi(wallet, days=7)
+    except Exception as e:
+        logger.debug("get_wallet_roi failed for %s: %s", wallet, e)
 
-    ds_volumes = ds_volumes or {}
+    # ERC-8004
+    identity  = get_agent_identity(wallet)
+    rep_score = 50.0
+    try:
+        reputation = get_agent_reputation(wallet)
+        rep_score  = reputation.get("score", 50.0) if reputation else 50.0
+    except Exception as e:
+        logger.debug("get_agent_reputation failed for %s: %s", wallet, e)
 
-    # Dynamic weights
-    weights = compute_dynamic_weights(dex_results, ds_volumes)
+    # Aave summary
+    aave_summary = {}
+    try:
+        aave_summary = get_wallet_aave_summary(wallet)
+    except Exception as e:
+        logger.debug("get_wallet_aave_summary failed for %s: %s", wallet, e)
 
-    # Weighted sum
-    s_weighted = 0.0
-    dex_scores = []
-    for r in dex_results:
-        dex = r.get("dex", "")
-        s_dex = r.get("s_dex", 0.0)
-        w = weights.get(dex, 0.0)
-        contribution = w * s_dex
-        s_weighted += contribution
-        dex_scores.append({
-            "dex": dex,
-            "s_dex": round(s_dex, 2),
-            "weight": round(w, 4),
-            "contribution": round(contribution, 2),
-        })
-
-    # Corroboration modifier
-    corroboration = compute_corroboration(dex_results)
-    modifier = CORROBORATION_MODIFIER.get(corroboration, 0.3)
-    s_final = s_weighted * modifier if corroboration > 1 else s_weighted
-
-    # Clamp
-    s_final = min(max(s_final, 0.0), 100.0)
-
-    alert_level = get_alert_level(s_final, phase1=phase1)
+    # Derived
+    wash_label  = compute_wash_label(
+        wash_ratio, inflow, outflow, total_volume, concentration
+    )
+    archetype   = classify_archetype(
+        aave_modifier, wash_ratio, cycle_count,
+        volume_spike_x, corroboration, tx_per_minute
+    )
+    agent_type  = classify_agent_type(
+        wallet, swaps, anomaly_score, wash_ratio,
+        cycle_count >= 1, roi_7d
+    )
+    smart_score = compute_smart_score(
+        roi_7d if roi_7d is not None else 0.0,
+        wash_ratio,
+        rep_score,
+    )
 
     return {
-        "s_final": round(s_final, 2),
-        "s_weighted": round(s_weighted, 2),
-        "alert_level": alert_level,
-        "weights_used": {k: round(v, 4) for k, v in weights.items()},
-        "corroboration": corroboration,
-        "corroboration_modifier": modifier,
-        "dex_scores": dex_scores,
-        "phase1_active": phase1,
+        # Identity
+        "wallet":           wallet.lower(),
+        "agent_type":       agent_type,
+        "erc8004_token_id": identity.get("token_id") if identity else None,
+        "rep_score":        round(rep_score, 1),
+
+        # Scoring
+        "anomaly_score":  round(anomaly_score, 2),
+        "wash_ratio":     round(wash_ratio, 4),
+        "wash_label":     wash_label,
+        "archetype":      archetype,
+        "aave_modifier":  aave_modifier,
+        "corroboration":  corroboration,
+        "cycle_count":    cycle_count,
+        "volume_spike_x": round(volume_spike_x, 2),
+        "tx_per_minute":  round(tx_per_minute, 4),
+        "concentration":  round(concentration, 4),
+
+        # Capital flow
+        "inflow":       round(inflow, 2),
+        "outflow":      round(outflow, 2),
+        "total_volume": round(total_volume, 2),
+        "net_flow":     round(abs(inflow - outflow) / (total_volume + 1e-9), 4),
+
+        # Smart money
+        "roi_7d":      round(roi_7d, 4) if roi_7d is not None else None,
+        "smart_score": smart_score,
+
+        # Aave
+        "aave_debt_usd":      aave_summary.get("total_debt_usd", 0.0),
+        "aave_health_factor": aave_summary.get("health_factor", 999.0),
+        "aave_flash_loan":    aave_summary.get("recent_flash_loan", False),
+        "aave_fresh_borrow":  aave_summary.get("recent_borrow_fresh", False),
+
+        # Meta
+        "updated_at": int(time.time()),
     }
 
 
-# ── Persist + Return ──────────────────────────────────────
+# ── SECTION 7 — Alert-ready summary ──────────────────────────────────────────
 
-def score_and_persist(
-    dex_results: list[dict],
-    tx_hashes: list[str],
-    ds_volumes: dict[str, float] = None,
-    phase1: bool = False,
-) -> dict:
+def format_wallet_line(profile: dict) -> str:
     """
-    Compute final score and persist to signal_log.
-    Returns full result dict including DB row id.
+    Compact single-line summary for Telegram alerts.
+    Example:
+      0xA91f..cc #47 | Rep: 23/100 | MANIPULATOR | COORDINATED_WASH | Aave x1.5
     """
-    result = compute_final_score(dex_results, ds_volumes, phase1)
+    w    = profile["wallet"]
+    ws   = w[:6] + ".." + w[-2:] if len(w) > 8 else w
+    tid  = f"#{profile['erc8004_token_id']}" if profile.get("erc8004_token_id") else ""
+    rep  = f"Rep: {profile['rep_score']}/100"
+    amod = profile.get("aave_modifier", 1.0)
+    aave = f"Aave x{amod}" if amod > 1.0 else ""
 
-    if result["alert_level"] == "none":
-        return result  # Don't persist non-events
+    parts = [f"{ws} {tid}".strip(), rep, profile["agent_type"], profile["wash_label"]]
+    if aave:
+        parts.append(aave)
 
-    # Use highest-scoring DEX result for per-layer scores
-    best = max(dex_results, key=lambda r: r.get("s_dex", 0))
-
-    row_id = log_signal(
-        dex=best.get("dex", "multi"),
-        pool_address=best.get("pool_id", ""),
-        tx_hashes=tx_hashes,
-        l1_score=best.get("l1_score", 0),
-        l2_score=best.get("l2_score", 0),
-        l3_score=best.get("l3_score", 0),
-        s_dex=best.get("s_dex", 0),
-        s_final=result["s_final"],
-        alert_level=result["alert_level"],
-        l1_methods=best.get("l1_methods", []),
-        l2_methods=best.get("l2_methods", []),
-        l3_methods=best.get("l3_methods", []),
-        top_wallets=best.get("top_wallets", []),
-        volume_usd=best.get("volume_usd", 0),
-        corroboration=result["corroboration"],
-        phase1_active=phase1,
-    )
-
-    result["db_row_id"] = row_id
-    logger.info(
-        f"[scorer] Signal persisted — id={row_id} "
-        f"s_final={result['s_final']} level={result['alert_level']} "
-        f"corroboration={result['corroboration']}"
-    )
-
-    return result
+    return " | ".join(parts)
