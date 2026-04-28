@@ -1,4 +1,4 @@
-# requirements.txt — RealClaw Intelligence Engine
+# requirements.txt — MAD
 
 # Core
 python-dotenv>=1.0.0
@@ -24,3 +24,6 @@ networkx>=3.2.0
 
 # Optional: dashboard (Phase 3)
 # nextjs handled separately via npm
+
+#supabase
+supabase>=2.3.0

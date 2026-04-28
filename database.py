@@ -1,100 +1,43 @@
-# database.py — RealClaw SQLite signal_log
-# Schema: signal_log, wallet_profile, agent_registry cache
+"""
+database.py
+MAD — Mantle Anomaly Detector
+Supabase backend: signal_log + wallet_profile + agent_registry + pool_baseline
+"""
 
-import sqlite3
 import logging
-from datetime import datetime
-from pathlib import Path
+import json
+from datetime import date, datetime, timezone
+from typing import Optional
+from supabase import create_client, Client
+from config import SUPABASE_URL, SUPABASE_KEY
 
-DB_PATH = Path("realclaw.db")
-logger  = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
+# ── Client ────────────────────────────────────────────────────────────────────
 
-def get_connection() -> sqlite3.Connection:
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA journal_mode=WAL")
-    conn.execute("PRAGMA foreign_keys=ON")
-    return conn
+_client: Optional[Client] = None
+
+def get_client() -> Client:
+    global _client
+    if _client is None:
+        if not SUPABASE_URL or not SUPABASE_KEY:
+            raise RuntimeError("SUPABASE_URL or SUPABASE_KEY not set")
+        _client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    return _client
 
 
 def init_db():
-    """Initialize all tables. Safe to call multiple times (CREATE IF NOT EXISTS)."""
-    with get_connection() as conn:
-        conn.executescript("""
-            -- ── Signal Log ────────────────────────────────────────────
-            CREATE TABLE IF NOT EXISTS signal_log (
-                id           INTEGER PRIMARY KEY AUTOINCREMENT,
-                created_at   TEXT    NOT NULL DEFAULT (datetime('now')),
-                dex          TEXT    NOT NULL,                       -- agni | moe | fluxion
-                pool_address TEXT    NOT NULL,
-                tx_hashes    TEXT    NOT NULL,                       -- JSON array of tx hashes
-                l1_score     REAL    NOT NULL DEFAULT 0,
-                l2_score     REAL    NOT NULL DEFAULT 0,
-                l3_score     REAL    NOT NULL DEFAULT 0,
-                s_dex        REAL    NOT NULL DEFAULT 0,             -- normalized 0-100
-                s_final      REAL    NOT NULL DEFAULT 0,             -- weighted final
-                alert_level  TEXT    NOT NULL DEFAULT 'none',        -- none|watching|alert|high_conf
-                l1_methods   TEXT,                                   -- JSON: which L1 methods triggered
-                l2_methods   TEXT,                                   -- JSON: which L2 methods triggered
-                l3_methods   TEXT,                                   -- JSON: which L3 methods triggered
-                top_wallets  TEXT,                                   -- JSON array of flagged wallets
-                volume_usd   REAL,
-                corroboration  INTEGER DEFAULT 1,                    -- how many DEXes flagged same signal
-                phase1_active  INTEGER DEFAULT 0,                    -- 1 if in conservative Phase 1
-                notes        TEXT
-            );
+    """Verify Supabase connection. Tables created via SQL migration."""
+    try:
+        client = get_client()
+        client.table("signal_log").select("id").limit(1).execute()
+        logger.info("[db] Supabase connection OK")
+    except Exception as e:
+        logger.error("[db] Supabase connection failed: %s", e)
+        raise
 
-            -- ── Wallet Profile Cache ──────────────────────────────────
-            CREATE TABLE IF NOT EXISTS wallet_profile (
-                address           TEXT PRIMARY KEY,
-                first_seen        TEXT NOT NULL DEFAULT (datetime('now')),
-                last_updated      TEXT NOT NULL DEFAULT (datetime('now')),
-                total_volume_usd  REAL    DEFAULT 0,
-                tx_count          INTEGER DEFAULT 0,
-                wash_ratio        REAL    DEFAULT 0,
-                is_probable_agent INTEGER DEFAULT 0,                 -- 1 = likely ERC-8004 agent
-                agent_token_id    TEXT,                              -- ERC-8004 token ID if confirmed
-                reputation_score  REAL,                              -- ERC-8004 reputation score
-                roi_7d            REAL,                              -- from MantleScan
-                risk_label        TEXT    DEFAULT 'unknown',         -- low|medium|high|agent
-                flags             TEXT                               -- JSON array of flag reasons
-            );
 
-            -- ── Agent Registry Cache ──────────────────────────────────
-            CREATE TABLE IF NOT EXISTS agent_registry (
-                token_id         TEXT PRIMARY KEY,
-                owner_address    TEXT NOT NULL,
-                reputation_score REAL DEFAULT 0,
-                last_synced      TEXT NOT NULL DEFAULT (datetime('now')),
-                metadata         TEXT                                -- JSON from ERC-8004
-            );
-
-            -- ── Pool Baseline Cache ───────────────────────────────────
-            CREATE TABLE IF NOT EXISTS pool_baseline (
-                pool_address    TEXT NOT NULL,
-                dex             TEXT NOT NULL,
-                window_start    TEXT NOT NULL,
-                window_end      TEXT NOT NULL,
-                avg_volume_usd  REAL,
-                avg_tx_count    REAL,
-                stddev_volume   REAL,
-                bollinger_upper REAL,
-                bollinger_lower REAL,
-                poisson_lambda  REAL,
-                updated_at      TEXT NOT NULL DEFAULT (datetime('now')),
-                PRIMARY KEY (pool_address, dex, window_start)
-            );
-
-            -- ── Indexes ───────────────────────────────────────────────
-            CREATE INDEX IF NOT EXISTS idx_signal_created ON signal_log(created_at);
-            CREATE INDEX IF NOT EXISTS idx_signal_dex     ON signal_log(dex);
-            CREATE INDEX IF NOT EXISTS idx_signal_pool    ON signal_log(pool_address);
-            CREATE INDEX IF NOT EXISTS idx_signal_level   ON signal_log(alert_level);
-            CREATE INDEX IF NOT EXISTS idx_wallet_risk    ON wallet_profile(risk_label);
-        """)
-        logger.info(f"DB initialized at {DB_PATH}")
-
+# ── Signal Log ────────────────────────────────────────────────────────────────
 
 def log_signal(
     dex: str,
@@ -106,73 +49,208 @@ def log_signal(
     s_dex: float,
     s_final: float,
     alert_level: str,
-    **kwargs
-) -> int:
+    **kwargs,
+) -> Optional[int]:
     """Insert a new signal. Returns inserted row id."""
-    import json
-    with get_connection() as conn:
-        cur = conn.execute("""
-            INSERT INTO signal_log (
-                dex, pool_address, tx_hashes,
-                l1_score, l2_score, l3_score,
-                s_dex, s_final, alert_level,
-                l1_methods, l2_methods, l3_methods,
-                top_wallets, volume_usd, corroboration,
-                phase1_active, notes
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-        """, (
-            dex, pool_address, json.dumps(tx_hashes),
-            l1_score, l2_score, l3_score,
-            s_dex, s_final, alert_level,
-            json.dumps(kwargs.get("l1_methods",    [])),
-            json.dumps(kwargs.get("l2_methods",    [])),
-            json.dumps(kwargs.get("l3_methods",    [])),
-            json.dumps(kwargs.get("top_wallets",   [])),
-            kwargs.get("volume_usd"),
-            kwargs.get("corroboration",  1),
-            int(kwargs.get("phase1_active", False)),
-            kwargs.get("notes"),
-        ))
-        return cur.lastrowid
+    try:
+        row = {
+            "dex":           dex,
+            "pool_address":  pool_address.lower(),
+            "tx_hashes":     tx_hashes,
+            "l1_score":      round(l1_score, 2),
+            "l2_score":      round(l2_score, 2),
+            "l3_score":      round(l3_score, 2),
+            "s_dex":         round(s_dex, 2),
+            "s_final":       round(s_final, 2),
+            "alert_level":   alert_level,
+            "l1_methods":    kwargs.get("l1_methods", []),
+            "l2_methods":    kwargs.get("l2_methods", []),
+            "l3_methods":    kwargs.get("l3_methods", []),
+            "top_wallets":   kwargs.get("top_wallets", []),
+            "volume_usd":    kwargs.get("volume_usd"),
+            "corroboration": kwargs.get("corroboration", 1),
+            "phase1_active": bool(kwargs.get("phase1_active", False)),
+            "notes":         kwargs.get("notes"),
+        }
+        res = get_client().table("signal_log").insert(row).execute()
+        row_id = res.data[0]["id"] if res.data else None
+        logger.info("[db] signal_log insert id=%s level=%s s_final=%.1f", row_id, alert_level, s_final)
+        return row_id
+    except Exception as e:
+        logger.error("[db] log_signal failed: %s", e)
+        return None
 
+
+def get_recent_signals(limit: int = 50, alert_level: Optional[str] = None) -> list:
+    """Fetch recent signals, optionally filtered by alert_level."""
+    try:
+        q = get_client().table("signal_log").select("*").order("created_at", desc=True).limit(limit)
+        if alert_level:
+            q = q.eq("alert_level", alert_level)
+        res = q.execute()
+        return res.data or []
+    except Exception as e:
+        logger.error("[db] get_recent_signals failed: %s", e)
+        return []
+
+
+# ── Wallet Profile ────────────────────────────────────────────────────────────
 
 def upsert_wallet(address: str, **kwargs):
-    """Upsert wallet profile. Pass any wallet_profile columns as kwargs."""
-    import json
-    fields = {k: v for k, v in kwargs.items()}
-    fields["last_updated"] = datetime.utcnow().isoformat()
-    if "flags" in fields and isinstance(fields["flags"], list):
-        fields["flags"] = json.dumps(fields["flags"])
-
-    cols         = ", ".join(fields.keys())
-    placeholders = ", ".join(["?"] * len(fields))
-    updates      = ", ".join([f"{k}=excluded.{k}" for k in fields.keys()])
-
-    with get_connection() as conn:
-        conn.execute(f"""
-            INSERT INTO wallet_profile (address, {cols})
-            VALUES (?, {placeholders})
-            ON CONFLICT(address) DO UPDATE SET {updates}
-        """, (address, *fields.values()))
+    """Upsert wallet profile."""
+    try:
+        row = {"address": address.lower(), **kwargs}
+        row["last_updated"] = datetime.now(timezone.utc).isoformat()
+        get_client().table("wallet_profile").upsert(row, on_conflict="address").execute()
+    except Exception as e:
+        logger.error("[db] upsert_wallet failed for %s: %s", address, e)
 
 
-def get_recent_signals(limit: int = 50, alert_level: str = None) -> list:
-    """Fetch recent signals, optionally filtered by alert level."""
-    with get_connection() as conn:
-        if alert_level:
-            rows = conn.execute(
-                "SELECT * FROM signal_log WHERE alert_level=? ORDER BY created_at DESC LIMIT ?",
-                (alert_level, limit)
-            ).fetchall()
-        else:
-            rows = conn.execute(
-                "SELECT * FROM signal_log ORDER BY created_at DESC LIMIT ?",
-                (limit,)
-            ).fetchall()
-        return [dict(r) for r in rows]
+def get_wallet(address: str) -> Optional[dict]:
+    """Fetch wallet profile by address."""
+    try:
+        res = get_client().table("wallet_profile").select("*").eq("address", address.lower()).limit(1).execute()
+        return res.data[0] if res.data else None
+    except Exception as e:
+        logger.error("[db] get_wallet failed for %s: %s", address, e)
+        return None
+
+
+def get_top_wallets(order_by: str = "roi_7d", limit: int = 10) -> list:
+    """Get top wallets sorted by field."""
+    allowed = {"roi_7d", "wash_ratio", "reputation_score", "smart_score"}
+    if order_by not in allowed:
+        order_by = "roi_7d"
+    try:
+        res = (
+            get_client()
+            .table("wallet_profile")
+            .select("address,roi_7d,wash_ratio,reputation_score,smart_score,agent_type,archetype,risk_label")
+            .order(order_by, desc=True, nulls_first=False)
+            .limit(limit)
+            .execute()
+        )
+        return res.data or []
+    except Exception as e:
+        logger.error("[db] get_top_wallets failed: %s", e)
+        return []
+
+
+# ── Digest Stats ──────────────────────────────────────────────────────────────
+
+def get_digest_stats() -> dict:
+    """Pull today's stats for daily digest."""
+    today = date.today().isoformat()
+
+    try:
+        client = get_client()
+
+        # All signals today
+        signals_res = (
+            client.table("signal_log")
+            .select("id,alert_level,s_final,volume_usd,pool_address,dex")
+            .gte("created_at", today)
+            .execute()
+        )
+        signals = signals_res.data or []
+
+        scan_count     = len(signals)
+        alert_count    = sum(1 for s in signals if s["alert_level"] in ("alert", "high_conf"))
+        watching_count = sum(1 for s in signals if s["alert_level"] == "watching")
+        total_volume   = sum(s.get("volume_usd") or 0 for s in signals)
+
+        # Top pools by max s_final
+        pool_scores: dict[str, dict] = {}
+        for s in signals:
+            key = s["pool_address"]
+            if key not in pool_scores or s["s_final"] > pool_scores[key]["s_dex"]:
+                pool_scores[key] = {
+                    "pool_name":  s["pool_address"],
+                    "dex":        s["dex"],
+                    "s_dex":      s["s_final"],
+                    "volume_usd": s.get("volume_usd") or 0,
+                }
+        top_pools = sorted(pool_scores.values(), key=lambda x: x["s_dex"], reverse=True)[:5]
+
+        # Top smart money wallets
+        top_wallets = get_top_wallets(order_by="roi_7d", limit=5)
+
+        return {
+            "scan_count":       scan_count,
+            "alert_count":      alert_count,
+            "watching_count":   watching_count,
+            "total_volume_usd": round(total_volume, 2),
+            "top_pools":        top_pools,
+            "top_wallets":      top_wallets,
+            "phase1_active":    False,
+            "start_date":       today,
+        }
+
+    except Exception as e:
+        logger.error("[db] get_digest_stats failed: %s", e)
+        return {
+            "scan_count": 0, "alert_count": 0, "watching_count": 0,
+            "total_volume_usd": 0, "top_pools": [], "top_wallets": [],
+            "phase1_active": False, "start_date": today,
+        }
+
+
+# ── Pool Baseline ─────────────────────────────────────────────────────────────
+
+def upsert_pool_baseline(pool_address: str, dex: str, window_start: str, window_end: str, **kwargs):
+    """Upsert pool baseline stats."""
+    try:
+        row = {
+            "pool_address": pool_address.lower(),
+            "dex":          dex,
+            "window_start": window_start,
+            "window_end":   window_end,
+            **kwargs,
+        }
+        get_client().table("pool_baseline").upsert(
+            row, on_conflict="pool_address,dex,window_start"
+        ).execute()
+    except Exception as e:
+        logger.error("[db] upsert_pool_baseline failed: %s", e)
+
+
+def get_pool_baseline(pool_address: str, dex: str) -> Optional[dict]:
+    """Get latest baseline for a pool."""
+    try:
+        res = (
+            get_client()
+            .table("pool_baseline")
+            .select("*")
+            .eq("pool_address", pool_address.lower())
+            .eq("dex", dex)
+            .order("window_start", desc=True)
+            .limit(1)
+            .execute()
+        )
+        return res.data[0] if res.data else None
+    except Exception as e:
+        logger.error("[db] get_pool_baseline failed: %s", e)
+        return None
+
+
+# ── Agent Registry ────────────────────────────────────────────────────────────
+
+def upsert_agent(token_id: str, owner_address: str, reputation_score: float, metadata: dict = None):
+    """Cache ERC-8004 agent data."""
+    try:
+        row = {
+            "token_id":         token_id,
+            "owner_address":    owner_address.lower(),
+            "reputation_score": reputation_score,
+            "last_synced":      datetime.now(timezone.utc).isoformat(),
+            "metadata":         metadata or {},
+        }
+        get_client().table("agent_registry").upsert(row, on_conflict="token_id").execute()
+    except Exception as e:
+        logger.error("[db] upsert_agent failed for %s: %s", token_id, e)
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     init_db()
-    print(f"✅ Database initialized: {DB_PATH}")
+    print("✅ Supabase connection verified")
