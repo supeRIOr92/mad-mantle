@@ -21,23 +21,21 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler("realclaw.log", encoding="utf-8"),
+        logging.FileHandler("mad.log", encoding="utf-8"),
     ],
 )
 
-logger = logging.getLogger("realclaw.main")
-
+logger = logging.getLogger("mad.main")
 
 # ── Startup Banner ────────────────────────────────────────
 
 BANNER = """
 ╔══════════════════════════════════════════════════╗
-║ RealClaw Intelligence Engine ║
-║ AI Alpha & Risk Detection — Mantle Network ║
-║ v5.1 — Turing Test 2026 ║
+║     MAD — Mantle Anomaly Detector                ║
+║     AI Alpha & Risk Detection — Mantle Network   ║
+║     v2.0 — Turing Test 2026                      ║
 ╚══════════════════════════════════════════════════╝
 """
-
 
 def print_startup_info():
     print(BANNER)
@@ -51,11 +49,9 @@ def print_startup_info():
 
 shutdown_event = asyncio.Event()
 
-
 def handle_shutdown(sig, frame):
     logger.info(f"[main] Received signal {sig} — shutting down...")
     shutdown_event.set()
-
 
 # ── Bot Runner ────────────────────────────────────────────
 
@@ -86,7 +82,6 @@ async def run_scheduler():
     logger.info("[main] Stopping scheduler...")
     scheduler.shutdown(wait=False)
 
-
 # ── Main ──────────────────────────────────────────────────
 
 async def main():
@@ -107,7 +102,6 @@ async def main():
     )
 
     logger.info("[main] RealClaw shutdown complete.")
-
 
 if __name__ == "__main__":
     try:
