@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+* {
+box-sizing: border-box;
+}
+
+body {
+background-color: #0a0a0f;
+color: #e2e8f0;
+font-family: 'JetBrains Mono', monospace;
+}
+
+::-webkit-scrollbar {
+width: 4px;
+height: 4px;
+}
+::-webkit-scrollbar-track { background: #0f0f1a; }
+::-webkit-scrollbar-thumb { background: #1a1a2e; border-radius: 2px; }
+
+.panel {
+background: #0f0f1a;
+border: 1px solid #1a1a2e;
+border-radius: 8px;
+padding: 16px;
+}
+
+.score-bar-bg {
+background: #1a1a2e;
+border-radius: 4px;
+height: 6px;
+overflow: hidden;
+}
+
+.pulse-red { animation: pulse-red 2s infinite; }
+@keyframes pulse-red {
+0%, 100% { opacity: 1; }
+50% { opacity: 0.5; }
+}
