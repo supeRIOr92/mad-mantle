@@ -81,7 +81,7 @@ def _handle_get_wallet_profile(params: dict) -> dict:
     if not address:
         return {"error": "address is required"}
 
-with get_connection() as conn:
+    with get_connection() as conn:
         row = conn.execute(
             "SELECT * FROM wallet_profile WHERE address = ?", (address,)
         ).fetchone()
