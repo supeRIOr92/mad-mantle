@@ -362,3 +362,99 @@ def format_wallet_line(profile: dict) -> str:
         parts.append(aave)
 
     return " | ".join(parts)
+
+# ── SECTION 8 — Batch helpers (called by scheduler.py) ───────────────────
+
+def profile_top_wallets(swaps: list[dict], anomaly_score: float, **score_kwargs) -> list[dict]:
+    """
+    Profile top N wallets from swap list.
+    Returns list of profile dicts sorted by anomaly_score desc.
+    """
+    if not swaps:
+        return []
+
+    wallet_swaps: dict[str, list] = {}
+    for s in swaps:
+        w = s.get("sender", "") or s.get("wallet", "")
+        if isinstance(w, dict):
+            w = w.get("id", "")
+        if w:
+            wallet_swaps.setdefault(w.lower(), []).append(s)
+
+    profiles = []
+    for wallet, wswaps in list(wallet_swaps.items())[:10]:
+        try:
+            vol     = sum(s.get("amountUSD", 0) or s.get("amount_usd", 0) for s in wswaps)
+            inflow  = sum(s.get("amountUSD", 0) or s.get("amount_usd", 0) for s in wswaps if s.get("direction") == "in")
+            outflow = vol - inflow
+            conc    = vol / (score_kwargs.get("total_volume", vol) + 1e-9)
+
+            profile = build_wallet_profile(
+                wallet        = wallet,
+                swaps         = wswaps,
+                anomaly_score = anomaly_score,
+                wash_ratio    = score_kwargs.get("wash_ratio", 0.0),
+                inflow        = inflow,
+                outflow       = outflow,
+                total_volume  = vol,
+                concentration = conc,
+                cycle_count   = score_kwargs.get("cycle_count", 0),
+                volume_spike_x = score_kwargs.get("volume_spike_x", 1.0),
+                corroboration = score_kwargs.get("corroboration", 1),
+                aave_modifier = score_kwargs.get("aave_modifier", 1.0),
+                tx_per_minute = len(wswaps) / max(score_kwargs.get("window_min", 15), 1),
+            )
+            profiles.append(profile)
+        except Exception as e:
+            logger.debug("profile_top_wallets skip %s: %s", wallet, e)
+
+    profiles.sort(key=lambda p: p.get("anomaly_score", 0), reverse=True)
+    return profiles
+
+
+def flag_capital_flows(swaps: list[dict]) -> dict:
+    """
+    Detect coordinated capital flow patterns.
+    Returns { total_flags, large_single, coordinated_wallets, details }
+    """
+    from config import (
+        CAPITAL_FLOW_SINGLE_MULTIPLIER,
+        CAPITAL_FLOW_COORDINATED_USD,
+        CAPITAL_FLOW_COORDINATED_WALLETS,
+    )
+
+    if not swaps:
+        return {"total_flags": 0, "large_single": False, "coordinated_wallets": 0, "details": []}
+
+    amounts = [s.get("amountUSD", 0) or s.get("amount_usd", 0) for s in swaps]
+    amounts = [a for a in amounts if a > 0]
+    if not amounts:
+        return {"total_flags": 0, "large_single": False, "coordinated_wallets": 0, "details": []}
+
+    avg    = sum(amounts) / len(amounts)
+    flags  = 0
+    details = []
+
+    large_single = any(a > avg * CAPITAL_FLOW_SINGLE_MULTIPLIER for a in amounts)
+    if large_single:
+        flags += 1
+        details.append("large_single_tx")
+
+    wallets_large = set(
+        (s.get("sender") or s.get("wallet", "")).lower()
+        if not isinstance(s.get("sender"), dict)
+        else s["sender"].get("id", "").lower()
+        for s in swaps
+        if (s.get("amountUSD", 0) or s.get("amount_usd", 0)) >= CAPITAL_FLOW_COORDINATED_USD
+    )
+    coordinated_wallets = len(wallets_large)
+    if coordinated_wallets >= CAPITAL_FLOW_COORDINATED_WALLETS:
+        flags += 1
+        details.append(f"coordinated_{coordinated_wallets}_wallets")
+
+    return {
+        "total_flags":         flags,
+        "large_single":        large_single,
+        "coordinated_wallets": coordinated_wallets,
+        "details":             details,
+    }

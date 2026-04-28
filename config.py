@@ -117,3 +117,7 @@ DEX_WEIGHTS = {
     "moe":     0.45,
     "fluxion": 0.15,
 }
+
+# ── Chain ─────────────────────────────────────────────
+MANTLE_CHAIN_ID = 5000
+AGENT_COUNT_MANTLE = 92

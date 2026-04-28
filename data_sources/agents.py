@@ -140,3 +140,42 @@ def is_high_risk_agent(wallet: str, agent_map: dict) -> bool:
     if not entry:
         return False
     return entry["is_high_risk"]
+
+# ── Aliases for wallet_profiler.py compatibility ──────────
+def get_agent_identity(wallet: str) -> dict | None:
+    """
+    Returns identity dict if wallet owns an ERC-8004 token, else None.
+    Used by wallet_profiler.py for agent classification.
+    """
+    # Requires agent_map — used in build_agent_map context
+    # Standalone lookup: scan all tokens to find owner match
+    try:
+        w3 = get_web3()
+        identity = get_identity_contract(w3)
+        for token_id in range(1, AGENT_COUNT_MANTLE + 1):
+            try:
+                owner = identity.functions.ownerOf(token_id).call().lower()
+                if owner == wallet.lower():
+                    return {"token_id": str(token_id), "owner": owner}
+            except Exception:
+                continue
+    except Exception as e:
+        logger.debug("get_agent_identity failed for %s: %s", wallet, e)
+    return None
+
+def get_agent_reputation(wallet: str) -> dict | None:
+    """
+    Returns reputation dict for wallet if registered as ERC-8004 agent.
+    Used by wallet_profiler.py for rep score lookup.
+    """
+    identity = get_agent_identity(wallet)
+    if not identity:
+        return None
+    try:
+        token_id = int(identity["token_id"])
+        score = fetch_agent_reputation(token_id)
+        if score is not None:
+            return {"score": score, "token_id": str(token_id)}
+    except Exception as e:
+        logger.debug("get_agent_reputation failed for %s: %s", wallet, e)
+    return None

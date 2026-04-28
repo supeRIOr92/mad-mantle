@@ -111,3 +111,8 @@ def enrich_wallet(address: str) -> dict:
         "roi_7d": roi,
         "mnt_balance": balance,
     }
+
+# ── Alias for wallet_profiler.py compatibility ────────────
+def get_wallet_roi(address: str, days: int = 7) -> float | None:
+    """Alias for calc_roi_7d. days param reserved for future use."""
+    return calc_roi_7d(address)
