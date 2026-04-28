@@ -68,6 +68,8 @@ for _p in _ARCHETYPE_PRIORS:
 
 # ── Feature Vector ────────────────────────────────────────────────────────────
 
+import math
+
 def build_feature_vector(
     anomaly_score: float,
     wash_ratio: float,
@@ -78,27 +80,28 @@ def build_feature_vector(
 ) -> list[float]:
     """
     6-dim normalized feature vector (v2.0 Fix #10).
-    All dims clamped to [0.0,1.0].
+    All dims clamped to [0.0, 1.0].
 
-Dim 0 — anomaly_score   / 100
-    Dim 1 — wash_ratio      / 20       (>20 = max)
-    Dim 2 — cycle_count     / FEATURE_CYCLE_NORM
-    Dim 3 — volume_spike_x  / 20       (>20 = max)
-    Dim 4 — tx_per_minute   / FEATURE_TX_DENSITY_NORM
-    Dim 5 — aave_modifier   normalized (1.0→0.0, 1.5→1.0)
+    Dim 0 — log1p(wash_ratio)          / log1p(20)
+    Dim 1 — cycle_count                / FEATURE_CYCLE_NORM (5)
+    Dim 2 — log1p(volume_spike_x)      / log1p(20)
+    Dim 3 — (aave_modifier - 1.0)      / 0.5
+    Dim 4 — anomaly_score (l1_score)   / 100
+    Dim 5 — tx_per_minute              / FEATURE_TX_DENSITY_NORM (10)
     """
     def clamp(v: float) -> float:
         return max(0.0, min(1.0, v))
 
-    f0 = clamp(anomaly_score / 100.0)
-    f1 = clamp(wash_ratio / 20.0)
-    f2 = clamp(cycle_count / FEATURE_CYCLE_NORM)
-    f3 = clamp(volume_spike_x / 20.0)
-    f4 = clamp(tx_per_minute / FEATURE_TX_DENSITY_NORM)
-    f5 = clamp((aave_modifier - FEATURE_AAVE_NORM_OFFSET) / FEATURE_AAVE_NORM_SCALE)
+    LOG_NORM = math.log1p(20)
+
+    f0 = clamp(math.log1p(wash_ratio)    / LOG_NORM)
+    f1 = clamp(cycle_count               / FEATURE_CYCLE_NORM)
+    f2 = clamp(math.log1p(volume_spike_x)/ LOG_NORM)
+    f3 = clamp((aave_modifier - FEATURE_AAVE_NORM_OFFSET) / FEATURE_AAVE_NORM_SCALE)
+    f4 = clamp(anomaly_score             / 100.0)
+    f5 = clamp(tx_per_minute             / FEATURE_TX_DENSITY_NORM)
 
     return [f0, f1, f2, f3, f4, f5]
-
 
 # ── Cosine Similarity ─────────────────────────────────────────────────────────
 
