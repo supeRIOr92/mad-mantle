@@ -126,7 +126,7 @@ def get_top_wallets(order_by: str = "roi_7d", limit: int = 10) -> list:
             get_client()
             .table("wallet_profile")
             .select("address,roi_7d,wash_ratio,reputation_score,smart_score,agent_type,archetype,risk_label")
-            .order(order_by, desc=True, nulls_first=False)
+            .order(order_by, desc=True)
             .limit(limit)
             .execute()
         )
