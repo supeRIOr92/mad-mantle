@@ -9,6 +9,7 @@ import { Swap as FluxionSwapEvent } from "../generated/FluxionPool/FluxionPool";
 import { LBPairCreated as MoePairCreated } from "../generated/MoeLBFactory/MoeLBFactory";
 import { Swap as MoeSwapEvent } from "../generated/MoeLBPair/MoeLBPair";
 import { Swap, Pool, Wallet, VolumeBucket, DailyPoolSnapshot } from "../generated/schema";
+import { AgniPool as AgniPoolTemplate, MoeLBPair as MoeLBPairTemplate } from "../generated/templates";
 
 let ZERO_BD = BigDecimal.fromString("0");
 let ZERO_BI = BigInt.fromI32(0);
@@ -159,6 +160,8 @@ export function handleAgniPoolCreated(event: AgniPoolCreated): void {
     event.params.fee as i32,
     event.block.timestamp
   );
+  // Spawn template to track swaps in this pool
+  AgniPoolTemplate.create(event.params.pool);
 }
 
 export function handleAgniSwap(event: AgniSwapEvent): void {
@@ -223,6 +226,7 @@ export function handleMoePairCreated(event: MoePairCreated): void {
     event.params.binStep.toI32(),
     event.block.timestamp
   );
+  MoeLBPairTemplate.create(event.params.LBPair);
 }
 
 export function handleMoeSwap(event: MoeSwapEvent): void {

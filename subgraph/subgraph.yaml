@@ -28,29 +28,6 @@ dataSources:
         - event: PoolCreated(indexed address,indexed address,indexed uint24,int24,address)
           handler: handleAgniPoolCreated
       file: ./mappings/index.ts
-  # ── Agni Pool (dynamic, created by Factory) ───────────
-  - kind: ethereum/contract
-    name: AgniPool
-    network: mantle
-    source:
-      abi: AgniPool
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - Swap
-        - Pool
-        - Wallet
-        - VolumeBucket
-        - DailyPoolSnapshot
-      abis:
-        - name: AgniPool
-          file: ./abis/AgniPool.json
-      eventHandlers:
-        - event: Swap(indexed address,indexed address,int256,int256,uint160,uint128,int24,uint128,uint128)
-          handler: handleAgniSwap
-      file: ./mappings/index.ts
   # ── Merchant Moe LB Factory ────────────────────────────
   - kind: ethereum
     name: MoeLBFactory
@@ -73,29 +50,6 @@ dataSources:
       eventHandlers:
         - event: LBPairCreated(indexed address,indexed address,indexed uint256,address,uint256)
           handler: handleMoePairCreated
-      file: ./mappings/index.ts
-  # ── Merchant Moe LB Pair (dynamic) ────────────────────
-  - kind: ethereum/contract
-    name: MoeLBPair
-    network: mantle
-    source:
-      abi: MoeLBPair
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - Swap
-        - Pool
-        - Wallet
-        - VolumeBucket
-        - DailyPoolSnapshot
-      abis:
-        - name: MoeLBPair
-          file: ./abis/MoeLBPair.json
-      eventHandlers:
-        - event: Swap(indexed address,indexed address,uint24,bytes32,bytes32,uint24,bytes32,bytes32)
-          handler: handleMoeSwap
       file: ./mappings/index.ts
   # ── Fluxion Pool (static) ─────────────────────────────
   - kind: ethereum
@@ -121,4 +75,51 @@ dataSources:
       eventHandlers:
         - event: Swap(indexed address,indexed address,int256,int256,uint160,uint128,int24)
           handler: handleFluxionSwap
+      file: ./mappings/index.ts
+templates:
+  # ── Agni Pool (dynamic, created by Factory) ───────────
+  - kind: ethereum
+    name: AgniPool
+    network: mantle
+    source:
+      abi: AgniPool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Swap
+        - Pool
+        - Wallet
+        - VolumeBucket
+        - DailyPoolSnapshot
+      abis:
+        - name: AgniPool
+          file: ./abis/AgniPool.json
+      eventHandlers:
+        - event: Swap(indexed address,indexed address,int256,int256,uint160,uint128,int24,uint128,uint128)
+          handler: handleAgniSwap
+      file: ./mappings/index.ts
+  # ── Merchant Moe LB Pair (dynamic) ────────────────────
+  - kind: ethereum
+    name: MoeLBPair
+    network: mantle
+    source:
+      abi: MoeLBPair
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Swap
+        - Pool
+        - Wallet
+        - VolumeBucket
+        - DailyPoolSnapshot
+      abis:
+        - name: MoeLBPair
+          file: ./abis/MoeLBPair.json
+      eventHandlers:
+        - event: Swap(indexed address,indexed address,uint24,bytes32,bytes32,uint24,bytes32,bytes32)
+          handler: handleMoeSwap
       file: ./mappings/index.ts
