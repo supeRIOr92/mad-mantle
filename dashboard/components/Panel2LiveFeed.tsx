@@ -1,112 +1,113 @@
 "use client";
-import { useEffect, useState } from "react";
-import { supabase, type Signal } from "@/lib/supabase";
+import { usePoolScans } from "@/lib/hooks/usePoolScans";
 
-function feedEntry(s: Signal) {
-const isAlert = s.alert_level === "alert" || s.alert_level === "high_conf";
-const isWatching = s.alert_level === "watching";
-const topWallet = s.top_wallets?.[0];
-const isSmartMoney = topWallet?.agent_type === "SMART MONEY";
+function shortAddr(addr: string) {
+return addr.length > 10 ? addr.slice(0, 6) + ".." + addr.slice(-4) : addr;
+}
 
-if (isSmartMoney) {
-return {
-type: "ALPHA",
-cls: "border-cyan-500/40 bg-cyan-500/5",
-badgeCls: "bg-cyan-500/20 text-cyan-400",
-title: "Smart Money · " + s.dex?.toUpperCase(),
-subtitle: `Wallet: ${topWallet?.wallet?.slice(0,6)}.. · $${((s.volume_usd||0)/1000).toFixed(1)}K · Score: ${Math.round(s.s_final)}`,
-action: "MONITOR",
-actionCls: "bg-cyan-500/20 text-cyan-400 border-cyan-500/40",
-};
+function timeAgo(iso: string) {
+const sec = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+if (sec < 60) return `${sec}s ago`;
+if (sec < 3600) return `${Math.floor(sec / 60)}m ago`;
+return `${Math.floor(sec / 3600)}h ago`;
 }
-if (isAlert) {
-const pred = s.top_wallets?.[0]?.prediction;
-return {
-type: "ALERT",
-cls: "border-red-500/40 bg-red-500/5",
-badgeCls: "bg-red-500/20 text-red-400",
-title: `${s.dex?.toUpperCase()} ${s.pool_address?.slice(0,6)}..`,
-subtitle: `Score: ${Math.round(s.s_final)} · Rug: ${pred ? Math.round(pred.rug_prob*100) + "%" : "—"} · Dump: ${pred?.dump_window_min ? pred.dump_window_min+"min" : "—"}`,
-action: "EXIT NOW",
-actionCls: "bg-red-500/20 text-red-400 border-red-500/40",
-};
+
+function scoreColor(score: number) {
+if (score >= 71) return "text-red-400";
+if (score >= 41) return "text-yellow-400";
+return "text-green-400";
 }
-if (isWatching) {
-return {
-type: "WATCH",
-cls: "border-yellow-500/40 bg-yellow-500/5",
-badgeCls: "bg-yellow-500/20 text-yellow-400",
-title: `${s.dex?.toUpperCase()} ${s.pool_address?.slice(0,6)}..`,
-subtitle: `Score: ${Math.round(s.s_final)} · Elevated activity`,
-action: "MONITOR",
-actionCls: "bg-yellow-500/20 text-yellow-400 border-yellow-500/40",
-};
-}
-return {
-type: "CLEAR",
-cls: "border-green-500/40 bg-green-500/5",
-badgeCls: "bg-green-500/20 text-green-400",
-title: "All pools",
-subtitle: "No anomaly detected",
-action: "CLEAR TO TRADE",
-actionCls: "bg-green-500/20 text-green-400 border-green-500/40",
-};
+
+function scoreBadge(level: string) {
+if (level === "alert" || level === "high_conf")
+return { label: "ALERT", cls: "bg-red-500/20 text-red-400 border-red-500/40" };
+if (level === "watching")
+return { label: "WATCH", cls: "bg-yellow-500/20 text-yellow-400 border-yellow-500/40" };
+return { label: "SCAN", cls: "bg-slate-700/40 text-slate-400 border-slate-600" };
 }
 
 export default function Panel2LiveFeed() {
-const [signals, setSignals] = useState<Signal[]>([]);
-const alertCount = signals.filter(s => s.alert_level === "alert" || s.alert_level === "high_conf").length;
+const { scans } = usePoolScans(15);
 
-useEffect(() => {
-supabase
-.from("signal_log")
-.select("*")
-.order("created_at", { ascending: false })
-.limit(10)
-.then(({ data }) => { if (data) setSignals(data); });
+const alertCount = scans.filter(
+(s) => s.alert_level === "alert" || s.alert_level === "high_conf"
+).length;
 
-const channel = supabase
-.channel("panel2-feed")
-.on("postgres_changes", { event: "INSERT", schema: "public", table: "signal_log" },
-(payload) => setSignals((prev) => [payload.new as Signal, ...prev].slice(0, 10))
-)
-.subscribe();
-
-return () => { supabase.removeChannel(channel); };
-}, []);
 return (
 <div className="panel h-full">
 <div className="flex items-center justify-between mb-3">
-<h2 className="text-xs font-bold text-slate-300 uppercase tracking-widest">Live Detection Feed</h2>
-{alertCount > 0 && (
+<h2 className="text-xs font-bold text-slate-300 uppercase tracking-widest">
+Live Detection Feed
+</h2>
+<div className="flex items-center gap-2">
+{alertCount > 0 ? (
 <span className="text-[10px] bg-red-500 text-white px-2 py-0.5 rounded-full font-bold">
 {alertCount} ALERTS
 </span>
+) : (
+<span className="text-[10px] text-slate-600 flex items-center gap-1">
+<span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
+Scanning...
+</span>
+)}
+</div>
+</div>
+
+<div className="space-y-1.5 overflow-y-auto max-h-72">
+{scans.length === 0 ? (
+<div className="text-[11px] text-slate-500 text-center py-8">
+<div className="mb-2">🔍</div>
+Scanning 3 DEXes — no events yet
+</div>
+) : (
+scans.map((s) => {
+const badge = scoreBadge(s.alert_level);
+const topWallet = s.top_wallets?.[0];
+return (
+<div
+key={s.id}
+className={`flex items-center gap-2 px-2 py-1.5 rounded text-[11px] transition-colors ${
+s.alert_level === "alert" || s.alert_level === "high_conf"
+? "bg-red-500/5 border border-red-500/20"
+: s.alert_level === "watching"
+? "bg-yellow-500/5 border border-yellow-500/10"
+: "hover:bg-slate-900/50"
+}`}
+>
+{/* Badge */}
+<span className={`text-[9px] px-1.5 py-0.5 rounded border font-bold shrink-0 ${badge.cls}`}>
+{badge.label}
+</span>
+
+{/* Pool + DEX */}
+<div className="flex-1 min-w-0">
+<span className="text-white font-mono">{shortAddr(s.pool_address)}</span>
+<span className="text-slate-600 ml-1">{s.dex?.toUpperCase()}</span>
+{topWallet?.agent_type === "MANIPULATOR" && (
+<span className="text-red-400 ml-1 text-[9px]">⚠ suspect wallet</span>
 )}
 </div>
 
-<div className="space-y-2 overflow-y-auto max-h-72">
-{signals.length === 0 && (
-<div className="text-xs text-slate-500 text-center py-8">Monitoring...</div>
-)}
-{signals.map((s) => {
-const entry = feedEntry(s);
-return (
-<div key={s.id} className={`p-2.5 rounded border ${entry.cls} flex items-start justify-between gap-2`}>
-<div className="flex-1 min-w-0">
-<div className="flex items-center gap-2 mb-1">
-<span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${entry.badgeCls}`}>{entry.type}</span>
-<span className="text-xs text-white font-medium truncate">{entry.title}</span>
-</div>
-<p className="text-[11px] text-slate-400">{entry.subtitle}</p>
-</div>
-<button className={`text-[10px] px-2 py-1 rounded border font-bold whitespace-nowrap ${entry.actionCls}`}>
-{entry.action}
-</button>
+{/* Score */}
+<span className={`font-bold shrink-0 ${scoreColor(s.s_final)}`}>
+{Math.round(s.s_final)}
+</span>
+
+{/* Time */}
+<span className="text-slate-600 shrink-0 text-[9px]">
+{timeAgo(s.created_at)}
+</span>
 </div>
 );
-})}
+})
+)}
 </div>
+
+<p className="text-[10px] text-slate-600 mt-2">
+{scans.length > 0
+? `${scans.length} events · polling every 5s`
+: "Waiting for first scan cycle..."}
+</p>
 </div>
 );
 }

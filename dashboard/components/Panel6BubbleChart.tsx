@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { ScatterChart, Scatter, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { supabase, type Wallet } from "@/lib/supabase";
+import { useAppState } from "@/lib/app-state";
 
 function bubbleColor(type: string) {
 if (type === "CONFIRMED AGENT" || type === "SMART MONEY") return "#22c55e";
@@ -12,12 +13,14 @@ return "#64748b";
 
 export default function Panel6BubbleChart() {
 const [wallets, setWallets] = useState<Wallet[]>([]);
+const { mode } = useAppState();
 
 useEffect(() => {
 const fetch = () => {
 supabase
 .from("wallet_profile")
 .select("*")
+.eq("environment", mode)
 .not("roi_7d", "is", null)
 .limit(30)
 .then(({ data }) => { if (data) setWallets(data as Wallet[]); });
@@ -32,7 +35,7 @@ const channel = supabase
 .subscribe();
 
 return () => { supabase.removeChannel(channel); };
-}, []);
+}, [mode]);
 
 const data = wallets.map(w => ({
 x: Math.round((w.total_volume_usd || 0) / 1000),

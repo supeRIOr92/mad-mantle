@@ -22,6 +22,7 @@ TOOLS = {
         "params": {
             "limit":       {"type": "int",    "default": 10,   "description": "Max signals to return (1-50)"},
             "alert_level": {"type": "string", "default": None, "description": "Filter: watching | alert | high_conf"},
+            "environment": {"type": "string", "default": "live","description": "Filter: live | demo"},
         },
     },
     "get_wallet_profile": {
@@ -72,9 +73,9 @@ TOOLS = {
 def _handle_get_recent_signals(params: dict) -> dict:
     limit = min(int(params.get("limit", 10)), 50)
     alert_level = params.get("alert_level")
-    signals = get_recent_signals(limit=limit, alert_level=alert_level)
+    environment = params.get("environment", "live")
+    signals = get_recent_signals(limit=limit, alert_level=alert_level, environment=environment)
     return {"count": len(signals), "signals": signals}
-
 
 def _handle_get_wallet_profile(params: dict) -> dict:
     address = params.get("address", "").lower()

@@ -1,0 +1,187 @@
+2026-04-28 13:59:00 | INFO     | mad.main — RealClaw starting up...
+2026-04-28 13:59:00 | INFO     | mad.main — Subgraph URL: ✅ SET
+2026-04-28 13:59:00 | INFO     | mad.main — Telegram Bot: ✅ SET
+2026-04-28 13:59:00 | INFO     | mad.main — Start time: 2026-04-28 06:59:00 UTC
+2026-04-28 13:59:02 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-04-28 13:59:02 | INFO     | database — [db] Supabase connection OK
+2026-04-28 13:59:02 | INFO     | mad.main — [main] Starting all services...
+2026-04-28 13:59:02 | INFO     | mad.main — [main] Alerter ready (direct httpx mode) ✅
+2026-04-28 13:59:02 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-04-28 13:59:02 | INFO     | database — [db] Supabase connection OK
+2026-04-28 13:59:02 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-28 13:59:02 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-28 13:59:02 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-28 13:59:02 | INFO     | scheduler — [scheduler] Jobs registered — scan=15min | digest=00:08 UTC | agent_refresh=1h
+2026-04-28 13:59:02 | INFO     | apscheduler.scheduler — Added job "RealClaw Main Scan" to job store "default"
+2026-04-28 13:59:02 | INFO     | apscheduler.scheduler — Added job "RealClaw Hourly Digest" to job store "default"
+2026-04-28 13:59:02 | INFO     | apscheduler.scheduler — Added job "ERC-8004 Agent Map Refresh" to job store "default"
+2026-04-28 13:59:02 | INFO     | apscheduler.scheduler — Scheduler started
+2026-04-28 13:59:02 | INFO     | scheduler — [scheduler] Scheduler started ✅
+2026-04-28 13:59:02 | INFO     | mad.main — [main] Running initial scan...
+2026-04-28 13:59:02 | INFO     | scheduler — [scheduler] Scan #1 started — normal — 06:59:02 UTC
+2026-04-28 14:00:43 | INFO     | data_sources.agents — [agents] Fetched 0 agents (scanned 1–92)
+2026-04-28 14:00:43 | INFO     | scheduler — [scheduler] Agent map refreshed — 0 agents
+2026-04-28 14:00:47 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-28 14:14:02 | INFO     | apscheduler.executors.default — Running job "RealClaw Main Scan (trigger: interval[0:15:00], next run at: 2026-04-28 14:29:02 +07)" (scheduled at 2026-04-28 14:14:02.495270+07:00)
+2026-04-28 14:14:02 | INFO     | scheduler — [scheduler] Scan #2 started — normal — 07:14:02 UTC
+2026-04-28 14:14:07 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-28 14:14:07 | INFO     | apscheduler.executors.default — Job "RealClaw Main Scan (trigger: interval[0:15:00], next run at: 2026-04-28 14:29:02 +07)" executed successfully
+2026-04-28 14:29:02 | INFO     | apscheduler.executors.default — Running job "RealClaw Main Scan (trigger: interval[0:15:00], next run at: 2026-04-28 14:44:02 +07)" (scheduled at 2026-04-28 14:29:02.495270+07:00)
+2026-04-28 14:29:02 | INFO     | scheduler — [scheduler] Scan #3 started — normal — 07:29:02 UTC
+2026-04-28 14:29:11 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-28 14:29:11 | INFO     | apscheduler.executors.default — Job "RealClaw Main Scan (trigger: interval[0:15:00], next run at: 2026-04-28 14:44:02 +07)" executed successfully
+2026-04-28 14:33:59 | INFO     | mad.main — [main] Received signal 2 — shutting down...
+2026-04-28 14:33:59 | INFO     | mad.main — [main] Stopping scheduler...
+2026-04-28 14:33:59 | INFO     | apscheduler.scheduler — Scheduler has been shut down
+2026-04-28 14:33:59 | INFO     | mad.main — [main] RealClaw shutdown complete.
+2026-04-28 14:35:20 | INFO     | mad.main — RealClaw starting up...
+2026-04-28 14:35:20 | INFO     | mad.main — Subgraph URL: ✅ SET
+2026-04-28 14:35:20 | INFO     | mad.main — Telegram Bot: ✅ SET
+2026-04-28 14:35:20 | INFO     | mad.main — Start time: 2026-04-28 07:35:20 UTC
+2026-04-28 14:35:21 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-04-28 14:35:21 | INFO     | database — [db] Supabase connection OK
+2026-04-28 14:35:21 | INFO     | mad.main — [main] Starting all services...
+2026-04-28 14:35:21 | INFO     | mad.main — [main] Alerter ready (direct httpx mode) ✅
+2026-04-28 14:35:22 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-04-28 14:35:22 | INFO     | database — [db] Supabase connection OK
+2026-04-28 14:35:22 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-28 14:35:22 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-28 14:35:22 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-28 14:35:22 | INFO     | scheduler — [scheduler] Jobs registered — scan=15min | digest=00:08 UTC | agent_refresh=1h
+2026-04-28 14:35:22 | INFO     | apscheduler.scheduler — Added job "AMD Main Scan" to job store "default"
+2026-04-28 14:35:22 | INFO     | apscheduler.scheduler — Added job "MAD Hourly Digest" to job store "default"
+2026-04-28 14:35:22 | INFO     | apscheduler.scheduler — Added job "ERC-8004 Agent Map Refresh" to job store "default"
+2026-04-28 14:35:22 | INFO     | apscheduler.scheduler — Scheduler started
+2026-04-28 14:35:22 | INFO     | scheduler — [scheduler] Scheduler started ✅
+2026-04-28 14:35:22 | INFO     | mad.main — [main] Running initial scan...
+2026-04-28 14:35:22 | INFO     | scheduler — [scheduler] Scan #1 started — normal — 07:35:22 UTC
+2026-04-28 14:37:32 | INFO     | data_sources.agents — [agents] Fetched 0 agents (scanned 0–91)
+2026-04-28 14:37:32 | INFO     | scheduler — [scheduler] Agent map refreshed — 0 agents
+2026-04-28 14:37:36 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-28 14:41:42 | INFO     | mad.main — [main] Received signal 2 — shutting down...
+2026-04-28 14:41:42 | INFO     | mad.main — [main] Stopping scheduler...
+2026-04-28 14:41:42 | INFO     | apscheduler.scheduler — Scheduler has been shut down
+2026-04-28 14:41:42 | INFO     | mad.main — [main] RealClaw shutdown complete.
+2026-04-28 14:43:28 | INFO     | mad.main — RealClaw starting up...
+2026-04-28 14:43:28 | INFO     | mad.main — Subgraph URL: ✅ SET
+2026-04-28 14:43:28 | INFO     | mad.main — Telegram Bot: ✅ SET
+2026-04-28 14:43:28 | INFO     | mad.main — Start time: 2026-04-28 07:43:28 UTC
+2026-04-28 14:43:29 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-04-28 14:43:29 | INFO     | database — [db] Supabase connection OK
+2026-04-28 14:43:29 | INFO     | mad.main — [main] Starting all services...
+2026-04-28 14:43:29 | INFO     | mad.main — [main] Alerter ready (direct httpx mode) ✅
+2026-04-28 14:43:29 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-04-28 14:43:29 | INFO     | database — [db] Supabase connection OK
+2026-04-28 14:43:29 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-28 14:43:29 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-28 14:43:29 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-28 14:43:29 | INFO     | scheduler — [scheduler] Jobs registered — scan=15min | digest=00:08 UTC | agent_refresh=1h
+2026-04-28 14:43:29 | INFO     | apscheduler.scheduler — Added job "AMD Main Scan" to job store "default"
+2026-04-28 14:43:29 | INFO     | apscheduler.scheduler — Added job "MAD Hourly Digest" to job store "default"
+2026-04-28 14:43:29 | INFO     | apscheduler.scheduler — Added job "ERC-8004 Agent Map Refresh" to job store "default"
+2026-04-28 14:43:29 | INFO     | apscheduler.scheduler — Scheduler started
+2026-04-28 14:43:29 | INFO     | scheduler — [scheduler] Scheduler started ✅
+2026-04-28 14:43:29 | INFO     | mad.main — [main] Running initial scan...
+2026-04-28 14:43:29 | INFO     | scheduler — [scheduler] Scan #1 started — normal — 07:43:29 UTC
+2026-04-28 14:46:13 | INFO     | data_sources.agents — [agents] Fetched 92 agents (scanned 0–101)
+2026-04-28 14:46:13 | INFO     | scheduler — [scheduler] Agent map refreshed — 4 agents
+2026-04-28 14:46:17 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-28 14:58:30 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-28 15:13:29 +07)" (scheduled at 2026-04-28 14:58:29.970896+07:00)
+2026-04-28 14:58:30 | INFO     | scheduler — [scheduler] Scan #2 started — normal — 07:58:30 UTC
+2026-04-28 14:58:35 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-28 14:58:35 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-28 15:13:29 +07)" executed successfully
+2026-04-28 15:00:00 | INFO     | apscheduler.executors.default — Running job "MAD Hourly Digest (trigger: cron[hour='8', minute='0'], next run at: 2026-04-29 08:00:00 UTC)" (scheduled at 2026-04-28 08:00:00+00:00)
+2026-04-28 15:00:00 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id%2Calert_level%2Cs_final%2Cvolume_usd%2Cpool_address%2Cdex&created_at=gte.2026-04-28 "HTTP/2 200 OK"
+2026-04-28 15:00:01 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/wallet_profile?select=address%2Croi_7d%2Cwash_ratio%2Creputation_score%2Csmart_score%2Cagent_type%2Carchetype%2Crisk_label&order=roi_7d.desc&limit=5 "HTTP/2 200 OK"
+2026-04-28 15:00:03 | INFO     | httpx — HTTP Request: POST https://api.telegram.org/bot8234884866:AAG79CIbcAAmrTufmkPWKWRxbgKwH9BmWWU/sendMessage "HTTP/1.1 200 OK"
+2026-04-28 15:00:03 | INFO     | alerter — [alerter] Message sent — attempt 1
+2026-04-28 15:00:03 | INFO     | alerter — [alerter] DAILY_DIGEST sent
+2026-04-28 15:00:03 | INFO     | apscheduler.executors.default — Job "MAD Hourly Digest (trigger: cron[hour='8', minute='0'], next run at: 2026-04-29 08:00:00 UTC)" executed successfully
+2026-04-28 15:13:30 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-28 15:28:29 +07)" (scheduled at 2026-04-28 15:13:29.970896+07:00)
+2026-04-28 15:13:30 | INFO     | scheduler — [scheduler] Scan #3 started — normal — 08:13:30 UTC
+2026-04-28 15:13:35 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-28 15:13:35 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-28 15:28:29 +07)" executed successfully
+2026-04-28 15:28:29 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-28 15:43:29 +07)" (scheduled at 2026-04-28 15:28:29.970896+07:00)
+2026-04-28 15:28:30 | INFO     | scheduler — [scheduler] Scan #4 started — normal — 08:28:30 UTC
+2026-04-28 15:28:35 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-28 15:28:35 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-28 15:43:29 +07)" executed successfully
+2026-04-28 15:43:30 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-28 15:58:29 +07)" (scheduled at 2026-04-28 15:43:29.970896+07:00)
+2026-04-28 15:43:30 | INFO     | scheduler — [scheduler] Scan #5 started — normal — 08:43:30 UTC
+2026-04-28 15:43:30 | INFO     | apscheduler.executors.default — Running job "ERC-8004 Agent Map Refresh (trigger: interval[1:00:00], next run at: 2026-04-28 16:43:29 +07)" (scheduled at 2026-04-28 15:43:29.971902+07:00)
+2026-04-28 15:43:39 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-28 15:43:39 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-28 15:58:29 +07)" executed successfully
+2026-04-28 15:45:18 | INFO     | data_sources.agents — [agents] Fetched 92 agents (scanned 0–101)
+2026-04-28 15:45:18 | INFO     | scheduler — [scheduler] Agent map refreshed — 4 agents
+2026-04-28 15:45:18 | INFO     | apscheduler.executors.default — Job "ERC-8004 Agent Map Refresh (trigger: interval[1:00:00], next run at: 2026-04-28 16:43:29 +07)" executed successfully
+2026-04-28 15:58:30 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-28 16:13:29 +07)" (scheduled at 2026-04-28 15:58:29.970896+07:00)
+2026-04-28 15:58:30 | INFO     | scheduler — [scheduler] Scan #6 started — normal — 08:58:30 UTC
+2026-04-28 15:58:37 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-28 15:58:37 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-28 16:13:29 +07)" executed successfully
+2026-04-28 16:13:30 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-28 16:28:29 +07)" (scheduled at 2026-04-28 16:13:29.970896+07:00)
+2026-04-28 16:13:30 | INFO     | scheduler — [scheduler] Scan #7 started — normal — 09:13:30 UTC
+2026-04-28 16:13:35 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-28 16:13:35 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-28 16:28:29 +07)" executed successfully
+2026-04-28 16:28:30 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-28 16:43:29 +07)" (scheduled at 2026-04-28 16:28:29.970896+07:00)
+2026-04-28 16:28:30 | INFO     | scheduler — [scheduler] Scan #8 started — normal — 09:28:30 UTC
+2026-04-28 16:28:36 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-28 16:28:36 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-28 16:43:29 +07)" executed successfully
+2026-04-29 10:23:24 | INFO     | mad.main — RealClaw starting up...
+2026-04-29 10:23:24 | INFO     | mad.main — Subgraph URL: ✅ SET
+2026-04-29 10:23:24 | INFO     | mad.main — Telegram Bot: ✅ SET
+2026-04-29 10:23:24 | INFO     | mad.main — Start time: 2026-04-29 03:23:24 UTC
+2026-04-29 10:23:26 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-04-29 10:23:26 | INFO     | database — [db] Supabase connection OK
+2026-04-29 10:23:26 | INFO     | mad.main — [main] Starting all services...
+2026-04-29 10:23:26 | INFO     | mad.main — [main] Alerter ready (direct httpx mode) ✅
+2026-04-29 10:23:26 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-04-29 10:23:26 | INFO     | database — [db] Supabase connection OK
+2026-04-29 10:23:26 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-29 10:23:26 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-29 10:23:26 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-29 10:23:26 | INFO     | scheduler — [scheduler] Jobs registered — scan=15min | digest=00:08 UTC | agent_refresh=1h
+2026-04-29 10:23:26 | INFO     | apscheduler.scheduler — Added job "AMD Main Scan" to job store "default"
+2026-04-29 10:23:26 | INFO     | apscheduler.scheduler — Added job "MAD Hourly Digest" to job store "default"
+2026-04-29 10:23:26 | INFO     | apscheduler.scheduler — Added job "ERC-8004 Agent Map Refresh" to job store "default"
+2026-04-29 10:23:26 | INFO     | apscheduler.scheduler — Scheduler started
+2026-04-29 10:23:26 | INFO     | scheduler — [scheduler] Scheduler started ✅
+2026-04-29 10:23:26 | INFO     | mad.main — [main] Running initial scan...
+2026-04-29 10:23:26 | INFO     | scheduler — [scheduler] Scan #1 started — normal — 03:23:26 UTC
+2026-04-29 10:24:37 | INFO     | data_sources.agents — [agents] Fetched 92 agents (scanned 0–101)
+2026-04-29 10:24:37 | INFO     | scheduler — [scheduler] Agent map refreshed — 4 agents
+2026-04-29 10:25:08 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-29 10:38:26 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-29 10:53:26 +07)" (scheduled at 2026-04-29 10:38:26.722898+07:00)
+2026-04-29 10:38:26 | INFO     | scheduler — [scheduler] Scan #2 started — normal — 03:38:26 UTC
+2026-04-29 10:39:03 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-29 10:39:03 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-29 10:53:26 +07)" executed successfully
+2026-04-29 10:53:26 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-29 11:08:26 +07)" (scheduled at 2026-04-29 10:53:26.722898+07:00)
+2026-04-29 10:53:26 | INFO     | scheduler — [scheduler] Scan #3 started — normal — 03:53:26 UTC
+2026-04-29 10:53:58 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-29 10:53:58 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-29 11:08:26 +07)" executed successfully
+2026-04-29 11:08:26 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-29 11:23:26 +07)" (scheduled at 2026-04-29 11:08:26.722898+07:00)
+2026-04-29 11:08:26 | INFO     | scheduler — [scheduler] Scan #4 started — normal — 04:08:26 UTC
+2026-04-29 11:08:57 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-29 11:08:57 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-29 11:23:26 +07)" executed successfully
+2026-04-29 11:23:26 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-29 11:38:26 +07)" (scheduled at 2026-04-29 11:23:26.722898+07:00)
+2026-04-29 11:23:26 | INFO     | scheduler — [scheduler] Scan #5 started — normal — 04:23:26 UTC
+2026-04-29 11:23:26 | INFO     | apscheduler.executors.default — Running job "ERC-8004 Agent Map Refresh (trigger: interval[1:00:00], next run at: 2026-04-29 12:23:26 +07)" (scheduled at 2026-04-29 11:23:26.723901+07:00)
+2026-04-29 11:23:56 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-29 11:23:56 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-29 11:38:26 +07)" executed successfully
+2026-04-29 11:25:39 | INFO     | data_sources.agents — [agents] Fetched 92 agents (scanned 0–101)
+2026-04-29 11:25:39 | INFO     | scheduler — [scheduler] Agent map refreshed — 4 agents
+2026-04-29 11:25:39 | INFO     | apscheduler.executors.default — Job "ERC-8004 Agent Map Refresh (trigger: interval[1:00:00], next run at: 2026-04-29 12:23:26 +07)" executed successfully
+2026-04-29 11:38:26 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-29 11:53:26 +07)" (scheduled at 2026-04-29 11:38:26.722898+07:00)
+2026-04-29 11:38:26 | INFO     | scheduler — [scheduler] Scan #6 started — normal — 04:38:26 UTC
+2026-04-29 11:38:53 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-29 11:38:53 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-29 11:53:26 +07)" executed successfully
+2026-04-29 11:53:26 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-29 12:08:26 +07)" (scheduled at 2026-04-29 11:53:26.722898+07:00)
+2026-04-29 11:53:26 | INFO     | scheduler — [scheduler] Scan #7 started — normal — 04:53:26 UTC
+2026-04-29 11:54:00 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-29 11:54:00 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-29 12:08:26 +07)" executed successfully
+2026-04-29 12:08:26 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-29 12:23:26 +07)" (scheduled at 2026-04-29 12:08:26.722898+07:00)
+2026-04-29 12:08:26 | INFO     | scheduler — [scheduler] Scan #8 started — normal — 05:08:26 UTC
+2026-04-29 12:08:54 | INFO     | scheduler — [scheduler] Scan complete — no data
+2026-04-29 12:08:54 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-04-29 12:23:26 +07)" executed successfully
+2026-04-29 12:09:23 | INFO     | mad.main — [main] Received signal 2 — shutting down...
+2026-04-29 12:09:23 | INFO     | mad.main — [main] Stopping scheduler...
+2026-04-29 12:09:23 | INFO     | apscheduler.scheduler — Scheduler has been shut down
+2026-04-29 12:09:23 | INFO     | mad.main — [main] RealClaw shutdown complete.

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { AreaChart, Area, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine, ComposedChart } from "recharts";
 import { supabase, type Signal } from "@/lib/supabase";
+import { useAppState } from "@/lib/app-state";
 
 function bollinger(data: number[], period = 20, sigma = 2) {
 return data.map((_, i) => {
@@ -14,11 +15,13 @@ return { sma: mean, upper: mean + sigma * std, lower: mean - sigma * std };
 
 export default function Panel7VolumeChart() {
 const [signals, setSignals] = useState<Signal[]>([]);
+const { mode } = useAppState();
 
 useEffect(() => {
 supabase
 .from("signal_log")
 .select("created_at,volume_usd,s_final,alert_level,pool_address,dex")
+.eq("environment", mode)
 .order("created_at", { ascending: true })
 .limit(48)
 .then(({ data }) => { if (data) setSignals(data as Signal[]); });
@@ -31,7 +34,7 @@ const channel = supabase
 .subscribe();
 
 return () => { supabase.removeChannel(channel); };
-}, []);
+}, [mode]);
 
 const vols = signals.map(s => (s.volume_usd || 0) / 1000);
 const bands = bollinger(vols);

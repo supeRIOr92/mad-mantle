@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { supabase, type Signal } from "@/lib/supabase";
+import { useAppState } from "@/lib/app-state";
 
 function calcAccuracy(signals: Signal[]) {
 const total = signals.length;
@@ -27,6 +28,7 @@ l3events: withL3,
 
 export default function Panel3Accuracy() {
 const [signals, setSignals] = useState<Signal[]>([]);
+const { mode } = useAppState();
 
 useEffect(() => {
 const since = new Date(Date.now() - 30 * 86400 * 1000).toISOString();
@@ -34,6 +36,7 @@ supabase
 .from("signal_log")
 .select("*")
 .gte("created_at", since)
+.eq("environment", "live")
 .then(({ data }) => { if (data) setSignals(data); });
 
 const channel = supabase
@@ -93,7 +96,11 @@ return (
 ))}
 </tbody>
 </table>
-
+{mode === "demo" && (
+<p className="text-[10px] text-amber-500/70 mt-2">
+⚠️ Accuracy stats reflect live data only
+</p>
+)}
 <p className="text-[10px] text-slate-600 mt-3">
 Confidence grows with data accumulation — stated explicitly in all alerts
 </p>

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { supabase, type Signal } from "@/lib/supabase";
+import { useAppState } from "@/lib/app-state";
 
 function scoreColor(level: string) {
 if (level === "high_conf" || level === "alert") return "text-red-400";
@@ -26,7 +27,8 @@ return addr.length > 12 ? addr.slice(0, 6) + ".." + addr.slice(-4) : addr;
 }
 
 export default function Panel1LiveScores() {
-const [signals, setSignals] = useState<Signal[]>([]);
+const [signals, setSignals] = useState <Signal[]>([]);
+const { mode } = useAppState();
 
 useEffect(() => {
 // Initial fetch — latest per pool
@@ -34,6 +36,7 @@ supabase
 .from("signal_log")
 .select("*")
 .order("created_at", { ascending: false })
+.eq("environment", mode)
 .limit(20)
 .then(({ data }) => {
 if (!data) return;
@@ -61,7 +64,7 @@ return updated.slice(0, 8);
 .subscribe();
 
 return () => { supabase.removeChannel(channel); };
-}, []);
+}, [mode]);
 return (
 <div className="panel h-full">
 <div className="flex items-center justify-between mb-3">

@@ -26,6 +26,8 @@ top_wallets: any[];
 volume_usd: number;
 corroboration: number;
 phase1_active: boolean;
+environment: "live" | "demo";
+is_simulated: boolean;
 };
 
 export type Wallet = {
@@ -43,4 +45,6 @@ total_volume_usd: number;
 tx_count: number;
 risk_label: string;
 agent_token_id: string | null;
+environment: "live" | "demo";
+is_simulated: boolean;
 };

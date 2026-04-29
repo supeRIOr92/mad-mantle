@@ -13,6 +13,8 @@ import httpx
 from config import (
     TELEGRAM_BOT_TOKEN,
     TELEGRAM_CHANNEL_ID,
+    DEMO_MODE,
+    TELEGRAM_DEMO_CHANNEL_ID,
     THRESHOLD_ALERT,
     THRESHOLD_HIGH_CONF,
     THRESHOLD_WATCHING,
@@ -32,9 +34,17 @@ _RATE_LIMIT_SEC = 3.0
 async def _rate_limited_send(payload: dict) -> bool:
     global _last_sent_ts
 
-    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHANNEL_ID:
-        logger.warning("[alerter] TELEGRAM_BOT_TOKEN or TELEGRAM_CHANNEL_ID not set — skip")
+    channel_id = (
+        TELEGRAM_DEMO_CHANNEL_ID
+        if DEMO_MODE and TELEGRAM_DEMO_CHANNEL_ID
+        else TELEGRAM_CHANNEL_ID
+    )
+
+    if not TELEGRAM_BOT_TOKEN or not channel_id:
+        logger.warning("[alerter] TELEGRAM_BOT_TOKEN or channel_id not set — skip")
         return False
+
+    payload = {**payload, "chat_id": channel_id}
 
     elapsed = time.time() - _last_sent_ts
     if elapsed < _RATE_LIMIT_SEC:
@@ -369,6 +379,9 @@ async def broadcast_signal(signal: dict, verbose: bool = False) -> bool:
             tx_hashes  = tx_hashes or None,
         )
 
+    if DEMO_MODE:
+        text = "[DEMO ALERT] ⚠️\n" + text
+
     payload = {
         "chat_id":                  TELEGRAM_CHANNEL_ID,
         "text":                     text,
@@ -419,6 +432,10 @@ async def broadcast_digest(
     phase1_active: bool = False,
     start_date: str = "",
 ) -> bool:
+    if DEMO_MODE:
+        logger.info("[alerter] Demo mode — digest skipped")
+        return False
+
     if scan_count == 0:
         try:
             from database import get_digest_stats

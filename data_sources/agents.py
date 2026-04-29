@@ -30,6 +30,13 @@ IDENTITY_ABI = [
         "stateMutability": "view",
         "type": "function",
     },
+    {
+        "inputs": [],
+        "name": "totalSupply",
+        "outputs": [{"name": "", "type": "uint256"}],
+        "stateMutability": "view",
+        "type": "function",
+    },
 ]
 
 REPUTATION_ABI = [
@@ -89,11 +96,10 @@ def fetch_agent_reputation(token_id: int) -> float | None:
         logger.error(f"[agents] getReputation({token_id}) failed: {e}")
         return None
 
-
 def fetch_all_agents(max_id: int = None) -> list[dict]:
     """
-    Scan all known agent token IDs and return owner + reputation.
-    Uses AGENT_COUNT_MANTLE as upper bound if max_id not provided.
+    Scan agent token IDs starting from 0.
+    Stop after 10 consecutive missing tokens.
     """
     max_id = max_id or AGENT_COUNT_MANTLE
     w3 = get_web3()
@@ -101,23 +107,38 @@ def fetch_all_agents(max_id: int = None) -> list[dict]:
     reputation = get_reputation_contract(w3)
 
     agents = []
-    for token_id in range(1, max_id + 1):
+    consecutive_errors = 0
+    MAX_CONSECUTIVE = 10
+
+    for token_id in range(0, max_id + MAX_CONSECUTIVE):
         try:
             owner = identity.functions.ownerOf(token_id).call().lower()
-            score = float(reputation.functions.getReputation(token_id).call())
+            consecutive_errors = 0  # reset on success
+
+            try:
+                score = float(reputation.functions.getReputation(token_id).call())
+            except Exception:
+                score = 50.0  # default neutral score
+
+            try:
+                uri = identity.functions.tokenURI(token_id).call()
+            except Exception:
+                uri = ""
+
             agents.append({
-                "token_id": str(token_id),
-                "owner_address": owner,
+                "token_id":         str(token_id),
+                "owner_address":    owner,
                 "reputation_score": score,
-                "is_high_risk": score < ERC8004_HIGH_RISK_THRESHOLD,
+                "is_high_risk":     score < ERC8004_HIGH_RISK_THRESHOLD,
+                "token_uri":        uri,
             })
         except Exception:
-            # Token may not exist yet — skip silently
-            continue
+            consecutive_errors += 1
+            if consecutive_errors >= MAX_CONSECUTIVE:
+                break
 
-    logger.info(f"[agents] Fetched {len(agents)} agents (scanned 1–{max_id})")
+    logger.info(f"[agents] Fetched {len(agents)} agents (scanned 0–{token_id})")
     return agents
-
 
 def build_agent_map(agents: list[dict]) -> dict:
     """

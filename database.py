@@ -49,7 +49,10 @@ def log_signal(
     s_dex: float,
     s_final: float,
     alert_level: str,
+    environment: str = "live",
+    is_simulated: bool = False,
     **kwargs,
+
 ) -> Optional[int]:
     """Insert a new signal. Returns inserted row id."""
     try:
@@ -63,6 +66,8 @@ def log_signal(
             "s_dex":         round(s_dex, 2),
             "s_final":       round(s_final, 2),
             "alert_level":   alert_level,
+            "environment":   environment,
+            "is_simulated":  is_simulated,
             "l1_methods":    kwargs.get("l1_methods", []),
             "l2_methods":    kwargs.get("l2_methods", []),
             "l3_methods":    kwargs.get("l3_methods", []),
@@ -81,10 +86,10 @@ def log_signal(
         return None
 
 
-def get_recent_signals(limit: int = 50, alert_level: Optional[str] = None) -> list:
+def get_recent_signals(limit: int = 50, alert_level: Optional[str] = None, environment: str = "live") -> list:
     """Fetch recent signals, optionally filtered by alert_level."""
     try:
-        q = get_client().table("signal_log").select("*").order("created_at", desc=True).limit(limit)
+        q = get_client().table("signal_log").select("*").order("created_at", desc=True).limit(limit).eq("environment", environment)
         if alert_level:
             q = q.eq("alert_level", alert_level)
         res = q.execute()
@@ -150,10 +155,10 @@ def get_digest_stats() -> dict:
             client.table("signal_log")
             .select("id,alert_level,s_final,volume_usd,pool_address,dex")
             .gte("created_at", today)
+            .eq("environment", "live")
             .execute()
         )
         signals = signals_res.data or []
-
         scan_count     = len(signals)
         alert_count    = sum(1 for s in signals if s["alert_level"] in ("alert", "high_conf"))
         watching_count = sum(1 for s in signals if s["alert_level"] == "watching")
@@ -254,3 +259,4 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     init_db()
     print("✅ Supabase connection verified")
+

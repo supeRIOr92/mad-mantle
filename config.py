@@ -121,3 +121,7 @@ DEX_WEIGHTS = {
 # ── Chain ─────────────────────────────────────────────
 MANTLE_CHAIN_ID = 5000
 AGENT_COUNT_MANTLE = 92
+
+# ── Demo Mode ─────────────────────────────────────────
+DEMO_MODE = os.getenv("APP_MODE", "live") == "demo"
+TELEGRAM_DEMO_CHANNEL_ID = os.getenv("TELEGRAM_DEMO_CHANNEL_ID", "")
