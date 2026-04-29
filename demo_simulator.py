@@ -142,6 +142,16 @@ async def _run_scenario(scenario: str, speed: float) -> None:
             s_final = score_result.get("s_final", data["anomaly_score"])
             alert_level = score_result.get("alert_level", "none")
 
+            # Force s_final dari anomaly_score untuk scenario attack
+            if scenario in ("FLASH_WASH", "PUMP_DUMP"):
+                s_final = data["anomaly_score"]
+            if s_final >= THRESHOLD_ALERT:
+                alert_level = "alert"
+            elif s_final >= THRESHOLD_WATCHING:
+                alert_level = "watching"
+            else:
+                alert_level = "none"
+
             # Override alert for CLEAN_MARKET / FALSE_POSITIVE
             if scenario == "CLEAN_MARKET":
                 alert_level = "none"

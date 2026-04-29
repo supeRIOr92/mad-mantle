@@ -185,3 +185,29 @@
 2026-04-29 12:09:23 | INFO     | mad.main — [main] Stopping scheduler...
 2026-04-29 12:09:23 | INFO     | apscheduler.scheduler — Scheduler has been shut down
 2026-04-29 12:09:23 | INFO     | mad.main — [main] RealClaw shutdown complete.
+2026-04-29 15:24:38 | INFO     | mad.main — RealClaw starting up...
+2026-04-29 15:24:38 | INFO     | mad.main — Subgraph URL: ✅ SET
+2026-04-29 15:24:38 | INFO     | mad.main — Telegram Bot: ✅ SET
+2026-04-29 15:24:38 | INFO     | mad.main — Start time: 2026-04-29 08:24:38 UTC
+2026-04-29 15:24:39 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-04-29 15:24:39 | INFO     | database — [db] Supabase connection OK
+2026-04-29 15:24:39 | INFO     | mad.main — [main] Starting all services...
+2026-04-29 15:24:39 | INFO     | mad.main — [main] Alerter ready (direct httpx mode) ✅
+2026-04-29 15:24:40 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-04-29 15:24:40 | INFO     | database — [db] Supabase connection OK
+2026-04-29 15:24:40 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-29 15:24:40 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-29 15:24:40 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-29 15:24:40 | INFO     | scheduler — [scheduler] Jobs registered — scan=15min | digest=00:08 UTC | agent_refresh=1h
+2026-04-29 15:24:40 | INFO     | apscheduler.scheduler — Added job "AMD Main Scan" to job store "default"
+2026-04-29 15:24:40 | INFO     | apscheduler.scheduler — Added job "MAD Hourly Digest" to job store "default"
+2026-04-29 15:24:40 | INFO     | apscheduler.scheduler — Added job "ERC-8004 Agent Map Refresh" to job store "default"
+2026-04-29 15:24:40 | INFO     | apscheduler.scheduler — Scheduler started
+2026-04-29 15:24:40 | INFO     | scheduler — [scheduler] Scheduler started ✅
+2026-04-29 15:24:40 | INFO     | mad.main — [main] Running initial scan...
+2026-04-29 15:24:40 | INFO     | scheduler — [scheduler] Scan #1 started — normal — 08:24:40 UTC
+2026-04-29 15:25:56 | INFO     | mad.main — [main] Received signal 2 — shutting down...
+2026-04-29 15:33:06 | INFO     | data_sources.agents — [agents] Fetched 92 agents (scanned 0–101)
+2026-04-29 15:33:06 | INFO     | scheduler — [scheduler] Agent map refreshed — 4 agents
+2026-04-29 15:33:23 | INFO     | mad.main — [main] Received signal 2 — shutting down...
+2026-04-29 15:33:31 | INFO     | mad.main — [main] Received signal 2 — shutting down...
