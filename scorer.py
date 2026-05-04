@@ -15,6 +15,8 @@ from config import (
     THRESHOLD_PHASE1,
     PHASE1_DAYS,
     L1_MAX, L2_MAX, L3_MAX,
+    AAVE_ALPHA, # v3.0
+    AAVE_HARD_GATE_THRESHOLD, # v3.0
 )
 from database import log_signal
 
@@ -103,6 +105,24 @@ def compute_corroboration(dex_results: list[dict], threshold: float = 40.0) -> i
     flagged = sum(1 for r in dex_results if r.get("s_dex", 0) >= threshold)
     return max(flagged, 1)
 
+# ── Aave Integration (v3.0) ───────────────────────────────
+def apply_aave_signal(s_moe: float, aave_signal: float) -> tuple[float, float]:
+    """
+    Apply Aave signal to risk score with hard gate.
+
+    Hard gate: s_moe < AAVE_HARD_GATE_THRESHOLD → aave_signal_effective = 0
+    Rationale: Aave is a conditional amplifier, not a standalone detector.
+               S_moe < 20 = noise band, Aave is not relevant.
+
+    Formula:
+        risk_score = s_moe * (1 + ALPHA * aave_signal_effective)
+
+    Returns:
+        (risk_score, aave_signal_effective)
+    """
+    aave_signal_effective = aave_signal if s_moe >= AAVE_HARD_GATE_THRESHOLD else 0.0
+    risk_score = s_moe * (1 + AAVE_ALPHA * aave_signal_effective)
+    return round(min(max(risk_score, 0.0), 100.0), 2), round(aave_signal_effective, 4)
 
 # ── Phase 1 Conservative Mode ─────────────────────────────
 
@@ -149,18 +169,25 @@ def get_alert_level(s_final: float, phase1: bool = False) -> str:
     else:
         return "none"
 
-
 # ── Final Score ───────────────────────────────────────────
 
 def compute_final_score(
     dex_results: list[dict],
     ds_volumes: dict[str, float] = None,
     phase1: bool = False,
+    aave_signal: float = 0.0,   # v3.0
+    aave_label: str = "NO_ACTIVITY",  # v3.0
 ) -> dict:
     """
-    Compute weighted S_final from per-DEX S_DEX scores.
+    Compute weighted S_final from per-DEX S_DEX scores,
+    then apply Aave signal amplification (v3.0).
 
-    S_final = Σ (w_dex × S_DEX) × corroboration_modifier
+    Pipeline:
+        1. Dynamic weights from DexScreener vol
+        2. Weighted sum → s_moe (single active DEX)
+        3. Corroboration modifier
+        4. Aave hard gate + amplification
+        5. Clamp → s_final
 
     Returns full scoring breakdown dict.
     """
@@ -171,6 +198,10 @@ def compute_final_score(
             "weights_used": {},
             "corroboration": 1,
             "dex_scores": [],
+            "aave_signal": 0.0,
+            "aave_signal_effective": 0.0,
+            "aave_label": "NO_ACTIVITY",
+            "source_factor": 0.6,
         }
 
     ds_volumes = ds_volumes or {}
@@ -197,24 +228,32 @@ def compute_final_score(
     # Corroboration modifier
     corroboration = compute_corroboration(dex_results)
     modifier = CORROBORATION_MODIFIER.get(corroboration, 0.3)
-    s_final = s_weighted * modifier if corroboration > 1 else s_weighted
+    s_moe = s_weighted * modifier if corroboration > 1 else s_weighted
 
-    # Clamp
-    s_final = min(max(s_final, 0.0), 100.0)
+    # v3.0 — Aave amplification with hard gate
+    s_final, aave_signal_effective = apply_aave_signal(s_moe, aave_signal)
+
+    # Source factor — confidence cap
+    # Moe only → 0.6 | Moe + Aave active → 1.0
+    source_factor = 1.0 if aave_signal > 0.0 else 0.6
 
     alert_level = get_alert_level(s_final, phase1=phase1)
 
     return {
-        "s_final": round(s_final, 2),
-        "s_weighted": round(s_weighted, 2),
+        "s_final": s_final,
+        "s_weighted": round(s_moe, 2),
         "alert_level": alert_level,
         "weights_used": {k: round(v, 4) for k, v in weights.items()},
         "corroboration": corroboration,
         "corroboration_modifier": modifier,
         "dex_scores": dex_scores,
         "phase1_active": phase1,
+        # v3.0
+        "aave_signal": round(aave_signal, 4),
+        "aave_signal_effective": aave_signal_effective,
+        "aave_label": aave_label,
+        "source_factor": source_factor,
     }
-
 
 # ── Persist + Return ──────────────────────────────────────
 
@@ -223,17 +262,22 @@ def score_and_persist(
     tx_hashes: list[str],
     ds_volumes: dict[str, float] = None,
     phase1: bool = False,
+    aave_signal: float = 0.0,        # v3.0
+    aave_label: str = "NO_ACTIVITY", # v3.0
 ) -> dict:
     """
     Compute final score and persist to signal_log.
     Returns full result dict including DB row id.
     """
-    result = compute_final_score(dex_results, ds_volumes, phase1)
+    result = compute_final_score(
+        dex_results, ds_volumes, phase1,
+        aave_signal=aave_signal,
+        aave_label=aave_label,
+    )
 
     if result["alert_level"] == "none":
         return result  # Don't persist non-events
 
-    # Use highest-scoring DEX result for per-layer scores
     best = max(dex_results, key=lambda r: r.get("s_dex", 0))
 
     row_id = log_signal(
@@ -253,13 +297,19 @@ def score_and_persist(
         volume_usd=best.get("volume_usd", 0),
         corroboration=result["corroboration"],
         phase1_active=phase1,
+        # v3.0
+        aave_signal=result["aave_signal"],
+        aave_label=result["aave_label"],
     )
 
     result["db_row_id"] = row_id
+
     logger.info(
-        f"[scorer] Signal persisted — id={row_id} "
-        f"s_final={result['s_final']} level={result['alert_level']} "
-        f"corroboration={result['corroboration']}"
+        "[scorer] Signal persisted — id=%s s_final=%s level=%s "
+        "aave_signal=%.2f aave_effective=%.2f source_factor=%.1f",
+        row_id, result["s_final"], result["alert_level"],
+        result["aave_signal"], result["aave_signal_effective"],
+        result["source_factor"],
     )
 
     return result

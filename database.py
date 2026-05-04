@@ -52,30 +52,32 @@ def log_signal(
     environment: str = "live",
     is_simulated: bool = False,
     **kwargs,
-
 ) -> Optional[int]:
     """Insert a new signal. Returns inserted row id."""
     try:
         row = {
-            "dex":           dex,
-            "pool_address":  pool_address.lower(),
-            "tx_hashes":     tx_hashes,
-            "l1_score":      round(l1_score, 2),
-            "l2_score":      round(l2_score, 2),
-            "l3_score":      round(l3_score, 2),
-            "s_dex":         round(s_dex, 2),
-            "s_final":       round(s_final, 2),
-            "alert_level":   alert_level,
-            "environment":   environment,
-            "is_simulated":  is_simulated,
-            "l1_methods":    kwargs.get("l1_methods", []),
-            "l2_methods":    kwargs.get("l2_methods", []),
-            "l3_methods":    kwargs.get("l3_methods", []),
-            "top_wallets":   kwargs.get("top_wallets", []),
-            "volume_usd":    kwargs.get("volume_usd"),
+            "dex": dex,
+            "pool_address": pool_address.lower(),
+            "tx_hashes": tx_hashes,
+            "l1_score": round(l1_score, 2),
+            "l2_score": round(l2_score, 2),
+            "l3_score": round(l3_score, 2),
+            "s_dex": round(s_dex, 2),
+            "s_final": round(s_final, 2),
+            "alert_level": alert_level,
+            "environment": environment,
+            "is_simulated": is_simulated,
+            "l1_methods": kwargs.get("l1_methods", []),
+            "l2_methods": kwargs.get("l2_methods", []),
+            "l3_methods": kwargs.get("l3_methods", []),
+            "top_wallets": kwargs.get("top_wallets", []),
+            "volume_usd": kwargs.get("volume_usd"),
             "corroboration": kwargs.get("corroboration", 1),
             "phase1_active": bool(kwargs.get("phase1_active", False)),
-            "notes":         kwargs.get("notes"),
+            "notes": kwargs.get("notes"),
+            # v3.0 — Aave context signal (context only, bukan alert trigger)
+            "aave_signal": round(float(kwargs.get("aave_signal", 0.0)), 4),
+            "aave_label": kwargs.get("aave_label", "NO_DATA"),
         }
         res = get_client().table("signal_log").insert(row).execute()
         row_id = res.data[0]["id"] if res.data else None

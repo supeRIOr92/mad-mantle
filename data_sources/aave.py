@@ -321,3 +321,138 @@ def get_wallet_aave_summary(wallet: str) -> dict:
         logger.warning("get_wallet_aave_summary failed for %s: %s", wallet, e)
 
     return result
+
+# ══════════════════════════════════════════════════════════
+# Pool-level Aave signal (independen from per-wallet cache)
+# Single source of truth for scorer.py
+# ══════════════════════════════════════════════════════════
+
+def _signal_label(signal: float) -> str:
+    """Human-readable label dari nilai aave_signal."""
+    if signal >= 1.0:
+        return "FLASH_LOAN_LARGE"
+    elif signal >= 0.7:
+        return "FLASH_LOAN"
+    elif signal >= 0.6:
+        return "BORROW_LARGE"
+    elif signal >= 0.4:
+        return "BORROW_MID"
+    elif signal >= 0.2:
+        return "BORROW_SMALL"
+    else:
+        return "NO_ACTIVITY"
+
+
+def compute_aave_signal(events: list[dict]) -> float:
+    """
+    Graded scoring 0.0–1.0 dari pool-level Aave events.
+    Pakai max() — tidak stacking, ambil signal terkuat.
+
+    Scoring:
+        FLASH_LOAN > $500K → 1.0
+        FLASH_LOAN any     → 0.7
+        BORROW > $1M       → 0.6
+        BORROW > $100K     → 0.4
+        BORROW > $10K      → 0.2
+        No activity        → 0.0
+    """
+    signal = 0.0
+    for e in events:
+        event_type = e.get("type", "")
+        amount_usd = float(e.get("amount_usd", 0))
+
+        if event_type == "FLASH_LOAN":
+            if amount_usd > 500_000:
+                signal = max(signal, 1.0)
+            else:
+                signal = max(signal, 0.7)
+        elif event_type == "BORROW":
+            if amount_usd > 1_000_000:
+                signal = max(signal, 0.6)
+            elif amount_usd > 100_000:
+                signal = max(signal, 0.4)
+            elif amount_usd > 10_000:
+                signal = max(signal, 0.2)
+
+    return round(signal, 4)
+
+
+def fetch_pool_signal(current_block: int) -> dict:
+    """
+    Fetch FlashLoan + Borrow events dari Aave dalam window 50 blocks terakhir.
+    Independen dari per-wallet cache — single source of truth untuk scorer.
+
+    Returns:
+        {
+            "aave_signal": float,  # 0.0–1.0
+            "aave_label": str,     # human-readable
+            "events": list,        # raw events untuk logging/debug
+        }
+    """
+    from config import AAVE_SIGNAL_WINDOW_BLOCKS
+
+    result = {
+        "aave_signal": 0.0,
+        "aave_label": "NO_ACTIVITY",
+        "events": [],
+    }
+
+    try:
+        w3 = _get_w3()
+        pool = _get_pool()
+
+        from_block = max(0, current_block - AAVE_SIGNAL_WINDOW_BLOCKS)
+        to_block = current_block
+        events = []
+
+        # FlashLoan events
+        flash_events = pool.events.FlashLoan.get_logs(
+            fromBlock=from_block,
+            toBlock=to_block,
+        )
+        for ev in flash_events:
+            amount_raw = ev["args"]["amount"]
+            # Amount dalam token decimals — approximate USD via raw amount
+            # Untuk scoring purposes: treat raw amount as proxy
+            # (asset-specific decimals bisa di-refine kalau perlu)
+            amount_usd = amount_raw / 1e6  # assume USDC/USDT 6 decimals as baseline
+            events.append({
+                "type": "FLASH_LOAN",
+                "amount_usd": amount_usd,
+                "block": ev["blockNumber"],
+                "initiator": ev["args"]["initiator"].lower(),
+                "asset": ev["args"]["asset"].lower(),
+            })
+
+        # Borrow events
+        borrow_events = pool.events.Borrow.get_logs(
+            fromBlock=from_block,
+            toBlock=to_block,
+        )
+        for ev in borrow_events:
+            amount_raw = ev["args"]["amount"]
+            amount_usd = amount_raw / 1e6  # same approximation
+            events.append({
+                "type": "BORROW",
+                "amount_usd": amount_usd,
+                "block": ev["blockNumber"],
+                "wallet": ev["args"]["onBehalfOf"].lower(),
+                "asset": ev["args"]["reserve"].lower(),
+            })
+
+        signal = compute_aave_signal(events)
+        label = _signal_label(signal)
+
+        result["aave_signal"] = signal
+        result["aave_label"] = label
+        result["events"] = events
+
+        logger.info(
+            "[aave.fetch_pool_signal] blocks=%d–%d events=%d signal=%.2f label=%s",
+            from_block, to_block, len(events), signal, label,
+        )
+
+    except Exception as e:
+        logger.warning("[aave.fetch_pool_signal] failed: %s", e)
+
+    return result

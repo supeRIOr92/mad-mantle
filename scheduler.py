@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from apscheduler.triggers.cron import CronTrigger
+import database as db
 
 from config import (
     POLL_DEFAULT_MIN,
@@ -18,6 +19,7 @@ from config import (
     SUBGRAPH_URL,
 )
 from data_sources import agni, moe, fluxion
+from data_sources.aave import fetch_pool_signal
 from data_sources.agents import fetch_all_agents, build_agent_map
 from detector import run_detection
 from scorer import score_and_persist, fetch_dexscreener_volumes
@@ -26,6 +28,7 @@ from alerter import broadcast_signal, broadcast_digest
 from database import init_db
 
 logger = logging.getLogger(__name__)
+
 
 # ── State ─────────────────────────────────────────────────
 
@@ -64,6 +67,7 @@ async def discover_pools() -> dict[str, list]:
     Returns { "agni": [...], "moe": [...], "fluxion": [...] }
     """
     loop = asyncio.get_event_loop()
+
     try:
         agni_pools = await loop.run_in_executor(None, agni.fetch_top_pools, 10)
     except Exception as e:
@@ -165,7 +169,6 @@ async def run_scan():
     # Discover pools
     pools = await discover_pools()
     all_results = []
-    all_tx_hashes = []
     all_pool_ids = []
 
     # Scan each pool
@@ -179,10 +182,6 @@ async def run_scan():
             if result:
                 all_results.append(result)
                 all_pool_ids.append(pool_id)
-
-                # Collect tx hashes from result (if available)
-                for m in result.get("l2_methods", []):
-                    pass  # tx hashes come from swaps — future: track per result
 
     if not all_results:
         logger.info("[scheduler] Scan complete — no data")
@@ -199,10 +198,28 @@ async def run_scan():
     except Exception:
         ds_volumes = {}
 
-    # Compute final score
+       # Fetch Aave pool-level signal (v3.0)
+    loop = asyncio.get_event_loop()
+    try:
+        current_block = await loop.run_in_executor(
+            None,
+            lambda: __import__("web3").Web3(
+                __import__("web3").Web3.HTTPProvider(__import__("config").MANTLE_RPC_URL)
+            ).eth.block_number
+        )
+        aave_data = await loop.run_in_executor(None, fetch_pool_signal, current_block)
+    except Exception as e:
+        logger.warning(f"[scheduler] Aave signal fetch failed: {e}")
+        aave_data = {"aave_signal": 0.0, "aave_label": "NO_DATA"}
+
+    # Compute final score (v3.0 — dengan Aave amplification)
     from scorer import compute_final_score, is_phase1
     phase1 = is_phase1(state.start_date)
-    final = compute_final_score(all_results, ds_volumes, phase1=phase1)
+    final = compute_final_score(
+        all_results, ds_volumes, phase1=phase1,
+        aave_signal=aave_data["aave_signal"],
+        aave_label=aave_data["aave_label"],
+    )
     s_final = final["s_final"]
     alert_level = final["alert_level"]
 
@@ -212,18 +229,19 @@ async def run_scan():
         f"pools={len(all_results)}"
     )
 
-    # Profile top wallets (non-blocking, best effort)
+    # Pick best result by s_dex score
     best_result = max(all_results, key=lambda r: r.get("s_dex", 0))
+
+    # Profile top wallets / capital flow flags (non-blocking, best effort)
     if alert_level != "none":
         try:
-            # Capital flow flags
             cap_flags = flag_capital_flows(best_result.get("swaps", []))
             if cap_flags["total_flags"] > 0:
                 logger.info(f"[scheduler] Capital flow flags: {cap_flags['total_flags']}")
         except Exception:
             pass
 
-    # Persist + broadcast
+    # Persist + broadcast only when there's a signal
     if alert_level != "none":
         signal_record = {
             **final,
@@ -243,6 +261,29 @@ async def run_scan():
             "created_at": now.strftime("%Y-%m-%d %H:%M:%S"),
         }
 
+        try:
+            row_id = db.log_signal(
+                dex=signal_record["dex"] or "unknown",
+                pool_address=signal_record["pool_address"] or "",
+                tx_hashes=best_result.get("tx_hashes", []),
+                l1_score=signal_record["l1_score"],
+                l2_score=signal_record["l2_score"],
+                l3_score=signal_record["l3_score"],
+                s_dex=signal_record["s_dex"],
+                s_final=s_final,
+                alert_level=alert_level,
+                l1_methods=signal_record["l1_methods"],
+                l2_methods=signal_record["l2_methods"],
+                l3_methods=signal_record["l3_methods"],
+                top_wallets=signal_record["top_wallets"],
+                volume_usd=signal_record["volume_usd"],
+                corroboration=signal_record["corroboration"],
+                phase1_active=phase1,
+            )
+            logger.info(f"[scheduler] Signal persisted — row_id={row_id}")
+        except Exception as e:
+            logger.error(f"[scheduler] Failed to persist signal: {e}")
+
         verbose = alert_level == "high_conf"
         await broadcast_signal(signal_record, verbose=verbose)
 
@@ -251,6 +292,8 @@ async def run_scan():
 
     state.last_scan_ts = now
 
+
+# ── Watch Mode ────────────────────────────────────────────
 
 def _update_watch_mode(s_final: float, scheduler: AsyncIOScheduler):
     """Auto-escalate/de-escalate watch mode based on S_final."""

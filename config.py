@@ -65,12 +65,17 @@ SCORE_DENOMINATOR = 165
 CORROBORATION_MODIFIER = {1: 1.0, 2: 0.6, 3: 0.3}
 DEXSCREENER_WEIGHT_FLOOR = 0.05
 
-# ── Aave Detection Windows ────────────────────────────
-AAVE_FLASH_LOAN_WINDOW_BLOCKS = 1      # same block only
-AAVE_COLLATERAL_DUMP_WINDOW_MIN = 15   # borrow -> sell collateral < 15 min
-AAVE_OPEN_BORROW_MIN_USD = 10_000      # min borrow to trigger x1.2
-AAVE_OPEN_BORROW_FRESH_MIN = 15        # borrow must be < 15 min old
-AAVE_MODIFIER_CAP = 1.5               # hard cap
+# ── Aave Detection Windows ────────────────────────────────
+AAVE_FLASH_LOAN_WINDOW_BLOCKS = 1 # same block only (per-wallet, legacy)
+AAVE_COLLATERAL_DUMP_WINDOW_MIN = 15
+AAVE_OPEN_BORROW_MIN_USD = 10_000
+AAVE_OPEN_BORROW_FRESH_MIN = 15
+AAVE_MODIFIER_CAP = 1.5
+
+# — Pool-level signal (independen from per-wallet cache)
+AAVE_SIGNAL_WINDOW_BLOCKS = 50 # ~100 detik di Mantle (~2s/block)
+AAVE_ALPHA = 0.3 # fixed, conservative, defensible
+AAVE_HARD_GATE_THRESHOLD = 20.0 # s_moe < 20.0 → aave_signal_effective = 0
 
 # ── Thresholds ────────────────────────────────────────
 THRESHOLD_WATCHING  = 41
