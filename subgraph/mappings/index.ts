@@ -1,7 +1,8 @@
-// mappings/index.ts — MAD unified handler entry point
-// All datasources point here
+// @ts-nocheck
 
-import { BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
+// mappings/index.ts — MAD unified handler entry point
+
+import { BigDecimal, BigInt, Bytes, log } from "@graphprotocol/graph-ts";
 
 import { PoolCreated as AgniPoolCreated } from "../generated/AgniFactory/AgniFactory";
 import { Swap as AgniSwapEvent } from "../generated/AgniPool/AgniPool";
@@ -117,6 +118,7 @@ function updateBucket(
 ): void {
   let bucketStart = timestamp.div(BUCKET_SIZE).times(BUCKET_SIZE);
   let id = poolId + "-" + dex + "-" + bucketStart.toString();
+
   let b = VolumeBucket.load(id);
   if (b == null) {
     b = new VolumeBucket(id);
@@ -127,29 +129,41 @@ function updateBucket(
     b.txCount = ZERO_BI;
     b.uniqueSenders = 0;
   }
+
   b.volumeUSD = b.volumeUSD.plus(amountUSD);
   b.txCount = b.txCount.plus(ONE_BI);
   b.save();
 }
 
-function updateDaily(poolId: string, dex: string, timestamp: BigInt, amountUSD: BigDecimal): void {
+function updateDaily(
+  poolId: string,
+  dex: string,
+  timestamp: BigInt,
+  amountUSD: BigDecimal
+): void {
   let dayStart = timestamp.div(BigInt.fromI32(86400)).times(BigInt.fromI32(86400));
   let dateStr = dayStart.toString();
   let id = poolId + "-" + dex + "-day-" + dateStr;
+
   let s = DailyPoolSnapshot.load(id);
   if (s == null) {
     s = new DailyPoolSnapshot(id);
-    s.pool = poolId; s.dex = dex; s.date = dateStr;
-    s.volumeUSD = ZERO_BD; s.txCount = ZERO_BI;
-    s.highVolumeUSD = ZERO_BD; s.lowVolumeUSD = ZERO_BD;
+    s.pool = poolId;
+    s.dex = dex;
+    s.date = dateStr;
+    s.volumeUSD = ZERO_BD;
+    s.txCount = ZERO_BI;
+    s.highVolumeUSD = ZERO_BD;
+    s.lowVolumeUSD = ZERO_BD;
   }
+
   s.volumeUSD = s.volumeUSD.plus(amountUSD);
   s.txCount = s.txCount.plus(ONE_BI);
   s.save();
 }
 
 
-// ── Agni Finance ───────────────────────────────────────────────────────────
+// ── Agni Finance ──────────────────────────────────────────────────────────────
 
 export function handleAgniPoolCreated(event: AgniPoolCreated): void {
   getOrCreatePool(
@@ -160,13 +174,13 @@ export function handleAgniPoolCreated(event: AgniPoolCreated): void {
     event.params.fee as i32,
     event.block.timestamp
   );
-  // Spawn template to track swaps in this pool
   AgniPoolTemplate.create(event.params.pool);
 }
 
 export function handleAgniSwap(event: AgniSwapEvent): void {
   let poolAddress = event.address.toHexString().toLowerCase();
   let pool = Pool.load(poolAddress);
+
   if (pool == null) {
     log.warning("[MAD] AgniSwap: pool {} not found", [poolAddress]);
     return;
@@ -209,13 +223,14 @@ export function handleAgniSwap(event: AgniSwapEvent): void {
   w.totalVolumeUSD = w.totalVolumeUSD.plus(amountUSD);
   w.txCount = w.txCount.plus(ONE_BI);
   w.save();
-  getOrCreateWallet(recipient, timestamp);
 
+  getOrCreateWallet(recipient, timestamp);
   updateBucket(poolAddress, "agni", timestamp, amountUSD);
   updateDaily(poolAddress, "agni", timestamp, amountUSD);
 }
 
-// ── Merchant Moe LB 2.2 ───────────────────────────────────────────────────
+
+// ── Merchant Moe LB 2.2 ──────────────────────────────────────────────────────
 
 export function handleMoePairCreated(event: MoePairCreated): void {
   getOrCreatePool(
@@ -232,6 +247,7 @@ export function handleMoePairCreated(event: MoePairCreated): void {
 export function handleMoeSwap(event: MoeSwapEvent): void {
   let poolAddress = event.address.toHexString().toLowerCase();
   let pool = Pool.load(poolAddress);
+
   if (pool == null) {
     log.warning("[MAD] MoeSwap: pool {} not found", [poolAddress]);
     return;
@@ -243,6 +259,20 @@ export function handleMoeSwap(event: MoeSwapEvent): void {
   let txHash = event.transaction.hash.toHexString();
   let logIndex = event.logIndex.toI32();
 
+  // Moe LB 2.2 — amountsIn/Out are Bytes32 packed
+  // Big-endian layout: [tokenY: bytes 0-15][tokenX: bytes 16-31]
+  let inBytes = event.params.amountsIn;
+  let outBytes = event.params.amountsOut;
+
+  let amountXIn = BigInt.fromUnsignedBytes(changetype<Bytes>(inBytes.slice(16)));
+  let amountYIn = BigInt.fromUnsignedBytes(changetype<Bytes>(inBytes.slice(0, 16)));
+  let amountXOut = BigInt.fromUnsignedBytes(changetype<Bytes>(outBytes.slice(16)));
+  let amountYOut = BigInt.fromUnsignedBytes(changetype<Bytes>(outBytes.slice(0, 16)));
+
+  let a0 = amountXIn.plus(amountXOut).toBigDecimal();
+  let a1 = amountYIn.plus(amountYOut).toBigDecimal();
+  let amountUSD = resolveAmountUSD(pool.token0, pool.token1, a0, a1);
+
   let swap = new Swap(txHash + "-" + logIndex.toString());
   swap.timestamp = timestamp;
   swap.blockNumber = event.block.number;
@@ -250,33 +280,37 @@ export function handleMoeSwap(event: MoeSwapEvent): void {
   swap.pool = poolAddress;
   swap.sender = sender;
   swap.recipient = recipient;
-  swap.amountUSD = ZERO_BD;
-  swap.amount0 = ZERO_BD;
-  swap.amount1 = ZERO_BD;
+  swap.amountUSD = amountUSD;
+  swap.amount0 = a0.div(SCALE);
+  swap.amount1 = a1.div(SCALE);
   swap.sqrtPriceX96 = null;
   swap.tick = 0;
   swap.txHash = txHash;
   swap.logIndex = logIndex;
   swap.save();
 
+  pool.totalVolumeUSD = pool.totalVolumeUSD.plus(amountUSD);
   pool.txCount = pool.txCount.plus(ONE_BI);
   pool.lastSwapAt = timestamp;
   pool.save();
 
   let w = getOrCreateWallet(sender, timestamp);
+  w.totalVolumeUSD = w.totalVolumeUSD.plus(amountUSD);
   w.txCount = w.txCount.plus(ONE_BI);
   w.save();
-  getOrCreateWallet(recipient, timestamp);
 
-  updateBucket(poolAddress, "moe", timestamp, ZERO_BD);
-  updateDaily(poolAddress, "moe", timestamp, ZERO_BD);
+  getOrCreateWallet(recipient, timestamp);
+  updateBucket(poolAddress, "moe", timestamp, amountUSD);
+  updateDaily(poolAddress, "moe", timestamp, amountUSD);
 }
 
-// ── Fluxion (UniV3 Fork) ───────────────────────────────────────────────────
+
+// ── Fluxion (UniV3 Fork) ──────────────────────────────────────────────────────
 
 export function handleFluxionSwap(event: FluxionSwapEvent): void {
   let poolAddress = event.address.toHexString().toLowerCase();
   let pool = Pool.load(poolAddress);
+
   if (pool == null) {
     pool = new Pool(poolAddress);
     pool.dex = "fluxion";
@@ -329,8 +363,8 @@ export function handleFluxionSwap(event: FluxionSwapEvent): void {
   w.totalVolumeUSD = w.totalVolumeUSD.plus(amountUSD);
   w.txCount = w.txCount.plus(ONE_BI);
   w.save();
-  getOrCreateWallet(recipient, timestamp);
 
+  getOrCreateWallet(recipient, timestamp);
   updateBucket(poolAddress, "fluxion", timestamp, amountUSD);
   updateDaily(poolAddress, "fluxion", timestamp, amountUSD);
 }
