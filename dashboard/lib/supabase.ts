@@ -28,6 +28,9 @@ corroboration: number;
 phase1_active: boolean;
 environment: "live" | "demo";
 is_simulated: boolean;
+// v3.0
+aave_signal: number;
+aave_label: string;
 };
 
 export type Wallet = {
