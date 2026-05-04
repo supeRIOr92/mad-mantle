@@ -132,14 +132,14 @@ def _fetch_recent_events():
         from_block = max(0, latest - 30)
 
         # FlashLoan events
-        flash_events = pool.events.FlashLoan.get_logs(fromBlock=from_block, toBlock=latest)
+        flash_events = pool.events.FlashLoan.get_logs(from_block=from_block, to_block=latest)
         _flash_cache = {}
         for ev in flash_events:
             initiator = ev["args"]["initiator"].lower()
             _flash_cache[initiator] = ev["blockNumber"]
 
         # Borrow events — store latest borrow per wallet
-        borrow_events = pool.events.Borrow.get_logs(fromBlock=from_block, toBlock=latest)
+        borrow_events = pool.events.Borrow.get_logs(from_block=from_block, to_block=latest)
         _borrow_cache = {}
         for ev in borrow_events:
             wallet = ev["args"]["onBehalfOf"].lower()
@@ -407,9 +407,10 @@ def fetch_pool_signal(current_block: int) -> dict:
 
         # FlashLoan events
         flash_events = pool.events.FlashLoan.get_logs(
-            fromBlock=from_block,
-            toBlock=to_block,
+            from_block=from_block,
+            to_block=to_block,
         )
+
         for ev in flash_events:
             amount_raw = ev["args"]["amount"]
             # Amount dalam token decimals — approximate USD via raw amount
@@ -426,9 +427,10 @@ def fetch_pool_signal(current_block: int) -> dict:
 
         # Borrow events
         borrow_events = pool.events.Borrow.get_logs(
-            fromBlock=from_block,
-            toBlock=to_block,
+            from_block=from_block,
+            to_block=to_block,
         )
+
         for ev in borrow_events:
             amount_raw = ev["args"]["amount"]
             amount_usd = amount_raw / 1e6  # same approximation

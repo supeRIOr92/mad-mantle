@@ -448,3 +448,82 @@ asyncio.exceptions.CancelledError
 2026-05-04 12:06:54 | INFO     | mad.main — [main] Stopping scheduler...
 2026-05-04 12:06:54 | INFO     | apscheduler.scheduler — Scheduler has been shut down
 2026-05-04 12:06:54 | INFO     | mad.main — [main] RealClaw shutdown complete.
+2026-05-04 13:47:21 | INFO     | mad.main — RealClaw starting up...
+2026-05-04 13:47:21 | INFO     | mad.main — Subgraph URL: ✅ SET
+2026-05-04 13:47:21 | INFO     | mad.main — Telegram Bot: ✅ SET
+2026-05-04 13:47:21 | INFO     | mad.main — Start time: 2026-05-04 06:47:21 UTC
+2026-05-04 13:47:23 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-04 13:47:23 | INFO     | database — [db] Supabase connection OK
+2026-05-04 13:47:23 | INFO     | mad.main — [main] Starting all services...
+2026-05-04 13:47:23 | INFO     | mad.main — [main] Alerter ready (direct httpx mode) ✅
+2026-05-04 13:47:24 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-04 13:47:24 | INFO     | database — [db] Supabase connection OK
+2026-05-04 13:47:24 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-04 13:47:24 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-04 13:47:24 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-04 13:47:24 | INFO     | scheduler — [scheduler] Jobs registered — scan=15min | digest=00:08 UTC | agent_refresh=1h
+2026-05-04 13:47:24 | INFO     | apscheduler.scheduler — Added job "AMD Main Scan" to job store "default"
+2026-05-04 13:47:24 | INFO     | apscheduler.scheduler — Added job "MAD Hourly Digest" to job store "default"
+2026-05-04 13:47:24 | INFO     | apscheduler.scheduler — Added job "ERC-8004 Agent Map Refresh" to job store "default"
+2026-05-04 13:47:24 | INFO     | apscheduler.scheduler — Scheduler started
+2026-05-04 13:47:24 | INFO     | scheduler — [scheduler] Scheduler started ✅
+2026-05-04 13:47:24 | INFO     | mad.main — [main] Running initial scan...
+2026-05-04 13:47:24 | INFO     | scheduler — [scheduler] Scan #1 started — normal — 06:47:24 UTC
+2026-05-04 13:48:12 | INFO     | data_sources.agents — [agents] Fetched 92 agents (scanned 0–101)
+2026-05-04 13:48:12 | INFO     | scheduler — [scheduler] Agent map refreshed — 4 agents
+2026-05-04 13:48:45 | WARNING  | data_sources.aave — [aave.fetch_pool_signal] failed: ContractEvent.get_logs() got an unexpected keyword argument 'fromBlock'
+2026-05-04 13:48:45 | INFO     | scorer — [scorer] agni vol share 0.00% < floor — zeroing weight
+2026-05-04 13:48:45 | INFO     | scorer — [scorer] fluxion vol share 0.00% < floor — zeroing weight
+2026-05-04 13:48:45 | INFO     | scheduler — [scheduler] Scan #1 complete — s_final=100.0 level=alert pools=11
+2026-05-04 13:48:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log "HTTP/2 201 Created"
+2026-05-04 13:48:45 | INFO     | database — [db] signal_log insert id=92 level=alert s_final=100.0
+2026-05-04 13:48:45 | INFO     | scheduler — [scheduler] Signal persisted — row_id=92
+2026-05-04 13:48:47 | INFO     | httpx — HTTP Request: POST https://api.telegram.org/bot8234884866:AAHy2Thb78b87EGi3apTxhmVLM5gCLjELYs/sendMessage "HTTP/1.1 200 OK"
+2026-05-04 13:48:47 | INFO     | alerter — [alerter] Message sent — attempt 1
+2026-05-04 13:48:47 | INFO     | alerter — [alerter] ANOMALY alert sent — level=alert s_final=100.0
+2026-05-04 13:48:47 | INFO     | scheduler — [scheduler] ⚡ Watch mode ON — interval=5min
+2026-05-04 13:53:47 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:05:00], next run at: 2026-05-04 13:58:47 +07)" (scheduled at 2026-05-04 13:53:47.191910+07:00)
+2026-05-04 13:53:47 | INFO     | scheduler — [scheduler] Scan #2 started — WATCH MODE — 06:53:47 UTC
+2026-05-04 13:54:06 | INFO     | detector — [detector] L1+L2=55.0 > 50 — running L3 async
+2026-05-04 13:54:33 | WARNING  | data_sources.aave — [aave.fetch_pool_signal] failed: ContractEvent.get_logs() got an unexpected keyword argument 'fromBlock'
+2026-05-04 13:54:33 | INFO     | scorer — [scorer] agni vol share 0.00% < floor — zeroing weight
+2026-05-04 13:54:33 | INFO     | scorer — [scorer] fluxion vol share 0.00% < floor — zeroing weight
+2026-05-04 13:54:33 | INFO     | scheduler — [scheduler] Scan #2 complete — s_final=100.0 level=alert pools=11
+2026-05-04 13:54:34 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log "HTTP/2 201 Created"
+2026-05-04 13:54:34 | INFO     | database — [db] signal_log insert id=105 level=alert s_final=100.0
+2026-05-04 13:54:34 | INFO     | scheduler — [scheduler] Signal persisted — row_id=105
+2026-05-04 13:54:35 | INFO     | httpx — HTTP Request: POST https://api.telegram.org/bot8234884866:AAHy2Thb78b87EGi3apTxhmVLM5gCLjELYs/sendMessage "HTTP/1.1 200 OK"
+2026-05-04 13:54:35 | INFO     | alerter — [alerter] Message sent — attempt 1
+2026-05-04 13:54:35 | INFO     | alerter — [alerter] ANOMALY alert sent — level=alert s_final=100.0
+2026-05-04 13:54:35 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:05:00], next run at: 2026-05-04 13:58:47 +07)" executed successfully
+2026-05-04 13:58:47 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:05:00], next run at: 2026-05-04 14:03:47 +07)" (scheduled at 2026-05-04 13:58:47.191910+07:00)
+2026-05-04 13:58:47 | INFO     | scheduler — [scheduler] Scan #3 started — WATCH MODE — 06:58:47 UTC
+2026-05-04 13:59:05 | INFO     | detector — [detector] L1+L2=55.0 > 50 — running L3 async
+2026-05-04 13:59:30 | WARNING  | data_sources.aave — [aave.fetch_pool_signal] failed: ContractEvent.get_logs() got an unexpected keyword argument 'fromBlock'
+2026-05-04 13:59:30 | INFO     | scorer — [scorer] agni vol share 0.00% < floor — zeroing weight
+2026-05-04 13:59:30 | INFO     | scorer — [scorer] fluxion vol share 0.00% < floor — zeroing weight
+2026-05-04 13:59:30 | INFO     | scheduler — [scheduler] Scan #3 complete — s_final=100.0 level=alert pools=11
+2026-05-04 13:59:30 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log "HTTP/2 201 Created"
+2026-05-04 13:59:30 | INFO     | database — [db] signal_log insert id=106 level=alert s_final=100.0
+2026-05-04 13:59:30 | INFO     | scheduler — [scheduler] Signal persisted — row_id=106
+2026-05-04 13:59:32 | INFO     | httpx — HTTP Request: POST https://api.telegram.org/bot8234884866:AAHy2Thb78b87EGi3apTxhmVLM5gCLjELYs/sendMessage "HTTP/1.1 200 OK"
+2026-05-04 13:59:32 | INFO     | alerter — [alerter] Message sent — attempt 1
+2026-05-04 13:59:32 | INFO     | alerter — [alerter] ANOMALY alert sent — level=alert s_final=100.0
+2026-05-04 13:59:32 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:05:00], next run at: 2026-05-04 14:03:47 +07)" executed successfully
+2026-05-04 14:03:47 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:05:00], next run at: 2026-05-04 14:08:47 +07)" (scheduled at 2026-05-04 14:03:47.191910+07:00)
+2026-05-04 14:03:47 | INFO     | scheduler — [scheduler] Scan #4 started — WATCH MODE — 07:03:47 UTC
+2026-05-04 14:04:18 | WARNING  | data_sources.aave — [aave.fetch_pool_signal] failed: ContractEvent.get_logs() got an unexpected keyword argument 'fromBlock'
+2026-05-04 14:04:18 | INFO     | scorer — [scorer] agni vol share 0.00% < floor — zeroing weight
+2026-05-04 14:04:18 | INFO     | scorer — [scorer] fluxion vol share 0.00% < floor — zeroing weight
+2026-05-04 14:04:18 | INFO     | scheduler — [scheduler] Scan #4 complete — s_final=90.9 level=alert pools=11
+2026-05-04 14:04:19 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log "HTTP/2 201 Created"
+2026-05-04 14:04:19 | INFO     | database — [db] signal_log insert id=107 level=alert s_final=90.9
+2026-05-04 14:04:19 | INFO     | scheduler — [scheduler] Signal persisted — row_id=107
+2026-05-04 14:04:20 | INFO     | httpx — HTTP Request: POST https://api.telegram.org/bot8234884866:AAHy2Thb78b87EGi3apTxhmVLM5gCLjELYs/sendMessage "HTTP/1.1 200 OK"
+2026-05-04 14:04:20 | INFO     | alerter — [alerter] Message sent — attempt 1
+2026-05-04 14:04:20 | INFO     | alerter — [alerter] ANOMALY alert sent — level=alert s_final=90.9
+2026-05-04 14:04:20 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:05:00], next run at: 2026-05-04 14:08:47 +07)" executed successfully
+2026-05-04 14:05:42 | INFO     | mad.main — [main] Received signal 2 — shutting down...
+2026-05-04 14:05:42 | INFO     | mad.main — [main] Stopping scheduler...
+2026-05-04 14:05:42 | INFO     | apscheduler.scheduler — Scheduler has been shut down
+2026-05-04 14:05:42 | INFO     | mad.main — [main] RealClaw shutdown complete.
