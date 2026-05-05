@@ -183,21 +183,21 @@ async def _run_scenario(scenario: str, speed: float) -> None:
                     "aave_modifier": data["aave_modifier"],
                     "cycle_count":  data["cycle_count"],
                     "is_simulated": True,
+                    }],
                 aave_signal=0.0,
                 aave_label="NO_DATA",
-                }],
             )
 
             # Step 5: upsert wallet_profile jika score cukup
             if s_final >= THRESHOLD_WATCHING:
                 upsert_wallet(
                     address=wallet_address,
-                    agent_type="MANIPULATOR" if scenario in ("FLASH_WASH", "PUMP_DUMP") else "UNKNOWN WALLET",
+                    agent_type="MANIPULATOR" if scenario in ("FLASH_WASH", "PUMP_DUMP") else "SMART MONEY",
                     archetype=archetype,
                     wash_ratio=data["wash_ratio"],
                     wash_label=archetype,
                     roi_7d=round(random.uniform(-20, 80), 1),
-                    smart_score=0.0,
+                    smart_score=round(random.uniform(0.5, 2.5), 3),
                     risk_label="HIGH" if s_final >= THRESHOLD_ALERT else "MEDIUM",
                     total_volume_usd=dex_results[0]["volume_usd"],
                     tx_count=i + 1,
