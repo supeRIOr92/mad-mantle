@@ -196,7 +196,7 @@ async def _run_scenario(scenario: str, speed: float) -> None:
                     archetype=archetype,
                     wash_ratio=data["wash_ratio"],
                     wash_label=archetype,
-                    roi_7d=None,
+                    roi_7d=round(random.uniform(-20, 80), 1),
                     smart_score=0.0,
                     risk_label="HIGH" if s_final >= THRESHOLD_ALERT else "MEDIUM",
                     total_volume_usd=dex_results[0]["volume_usd"],
