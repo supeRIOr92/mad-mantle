@@ -198,7 +198,7 @@ async def run_scan():
     except Exception:
         ds_volumes = {}
 
-       # Fetch Aave pool-level signal (v3.0)
+    # Fetch Aave pool-level signal (v3.0)
     loop = asyncio.get_event_loop()
     try:
         current_block = await loop.run_in_executor(
@@ -258,42 +258,42 @@ async def run_scan():
         "corroboration": final.get("corroboration", 1),
         "phase1_active": phase1,
         "created_at": now.strftime("%Y-%m-%d %H:%M:%S"),
-        }
+    }
 
-        try:
-            row_id = db.log_signal(
-                dex=signal_record["dex"] or "unknown",
-                pool_address=signal_record["pool_address"] or "",
-                tx_hashes=best_result.get("tx_hashes", []),
-                l1_score=signal_record["l1_score"],
-                l2_score=signal_record["l2_score"],
-                l3_score=signal_record["l3_score"],
-                s_dex=signal_record["s_dex"],
-                s_final=s_final,
-                alert_level=alert_level,
-                l1_methods=signal_record["l1_methods"],
-                l2_methods=signal_record["l2_methods"],
-                l3_methods=signal_record["l3_methods"],
-                top_wallets=signal_record["top_wallets"],
-                volume_usd=signal_record["volume_usd"],
-                corroboration=signal_record["corroboration"],
-                phase1_active=phase1,
-                aave_signal=aave_data["aave_signal"],
-                aave_label=aave_data["aave_label"],
-            )
-            logger.info(f"[scheduler] Signal persisted — row_id={row_id}")
-        except Exception as e:
-            logger.error(f"[scheduler] Failed to persist signal: {e}")
-        if alert_level != "none":
-            verbose = alert_level == "high_conf"
+    try:
+        row_id = db.log_signal(
+            dex=signal_record["dex"] or "unknown",
+            pool_address=signal_record["pool_address"] or "",
+            tx_hashes=best_result.get("tx_hashes", []),
+            l1_score=signal_record["l1_score"],
+            l2_score=signal_record["l2_score"],
+            l3_score=signal_record["l3_score"],
+            s_dex=signal_record["s_dex"],
+            s_final=s_final,
+            alert_level=alert_level,
+            l1_methods=signal_record["l1_methods"],
+            l2_methods=signal_record["l2_methods"],
+            l3_methods=signal_record["l3_methods"],
+            top_wallets=signal_record["top_wallets"],
+            volume_usd=signal_record["volume_usd"],
+            corroboration=signal_record["corroboration"],
+            phase1_active=phase1,
+            aave_signal=aave_data["aave_signal"],
+            aave_label=aave_data["aave_label"],
+        )
+        logger.info(f"[scheduler] Signal persisted — row_id={row_id}")
+    except Exception as e:
+        logger.error(f"[scheduler] Failed to persist signal: {e}")
+
+    if alert_level != "none":
+        verbose = alert_level == "high_conf"
         await broadcast_signal(signal_record, verbose=verbose)
 
     # Watch mode management
     _update_watch_mode(s_final, scheduler)
 
     state.last_scan_ts = now
-
-
+    
 # ── Watch Mode ────────────────────────────────────────────
 
 def _update_watch_mode(s_final: float, scheduler: AsyncIOScheduler):
