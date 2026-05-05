@@ -47,28 +47,26 @@ dataSources:
           handler: handleMoePairCreated
       file: AgniFactory\AgniFactory.wasm
   - kind: ethereum
-    name: FluxionPool
+    name: FluxionFactory
     network: mantle
     source:
-      address: "0x560d064493de5a23e72ed916caf92ec6e8924948"
-      abi: FluxionPool
-      startBlock: 937638
+      address: "0xF883162Ed9c7E8EF604214c964c678E40c9B737C"
+      abi: FluxionFactory
+      startBlock: 932327
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - Swap
         - Pool
-        - Wallet
-        - VolumeBucket
-        - DailyPoolSnapshot
       abis:
+        - name: FluxionFactory
+          file: FluxionFactory\FluxionFactory.json
         - name: FluxionPool
-          file: FluxionPool\FluxionPool.json
+          file: FluxionFactory\FluxionPool.json
       eventHandlers:
-        - event: Swap(indexed address,indexed address,int256,int256,uint160,uint128,int24)
-          handler: handleFluxionSwap
+        - event: PoolCreated(indexed address,indexed address,indexed uint24,int24,address)
+          handler: handleFluxionPoolCreated
       file: AgniFactory\AgniFactory.wasm
 templates:
   - kind: ethereum
@@ -115,4 +113,26 @@ templates:
       eventHandlers:
         - event: Swap(indexed address,indexed address,uint24,bytes32,bytes32,uint24,bytes32,bytes32)
           handler: handleMoeSwap
+      file: AgniFactory\AgniFactory.wasm
+  - kind: ethereum
+    name: FluxionPool
+    network: mantle
+    source:
+      abi: FluxionPool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Swap
+        - Pool
+        - Wallet
+        - VolumeBucket
+        - DailyPoolSnapshot
+      abis:
+        - name: FluxionPool
+          file: FluxionPool\FluxionPool.json
+      eventHandlers:
+        - event: Swap(indexed address,indexed address,int256,int256,uint160,uint128,int24)
+          handler: handleFluxionSwap
       file: AgniFactory\AgniFactory.wasm

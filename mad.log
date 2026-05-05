@@ -704,3 +704,57 @@ asyncio.exceptions.CancelledError
 2026-05-04 14:42:50 | INFO     | scorer — [scorer] agni vol share 0.00% < floor — zeroing weight
 2026-05-04 14:42:50 | INFO     | scorer — [scorer] fluxion vol share 0.00% < floor — zeroing weight
 2026-05-04 14:42:50 | INFO     | scheduler — [scheduler] Scan #1 complete — s_final=9.1 level=none pools=11
+2026-05-05 10:45:16 | INFO     | mad.main — RealClaw starting up...
+2026-05-05 10:45:16 | INFO     | mad.main — Subgraph URL: ✅ SET
+2026-05-05 10:45:16 | INFO     | mad.main — Telegram Bot: ✅ SET
+2026-05-05 10:45:16 | INFO     | mad.main — Start time: 2026-05-05 03:45:16 UTC
+2026-05-05 10:45:20 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-05 10:45:20 | INFO     | database — [db] Supabase connection OK
+2026-05-05 10:45:20 | INFO     | mad.main — [main] Starting all services...
+2026-05-05 10:45:20 | INFO     | mad.main — [main] Alerter ready (direct httpx mode) ✅
+2026-05-05 10:45:20 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-05 10:45:20 | INFO     | database — [db] Supabase connection OK
+2026-05-05 10:45:20 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-05 10:45:20 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-05 10:45:20 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-05 10:45:20 | INFO     | scheduler — [scheduler] Jobs registered — scan=15min | digest=00:08 UTC | agent_refresh=1h
+2026-05-05 10:45:20 | INFO     | apscheduler.scheduler — Added job "AMD Main Scan" to job store "default"
+2026-05-05 10:45:20 | INFO     | apscheduler.scheduler — Added job "MAD Hourly Digest" to job store "default"
+2026-05-05 10:45:20 | INFO     | apscheduler.scheduler — Added job "ERC-8004 Agent Map Refresh" to job store "default"
+2026-05-05 10:45:20 | INFO     | apscheduler.scheduler — Scheduler started
+2026-05-05 10:45:20 | INFO     | scheduler — [scheduler] Scheduler started ✅
+2026-05-05 10:45:20 | INFO     | mad.main — [main] Running initial scan...
+2026-05-05 10:45:20 | INFO     | scheduler — [scheduler] Scan #1 started — normal — 03:45:20 UTC
+2026-05-05 10:46:24 | INFO     | data_sources.agents — [agents] Fetched 92 agents (scanned 0–101)
+2026-05-05 10:46:24 | INFO     | scheduler — [scheduler] Agent map refreshed — 4 agents
+2026-05-05 10:47:18 | INFO     | data_sources.aave — [aave.fetch_pool_signal] blocks=94911212–94911262 events=0 signal=0.00 label=NO_ACTIVITY
+2026-05-05 10:47:18 | INFO     | scorer — [scorer] agni vol share 0.00% < floor — zeroing weight
+2026-05-05 10:47:18 | INFO     | scorer — [scorer] fluxion vol share 0.00% < floor — zeroing weight
+2026-05-05 10:47:18 | INFO     | scheduler — [scheduler] Scan #1 complete — s_final=9.1 level=none pools=10
+2026-05-05 10:47:20 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log "HTTP/2 201 Created"
+2026-05-05 10:47:20 | INFO     | database — [db] signal_log insert id=117 level=none s_final=9.1
+2026-05-05 10:47:20 | INFO     | scheduler — [scheduler] Signal persisted — row_id=117
+2026-05-05 11:13:15 | WARNING  | apscheduler.executors.default — Run time of job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-05-05 11:15:20 +07)" was missed by 0:12:55.408223
+2026-05-05 11:15:20 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-05-05 11:30:20 +07)" (scheduled at 2026-05-05 11:15:20.181043+07:00)
+2026-05-05 11:15:20 | INFO     | scheduler — [scheduler] Scan #2 started — normal — 04:15:20 UTC
+2026-05-05 11:15:35 | ERROR    | data_sources.moe — [moe] fetch_recent_swaps failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+2026-05-05 11:16:00 | INFO     | data_sources.aave — [aave.fetch_pool_signal] blocks=94912073–94912123 events=0 signal=0.00 label=NO_ACTIVITY
+2026-05-05 11:16:00 | INFO     | scorer — [scorer] agni vol share 0.00% < floor — zeroing weight
+2026-05-05 11:16:00 | INFO     | scorer — [scorer] fluxion vol share 0.00% < floor — zeroing weight
+2026-05-05 11:16:00 | INFO     | scheduler — [scheduler] Scan #2 complete — s_final=9.1 level=none pools=10
+2026-05-05 11:16:03 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log "HTTP/2 201 Created"
+2026-05-05 11:16:03 | INFO     | database — [db] signal_log insert id=118 level=none s_final=9.1
+2026-05-05 11:16:03 | INFO     | scheduler — [scheduler] Signal persisted — row_id=118
+2026-05-05 11:16:03 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-05-05 11:30:20 +07)" executed successfully
+2026-05-05 11:30:20 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-05-05 11:45:20 +07)" (scheduled at 2026-05-05 11:30:20.181043+07:00)
+2026-05-05 11:30:20 | INFO     | scheduler — [scheduler] Scan #3 started — normal — 04:30:20 UTC
+2026-05-05 11:30:49 | INFO     | data_sources.aave — [aave.fetch_pool_signal] blocks=94912518–94912568 events=0 signal=0.00 label=NO_ACTIVITY
+2026-05-05 11:30:49 | INFO     | scheduler — [scheduler] Scan #3 complete — s_final=1.4 level=none pools=1
+2026-05-05 11:30:51 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log "HTTP/2 201 Created"
+2026-05-05 11:30:51 | INFO     | database — [db] signal_log insert id=119 level=none s_final=1.4
+2026-05-05 11:30:51 | INFO     | scheduler — [scheduler] Signal persisted — row_id=119
+2026-05-05 11:30:51 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-05-05 11:45:20 +07)" executed successfully
+2026-05-05 11:32:57 | INFO     | mad.main — [main] Received signal 2 — shutting down...
+2026-05-05 11:32:57 | INFO     | mad.main — [main] Stopping scheduler...
+2026-05-05 11:32:57 | INFO     | apscheduler.scheduler — Scheduler has been shut down
+2026-05-05 11:32:57 | INFO     | mad.main — [main] RealClaw shutdown complete.

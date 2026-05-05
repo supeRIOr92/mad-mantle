@@ -87,7 +87,13 @@ export default function PanelSystemStatus() {
 
         <div className="flex justify-between border-b border-mad-border/50 pb-1">
           <span className="text-slate-500">DEXes monitored</span>
-          <span className="text-white">Agni · Moe · Fluxion</span>
+          <span className="text-white">
+          <span className="text-red-400">Agni ✗</span>
+          {" · "}
+          <span className="text-green-400">Moe ✓</span>
+          {" · "}
+          <span className="text-green-400">Fluxion ✓</span>
+          </span>
         </div>
 
         <div className="flex justify-between border-b border-mad-border/50 pb-1">

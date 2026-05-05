@@ -7,10 +7,11 @@ import { BigDecimal, BigInt, Bytes, log } from "@graphprotocol/graph-ts";
 import { PoolCreated as AgniPoolCreated } from "../generated/AgniFactory/AgniFactory";
 import { Swap as AgniSwapEvent } from "../generated/AgniPool/AgniPool";
 import { Swap as FluxionSwapEvent } from "../generated/FluxionPool/FluxionPool";
+import { PoolCreated as FluxionPoolCreated } from "../generated/FluxionFactory/FluxionFactory";
 import { LBPairCreated as MoePairCreated } from "../generated/MoeLBFactory/MoeLBFactory";
 import { Swap as MoeSwapEvent } from "../generated/MoeLBPair/MoeLBPair";
 import { Swap, Pool, Wallet, VolumeBucket, DailyPoolSnapshot } from "../generated/schema";
-import { AgniPool as AgniPoolTemplate, MoeLBPair as MoeLBPairTemplate } from "../generated/templates";
+import { AgniPool as AgniPoolTemplate, MoeLBPair as MoeLBPairTemplate, FluxionPool as FluxionPoolTemplate } from "../generated/templates";
 
 let ZERO_BD = BigDecimal.fromString("0");
 let ZERO_BI = BigInt.fromI32(0);
@@ -23,6 +24,8 @@ let STABLES: string[] = [
   "0x201eba5cc46d216ce6dc03f6a759e8e766e956ae",
   "0x09bc4e0d864854c6afb6eb9a9cdf58ac190d0df9",
   "0x0a3bb08b3a15a19b4de82f8acfc862606fb69a2d",
+  "0x111111d2bf19e43c34263401e0cad979ed1cdb61", // USDT1 (Fluxion)
+  "0x779ded0c9e1022225f8e0630b35a9b54be713736", // USDT0 (Fluxion)
 ];
 
 function isStable(addr: string): bool {
@@ -38,6 +41,8 @@ function tokenSymbol(addr: string): string {
   if (addr == "0x78c1b0c915c4faa5fffa6cabf0219da63d7f4cb8") return "WMNT";
   if (addr == "0xdeaddeaddeaddeaddeaddeaddeaddeaddead1111") return "WETH";
   if (addr == "0xcda86a272531e8640cd7f1a92c01839911b90bb0") return "mETH";
+  if (addr == "0x111111d2bf19e43c34263401e0cad979ed1cdb61") return "USDT1";
+  if (addr == "0x779ded0c9e1022225f8e0630b35a9b54be713736") return "USDT0";
   return addr.slice(0, 8) + "...";
 }
 
@@ -304,27 +309,28 @@ export function handleMoeSwap(event: MoeSwapEvent): void {
   updateDaily(poolAddress, "moe", timestamp, amountUSD);
 }
 
-
 // ── Fluxion (UniV3 Fork) ──────────────────────────────────────────────────────
+export function handleFluxionPoolCreated(event: FluxionPoolCreated): void {
+  let poolAddress = event.params.pool.toHexString().toLowerCase();
+  getOrCreatePool(
+    poolAddress,
+    "fluxion",
+    event.params.token0.toHexString().toLowerCase(),
+    event.params.token1.toHexString().toLowerCase(),
+    event.params.fee as i32,
+    event.block.timestamp
+  );
+  FluxionPoolTemplate.create(event.params.pool);
+}
 
 export function handleFluxionSwap(event: FluxionSwapEvent): void {
   let poolAddress = event.address.toHexString().toLowerCase();
   let pool = Pool.load(poolAddress);
 
-  if (pool == null) {
-    pool = new Pool(poolAddress);
-    pool.dex = "fluxion";
-    pool.token0 = "unknown";
-    pool.token1 = "unknown";
-    pool.token0Symbol = "?";
-    pool.token1Symbol = "?";
-    pool.feeTier = 0;
-    pool.createdAt = event.block.timestamp;
-    pool.totalVolumeUSD = ZERO_BD;
-    pool.txCount = ZERO_BI;
-    pool.lastSwapAt = ZERO_BI;
-    pool.save();
-  }
+if (pool == null) {
+  log.warning("[MAD] FluxionSwap: pool {} not found", [poolAddress]);
+return;
+}
 
   let timestamp = event.block.timestamp;
   let sender = event.params.sender.toHexString().toLowerCase();

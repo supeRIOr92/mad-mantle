@@ -51,30 +51,28 @@ dataSources:
         - event: LBPairCreated(indexed address,indexed address,indexed uint256,address,uint256)
           handler: handleMoePairCreated
       file: ./mappings/index.ts
-  # ── Fluxion Pool (static) ─────────────────────────────
+ # ── Fluxion Factory (dynamic) ─────────────────────────
   - kind: ethereum
-    name: FluxionPool
+    name: FluxionFactory
     network: mantle
     source:
-      address: "0x560d064493de5a23e72ed916caf92ec6e8924948"
-      abi: FluxionPool
-      startBlock: 937638
+      address: "0xF883162Ed9c7E8EF604214c964c678E40c9B737C"
+      abi: FluxionFactory
+      startBlock: 932327
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - Swap
         - Pool
-        - Wallet
-        - VolumeBucket
-        - DailyPoolSnapshot
       abis:
+        - name: FluxionFactory
+          file: ./abis/FluxionFactory.json
         - name: FluxionPool
           file: ./abis/FluxionPool.json
       eventHandlers:
-        - event: Swap(indexed address,indexed address,int256,int256,uint160,uint128,int24)
-          handler: handleFluxionSwap
+        - event: PoolCreated(indexed address,indexed address,indexed uint24,int24,address)
+          handler: handleFluxionPoolCreated
       file: ./mappings/index.ts
 templates:
   # ── Agni Pool (dynamic, created by Factory) ───────────
@@ -122,4 +120,28 @@ templates:
       eventHandlers:
         - event: Swap(indexed address,indexed address,uint24,bytes32,bytes32,uint24,bytes32,bytes32)
           handler: handleMoeSwap
+      file: ./mappings/index.ts
+
+  # ── Fluxion Pool (dynamic) ────────────────────────────
+  - kind: ethereum
+    name: FluxionPool
+    network: mantle
+    source:
+      abi: FluxionPool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Swap
+        - Pool
+        - Wallet
+        - VolumeBucket
+        - DailyPoolSnapshot
+      abis:
+        - name: FluxionPool
+          file: ./abis/FluxionPool.json
+      eventHandlers:
+        - event: Swap(indexed address,indexed address,int256,int256,uint160,uint128,int24)
+          handler: handleFluxionSwap
       file: ./mappings/index.ts
