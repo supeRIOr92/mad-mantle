@@ -175,8 +175,8 @@ def compute_final_score(
     dex_results: list[dict],
     ds_volumes: dict[str, float] = None,
     phase1: bool = False,
-    aave_signal: float = 0.0,   # v3.0
-    aave_label: str = "NO_ACTIVITY",  # v3.0
+    aave_signal: float = 0.0,        # v3.0
+    aave_label: str = "NO_ACTIVITY", # v3.0
 ) -> dict:
     """
     Compute weighted S_final from per-DEX S_DEX scores,
@@ -209,21 +209,51 @@ def compute_final_score(
     # Dynamic weights
     weights = compute_dynamic_weights(dex_results, ds_volumes)
 
-    # Weighted sum
+    # Aggregate per DEX: Top-K=2 with outlier dampening
+    dex_pool_scores: dict[str, list[float]] = {}
+    for r in dex_results:
+        dex = r.get("dex", "")
+        s_dex = r.get("s_dex", 0.0)
+        if dex not in dex_pool_scores:
+            dex_pool_scores[dex] = []
+        dex_pool_scores[dex].append(s_dex)
+
+    def aggregate_dex_score(scores: list[float]) -> float:
+        sorted_scores = sorted(scores, reverse=True)
+        top1 = sorted_scores[0]
+        top2 = sorted_scores[1] if len(sorted_scores) > 1 else top1
+        if top2 < 0.3 * top1:
+            return top1 * 0.7  # outlier — dampen score
+        return (top1 + top2) / 2
+
+    # Weighted sum — one contribution per DEX
     s_weighted = 0.0
     dex_scores = []
+    seen_dex: set[str] = set()
+
     for r in dex_results:
         dex = r.get("dex", "")
         s_dex = r.get("s_dex", 0.0)
         w = weights.get(dex, 0.0)
-        contribution = w * s_dex
-        s_weighted += contribution
-        dex_scores.append({
-            "dex": dex,
-            "s_dex": round(s_dex, 2),
-            "weight": round(w, 4),
-            "contribution": round(contribution, 2),
-        })
+
+        if dex not in seen_dex:
+            seen_dex.add(dex)
+            s_dex_agg = aggregate_dex_score(dex_pool_scores[dex])
+            contribution = w * s_dex_agg
+            s_weighted += contribution
+            dex_scores.append({
+                "dex": dex,
+                "s_dex": round(s_dex_agg, 2),
+                "weight": round(w, 4),
+                "contribution": round(contribution, 2),
+            })
+        else:
+            dex_scores.append({
+                "dex": dex,
+                "s_dex": round(s_dex, 2),
+                "weight": 0.0,
+                "contribution": 0.0,
+            })
 
     # Corroboration modifier
     corroboration = compute_corroboration(dex_results)
@@ -255,6 +285,7 @@ def compute_final_score(
         "source_factor": source_factor,
     }
 
+
 # ── Persist + Return ──────────────────────────────────────
 
 def score_and_persist(
@@ -274,9 +305,6 @@ def score_and_persist(
         aave_signal=aave_signal,
         aave_label=aave_label,
     )
-
-    if result["alert_level"] == "none":
-        return result  # Don't persist non-events
 
     best = max(dex_results, key=lambda r: r.get("s_dex", 0))
 

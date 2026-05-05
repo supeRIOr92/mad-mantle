@@ -242,23 +242,22 @@ async def run_scan():
             pass
 
     # Persist + broadcast only when there's a signal
-    if alert_level != "none":
-        signal_record = {
-            **final,
-            "dex": best_result.get("dex"),
-            "pool_address": best_result.get("pool_id"),
-            "l1_score": best_result.get("l1_score", 0),
-            "l2_score": best_result.get("l2_score", 0),
-            "l3_score": best_result.get("l3_score", 0),
-            "s_dex": best_result.get("s_dex", 0),
-            "volume_usd": best_result.get("volume_usd", 0),
-            "l1_methods": best_result.get("l1_methods", []),
-            "l2_methods": best_result.get("l2_methods", []),
-            "l3_methods": best_result.get("l3_methods", []),
-            "top_wallets": best_result.get("top_wallets", []),
-            "corroboration": final.get("corroboration", 1),
-            "phase1_active": phase1,
-            "created_at": now.strftime("%Y-%m-%d %H:%M:%S"),
+    signal_record = {
+        **final,
+        "dex": best_result.get("dex"),
+        "pool_address": best_result.get("pool_id"),
+        "l1_score": best_result.get("l1_score", 0),
+        "l2_score": best_result.get("l2_score", 0),
+        "l3_score": best_result.get("l3_score", 0),
+        "s_dex": best_result.get("s_dex", 0),
+        "volume_usd": best_result.get("volume_usd", 0),
+        "l1_methods": best_result.get("l1_methods", []),
+        "l2_methods": best_result.get("l2_methods", []),
+        "l3_methods": best_result.get("l3_methods", []),
+        "top_wallets": best_result.get("top_wallets", []),
+        "corroboration": final.get("corroboration", 1),
+        "phase1_active": phase1,
+        "created_at": now.strftime("%Y-%m-%d %H:%M:%S"),
         }
 
         try:
@@ -279,12 +278,14 @@ async def run_scan():
                 volume_usd=signal_record["volume_usd"],
                 corroboration=signal_record["corroboration"],
                 phase1_active=phase1,
+                aave_signal=aave_data["aave_signal"],
+                aave_label=aave_data["aave_label"],
             )
             logger.info(f"[scheduler] Signal persisted — row_id={row_id}")
         except Exception as e:
             logger.error(f"[scheduler] Failed to persist signal: {e}")
-
-        verbose = alert_level == "high_conf"
+        if alert_level != "none":
+            verbose = alert_level == "high_conf"
         await broadcast_signal(signal_record, verbose=verbose)
 
     # Watch mode management

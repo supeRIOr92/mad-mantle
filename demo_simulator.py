@@ -183,6 +183,8 @@ async def _run_scenario(scenario: str, speed: float) -> None:
                     "aave_modifier": data["aave_modifier"],
                     "cycle_count":  data["cycle_count"],
                     "is_simulated": True,
+                aave_signal=0.0,
+                aave_label="NO_DATA",
                 }],
             )
 
