@@ -105,32 +105,56 @@ def _decode_swap_log(log: dict) -> dict | None:
     try:
         pool_addr = log["address"].lower()
         meta = _pool_registry.get(pool_addr, {})
+        # Handle HexBytes or str for data
         raw_data = log["data"]
         if isinstance(raw_data, (bytes, bytearray)):
             data_bytes = bytes(raw_data)
         else:
-            data_bytes = bytes.fromhex(str(raw_data)[2:])
+            data_bytes = bytes.fromhex(str(raw_data).removeprefix("0x"))
         amount0, amount1, sqrtPriceX96, liquidity, tick = abi_decode(
             ["int256", "int256", "uint160", "uint128", "int24"],
             data_bytes,
         )
-        sender = "0x" + (log["topics"][1].hex() if hasattr(log["topics"][1], "hex") else log["topics"][1])[26:]
-        recipient = "0x" + (log["topics"][2].hex() if hasattr(log["topics"][2], "hex") else log["topics"][2])[26:]
+        # Handle HexBytes for topics
+        def topic_to_hex(t) -> str:
+            if isinstance(t, (bytes, bytearray)):
+                return t.hex()
+            return str(t).removeprefix("0x")
+        sender = "0x" + topic_to_hex(log["topics"][1])[24:]
+        recipient = "0x" + topic_to_hex(log["topics"][2])[24:]
         dec0, dec1 = meta.get("decimals0", 18), meta.get("decimals1", 18)
         amount_usd = (amount0 / (10 ** dec0)) if amount0 > 0 else (abs(amount1) / (10 ** dec1))
-        try:
-            ts = int(log.get("blockTimestamp", "0x0"), 16)
-        except Exception:
-            ts = 0
+        # Get timestamp
+        ts = 0
+        raw_ts = log.get("blockTimestamp")
+        if raw_ts:
+            try:
+                ts = int(raw_ts, 16) if isinstance(raw_ts, str) else int(raw_ts)
+            except Exception:
+                ts = 0
         if ts == 0:
             w3 = _get_w3()
-            ts = w3.eth.get_block(log["blockNumber"])["timestamp"]
-        logger.info("[fluxion] decoded swap ts=%d txHash=%s", ts, log["transactionHash"])
-
+            block_num = log["blockNumber"]
+            if isinstance(block_num, (bytes, bytearray)):
+                block_num = int.from_bytes(block_num, "big")
+            ts = w3.eth.get_block(block_num)["timestamp"]
+        # Handle HexBytes for transactionHash and logIndex
+        tx_h = log["transactionHash"]
+        if isinstance(tx_h, (bytes, bytearray)):
+            tx_h = "0x" + tx_h.hex()
+        else:
+            tx_h = str(tx_h)
+        log_idx = log["logIndex"]
+        if isinstance(log_idx, (bytes, bytearray)):
+            log_idx = int.from_bytes(log_idx, "big")
+        elif isinstance(log_idx, str):
+            log_idx = int(log_idx, 16)
+        else:
+            log_idx = int(log_idx)
         return {
-            "id": f"{log['transactionHash']}-{int(log['logIndex'], 16)}",
+            "id": f"{tx_h}-{log_idx}",
             "timestamp": ts,
-            "txHash": log["transactionHash"],
+            "txHash": tx_h,
             "pool": {
                 "id": pool_addr,
                 "token0Symbol": meta.get("token0Symbol", "?"),
