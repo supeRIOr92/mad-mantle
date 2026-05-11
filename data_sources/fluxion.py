@@ -101,60 +101,84 @@ def _ensure_pool_registry():
     except Exception as e:
         logger.error("[fluxion] registry fetch failed: %s", e)
 
-
 def _decode_swap_log(log: dict) -> dict | None:
     try:
         pool_addr = log["address"].lower()
-        meta      = _pool_registry.get(pool_addr, {})
+        meta = _pool_registry.get(pool_addr, {})
+        raw_data = log["data"]
+        if isinstance(raw_data, (bytes, bytearray)):
+            data_bytes = bytes(raw_data)
+        else:
+            data_bytes = bytes.fromhex(str(raw_data)[2:])
         amount0, amount1, sqrtPriceX96, liquidity, tick = abi_decode(
             ["int256", "int256", "uint160", "uint128", "int24"],
-            bytes.fromhex(log["data"][2:]),
+            data_bytes,
         )
-        sender    = "0x" + log["topics"][1][26:]
-        recipient = "0x" + log["topics"][2][26:]
+        sender = "0x" + (log["topics"][1].hex() if hasattr(log["topics"][1], "hex") else log["topics"][1])[26:]
+        recipient = "0x" + (log["topics"][2].hex() if hasattr(log["topics"][2], "hex") else log["topics"][2])[26:]
         dec0, dec1 = meta.get("decimals0", 18), meta.get("decimals1", 18)
         amount_usd = (amount0 / (10 ** dec0)) if amount0 > 0 else (abs(amount1) / (10 ** dec1))
-        ts = int(log.get("blockTimestamp", "0x0"), 16)
+        try:
+            ts = int(log.get("blockTimestamp", "0x0"), 16)
+        except Exception:
+            ts = 0
+        if ts == 0:
+            w3 = _get_w3()
+            ts = w3.eth.get_block(log["blockNumber"])["timestamp"]
+        logger.info("[fluxion] decoded swap ts=%d txHash=%s", ts, log["transactionHash"])
+
         return {
             "id": f"{log['transactionHash']}-{int(log['logIndex'], 16)}",
-            "timestamp": ts, "txHash": log["transactionHash"],
-            "pool": {"id": pool_addr,
-                     "token0Symbol": meta.get("token0Symbol", "?"),
-                     "token1Symbol": meta.get("token1Symbol", "?"),
-                     "totalVolumeUSD": 0, "txCount": 0},
-            "sender":    {"id": sender,    "txCount": 0, "isAgent": False, "agentTokenId": None},
+            "timestamp": ts,
+            "txHash": log["transactionHash"],
+            "pool": {
+                "id": pool_addr,
+                "token0Symbol": meta.get("token0Symbol", "?"),
+                "token1Symbol": meta.get("token1Symbol", "?"),
+                "totalVolumeUSD": 0,
+                "txCount": 0,
+            },
+            "sender": {"id": sender, "txCount": 0, "isAgent": False, "agentTokenId": None},
             "recipient": {"id": recipient},
             "amountUSD": round(amount_usd, 6),
-            "amount0":   amount0 / (10 ** dec0),
-            "amount1":   amount1 / (10 ** dec1),
-            "sqrtPriceX96": sqrtPriceX96, "tick": tick, "dex": "fluxion",
+            "amount0": amount0 / (10 ** dec0),
+            "amount1": amount1 / (10 ** dec1),
+            "sqrtPriceX96": sqrtPriceX96,
+            "tick": tick,
+            "dex": "fluxion",
         }
     except Exception as e:
-        logger.debug("[fluxion] decode failed: %s", e)
+        logger.warning("[fluxion] decode failed: %s", e)
         return None
-
 
 def fetch_recent_swaps(since_ts: int, limit: int = 500) -> list:
     _ensure_pool_registry()
     if not _pool_registry:
         return []
     try:
-        w3     = _get_w3()
+        w3 = _get_w3()
         latest = w3.eth.block_number
         now_ts = int(time.time())
-        delta  = (max(0, now_ts - since_ts) // MANTLE_BLOCK_TIME) + 10
+        delta = (max(0, now_ts - since_ts) // MANTLE_BLOCK_TIME) + 10
         from_b = max(0, latest - min(delta, RPC_BLOCK_LOOKBACK))
-        swaps  = []
+        swaps = []
         for pool_addr in list(_pool_registry.keys()):
             logs = w3.eth.get_logs({
-                "fromBlock": from_b, "toBlock": latest,
+                "fromBlock": from_b,
+                "toBlock": latest,
                 "address": Web3.to_checksum_address(pool_addr),
                 "topics": [SWAP_TOPIC],
             })
+            logger.info("[fluxion] pool %s -- %d raw logs from block %d to %d", pool_addr, len(logs), from_b, latest)
             for log in logs:
                 s = _decode_swap_log(dict(log))
-                if s and s["timestamp"] >= since_ts:
-                    swaps.append(s)
+                if s:
+                    logger.warning("[fluxion] ts=%d since=%d ok=%s", s["timestamp"], since_ts, s["timestamp"] >= since_ts)
+                    if s["timestamp"] >= since_ts:
+                        swaps.append(s)
+                else:
+                    logger.warning("[fluxion] decode None tx=%s", log.get("transactionHash", "?"))
+            logger.info("[fluxion] pool %s — %d decoded swaps after filter", pool_addr, len(swaps))
             if len(swaps) >= limit:
                 break
         swaps.sort(key=lambda s: s["timestamp"], reverse=True)
@@ -162,7 +186,6 @@ def fetch_recent_swaps(since_ts: int, limit: int = 500) -> list:
     except Exception as e:
         logger.error("[fluxion] fetch_recent_swaps failed: %s", e)
         return []
-
 
 def fetch_volume_buckets(pool_id: str, since_ts: int) -> list:
     _ensure_pool_registry()
@@ -201,7 +224,7 @@ def fetch_daily_snapshots(pool_id: str, days: int = 7) -> list:
         latest   = w3.eth.block_number
         now_ts   = int(time.time())
         since_ts = now_ts - (days * 86400)
-        from_b   = max(0, latest - (days * 86400 // MANTLE_BLOCK_TIME) - 100)
+        from_b   = max(0, latest - RPC_BLOCK_LOOKBACK)
         logs     = w3.eth.get_logs({
             "fromBlock": from_b, "toBlock": latest,
             "address": Web3.to_checksum_address(pool_id),
