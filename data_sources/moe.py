@@ -116,33 +116,74 @@ def _decode_amounts(b32: bytes) -> tuple:
 def _decode_swap_log(log: dict) -> dict | None:
     try:
         pool_addr = log["address"].lower()
-        meta      = _pool_registry.get(pool_addr, {})
+        meta = _pool_registry.get(pool_addr, {})
+        # Handle HexBytes or str for data
+        raw_data = log["data"]
+        if isinstance(raw_data, (bytes, bytearray)):
+            data_bytes = bytes(raw_data)
+        else:
+            data_bytes = bytes.fromhex(str(raw_data).removeprefix("0x"))
         id_, amounts_in, amounts_out, vol_acc, total_fees, protocol_fees = abi_decode(
             ["uint24", "bytes32", "bytes32", "uint24", "bytes32", "bytes32"],
-            bytes.fromhex(log["data"][2:]),
+            data_bytes,
         )
-        sender    = "0x" + log["topics"][1][26:]
-        recipient = "0x" + log["topics"][2][26:]
-        in0, in1  = _decode_amounts(amounts_in)
+        # Handle HexBytes for topics
+        def topic_to_hex(t) -> str:
+            if isinstance(t, (bytes, bytearray)):
+                return t.hex()
+            return str(t).removeprefix("0x")
+
+        sender = "0x" + topic_to_hex(log["topics"][1])[24:]
+        recipient = "0x" + topic_to_hex(log["topics"][2])[24:]
+        in0, in1 = _decode_amounts(amounts_in)
         dec0, dec1 = meta.get("decimals0", 18), meta.get("decimals1", 18)
         amount_usd = (in0 / (10 ** dec0)) if in0 > 0 else (in1 / (10 ** dec1)) if in1 > 0 else 0.0
-        ts = int(log.get("blockTimestamp", "0x0"), 16)
+        # Get timestamp
+        ts = 0
+        raw_ts = log.get("blockTimestamp")
+        if raw_ts:
+            try:
+                ts = int(raw_ts, 16) if isinstance(raw_ts, str) else int(raw_ts)
+            except Exception:
+                ts = 0
+        if ts == 0:
+            w3 = _get_w3()
+            block_num = log["blockNumber"]
+            if isinstance(block_num, (bytes, bytearray)):
+                block_num = int.from_bytes(block_num, "big")
+            ts = w3.eth.get_block(block_num)["timestamp"]
+        # Handle HexBytes for transactionHash and logIndex
+        tx_h = log["transactionHash"]
+        if isinstance(tx_h, (bytes, bytearray)):
+            tx_h = "0x" + tx_h.hex()
+        else:
+            tx_h = str(tx_h)
+        log_idx = log["logIndex"]
+        if isinstance(log_idx, (bytes, bytearray)):
+            log_idx = int.from_bytes(log_idx, "big")
+        elif isinstance(log_idx, str):
+            log_idx = int(log_idx, 16)
+        else:
+            log_idx = int(log_idx)
         return {
-            "id": f"{log['transactionHash']}-{int(log['logIndex'], 16)}",
-            "timestamp": ts, "txHash": log["transactionHash"],
-            "pool": {"id": pool_addr,
-                     "token0Symbol": meta.get("token0Symbol", "?"),
-                     "token1Symbol": meta.get("token1Symbol", "?"),
-                     "txCount": 0},
-            "sender":    {"id": sender,    "txCount": 0, "isAgent": False, "agentTokenId": None},
+            "id": f"{tx_h}-{log_idx}",
+            "timestamp": ts,
+            "txHash": tx_h,
+            "pool": {
+                "id": pool_addr,
+                "token0Symbol": meta.get("token0Symbol", "?"),
+                "token1Symbol": meta.get("token1Symbol", "?"),
+                "txCount": 0,
+            },
+            "sender": {"id": sender, "txCount": 0, "isAgent": False, "agentTokenId": None},
             "recipient": {"id": recipient},
             "amountUSD": round(amount_usd, 6),
-            "bin_id": id_, "dex": "moe",
+            "bin_id": id_,
+            "dex": "moe",
         }
     except Exception as e:
         logger.debug("[moe] decode failed: %s", e)
         return None
-
 
 def fetch_recent_swaps(since_ts: int, limit: int = 500) -> list:
     _ensure_pool_registry()
@@ -211,7 +252,7 @@ def fetch_daily_snapshots(pool_id: str, days: int = 7) -> list:
         latest   = w3.eth.block_number
         now_ts   = int(time.time())
         since_ts = now_ts - (days * 86400)
-        from_b   = max(0, latest - (days * 86400 // MANTLE_BLOCK_TIME) - 100)
+        from_b = max(0, latest - RPC_BLOCK_LOOKBACK)
         logs     = w3.eth.get_logs({
             "fromBlock": from_b, "toBlock": latest,
             "address": Web3.to_checksum_address(pool_id),
