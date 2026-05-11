@@ -8,7 +8,7 @@ import sys
 import signal
 from datetime import datetime, timezone
 
-from config import TELEGRAM_BOT_TOKEN, SUBGRAPH_URL
+from config import TELEGRAM_BOT_TOKEN
 from database import init_db
 from scheduler import start_scheduler, scheduler, run_scan
 # alerter uses direct httpx — no bot app needed
@@ -40,10 +40,9 @@ BANNER = """
 def print_startup_info():
     print(BANNER)
     logger.info("RealClaw starting up...")
-    logger.info(f"Subgraph URL: {'✅ SET' if SUBGRAPH_URL else '❌ NOT SET — scans will fail'}")
+    logger.info("Data source: ✅ Direct RPC (rpc.mantle.xyz)")
     logger.info(f"Telegram Bot: {'✅ SET' if TELEGRAM_BOT_TOKEN else '❌ NOT SET — alerts disabled'}")
     logger.info(f"Start time: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} UTC")
-
 
 # ── Graceful Shutdown ─────────────────────────────────────
 
