@@ -16,9 +16,8 @@ from config import (
     POLL_WATCH_TRIGGER,
     POLL_WATCH_DEESCALATE,
     DIGEST_HOUR_UTC,
-    SUBGRAPH_URL,
 )
-from data_sources import agni, moe, fluxion
+from data_sources import moe, fluxion
 from data_sources.aave import fetch_pool_signal
 from data_sources.agents import fetch_all_agents, build_agent_map
 from detector import run_detection
@@ -69,12 +68,6 @@ async def discover_pools() -> dict[str, list]:
     loop = asyncio.get_event_loop()
 
     try:
-        agni_pools = await loop.run_in_executor(None, agni.fetch_top_pools, 10)
-    except Exception as e:
-        logger.error(f"[scheduler] Agni pool discovery failed: {e}")
-        agni_pools = []
-
-    try:
         moe_pools = await loop.run_in_executor(None, moe.fetch_top_pools, 10)
     except Exception as e:
         logger.error(f"[scheduler] Moe pool discovery failed: {e}")
@@ -87,7 +80,6 @@ async def discover_pools() -> dict[str, list]:
         fluxion_pools = []
 
     return {
-        "agni": agni_pools,
         "moe": moe_pools,
         "fluxion": fluxion_pools,
     }
@@ -154,10 +146,6 @@ async def run_scan():
         f"[scheduler] Scan #{state.scan_count} started — "
         f"{'WATCH MODE' if state.watch_mode else 'normal'} — {now.strftime('%H:%M:%S')} UTC"
     )
-
-    if not SUBGRAPH_URL:
-        logger.error("[scheduler] SUBGRAPH_URL not set — skipping scan")
-        return
 
     # Refresh agent map if stale (>1h)
     if (

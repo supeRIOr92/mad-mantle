@@ -1,4 +1,6 @@
-# requirements.txt — MAD
+# requirements.txt — MAD (post-migration)
+# REMOVED: gql, requests-toolbelt (subgraph dependency)
+# ADDED: eth-abi (explicit)
 
 # Core
 python-dotenv>=1.0.0
@@ -8,10 +10,7 @@ scipy>=1.12.0
 
 # Blockchain
 web3>=6.15.0
-
-# Graph queries
-gql>=3.5.0
-requests-toolbelt>=1.0.0
+eth-abi>=4.0.0
 
 # Scheduling
 APScheduler>=3.10.4
@@ -22,11 +21,9 @@ python-telegram-bot>=21.0.0
 # Graph algorithms (L3)
 networkx>=3.2.0
 
-# Optional: dashboard (Phase 3)
-# nextjs handled separately via npm
-
-#supabase
+# Supabase
 supabase>=2.3.0
 
+# API server (demo mode)
 fastapi
 uvicorn[standard]

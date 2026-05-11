@@ -1,145 +1,255 @@
 # data_sources/fluxion.py — Fluxion (UniV3 fork) data source
-# Queries unified custom subgraph
-# Same detection as Agni: Z-Score + Bollinger
+# MIGRATED: subgraph → direct RPC via web3.py
+# Detection: Z-Score + Bollinger (same as before)
+#
+# Verified onchain:
+#   Swap topic: 0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67
+#   Signature:  Swap(address sender, address recipient, int256 amount0, int256 amount1,
+#                    uint160 sqrtPriceX96, uint128 liquidity, int24 tick)
+#   Factory:    0xF883162Ed9c7E8EF604214c964c678E40c9B737C
 
 import logging
-from gql import gql, Client
-from gql.transport.requests import RequestsHTTPTransport
-from config import SUBGRAPH_URL
+import time
+from collections import defaultdict
+from datetime import datetime, timezone
+
+from web3 import Web3
+from eth_abi import decode as abi_decode
+
+from config import MANTLE_RPC_URL, RPC_BLOCK_LOOKBACK
 
 logger = logging.getLogger(__name__)
 
+SWAP_TOPIC      = "0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67"
+FACTORY_ADDRESS = Web3.to_checksum_address("0xF883162Ed9c7E8EF604214c964c678E40c9B737C")
+BUCKET_SIZE     = 15 * 60
+MANTLE_BLOCK_TIME = 2
 
-def get_client() -> Client:
-    transport = RequestsHTTPTransport(url=SUBGRAPH_URL, timeout=30)
-    return Client(transport=transport, fetch_schema_from_transport=False)
-
-
-# ── Queries ───────────────────────────────────────────────
-QUERY_RECENT_SWAPS = gql("""
-    query FluxionRecentSwaps($since: BigInt!, $first: Int!) {
-        swaps(
-            where:          { dex: "fluxion", timestamp_gte: $since }
-            orderBy:        timestamp
-            orderDirection: desc
-            first:          $first
-        ) {
-            id
-            timestamp
-            pool      { id token0Symbol token1Symbol totalVolumeUSD txCount }
-            sender    { id totalVolumeUSD txCount isAgent agentTokenId }
-            recipient { id }
-            amountUSD
-            amount0
-            amount1
-            sqrtPriceX96
-            tick
-            txHash
-        }
+FACTORY_ABI = [
+    {
+        "anonymous": False,
+        "inputs": [
+            {"indexed": True,  "name": "token0",      "type": "address"},
+            {"indexed": True,  "name": "token1",      "type": "address"},
+            {"indexed": True,  "name": "fee",         "type": "uint24"},
+            {"indexed": False, "name": "tickSpacing", "type": "int24"},
+            {"indexed": False, "name": "pool",        "type": "address"},
+        ],
+        "name": "PoolCreated",
+        "type": "event",
     }
-""")
+]
 
-QUERY_VOLUME_BUCKETS = gql("""
-    query FluxionBuckets($poolId: String!, $since: BigInt!) {
-        volumeBuckets(
-            where:          { pool: $poolId, dex: "fluxion", bucketStart_gte: $since }
-            orderBy:        bucketStart
-            orderDirection: asc
-        ) {
-            bucketStart
-            volumeUSD
-            txCount
-            uniqueSenders
-        }
-    }
-""")
+ERC20_ABI = [
+    {"inputs": [], "name": "symbol",   "outputs": [{"type": "string"}], "stateMutability": "view", "type": "function"},
+    {"inputs": [], "name": "decimals", "outputs": [{"type": "uint8"}],  "stateMutability": "view", "type": "function"},
+]
 
-QUERY_DAILY_SNAPSHOTS = gql("""
-    query FluxionDailySnapshots($poolId: String!, $days: Int!) {
-        dailyPoolSnapshots(
-            where:          { pool: $poolId, dex: "fluxion" }
-            orderBy:        date
-            orderDirection: desc
-            first:          $days
-        ) {
-            date
-            volumeUSD
-            txCount
-            highVolumeUSD
-            lowVolumeUSD
-        }
-    }
-""")
-
-QUERY_TOP_POOLS = gql("""
-    query FluxionTopPools($first: Int!) {
-        pools(
-            where:          { dex: "fluxion" }
-            orderBy:        totalVolumeUSD
-            orderDirection: desc
-            first:          $first
-        ) {
-            id
-            token0Symbol
-            token1Symbol
-            feeTier
-            totalVolumeUSD
-            txCount
-            lastSwapAt
-        }
-    }
-""")
+_w3 = None
+_token_cache: dict = {}
+_pool_registry: dict = {}
+_registry_fetched_at: float = 0.0
+REGISTRY_TTL = 3600
 
 
-# ── Fetchers ──────────────────────────────────────────────
-def fetch_recent_swaps(since_ts: int, limit: int = 500) -> list:
-    """Fetch recent Fluxion swaps since timestamp."""
+def _get_w3() -> Web3:
+    global _w3
+    if _w3 is None or not _w3.is_connected():
+        _w3 = Web3(Web3.HTTPProvider(MANTLE_RPC_URL, request_kwargs={"timeout": 15}))
+    return _w3
+
+
+def _get_token_meta(address: str) -> dict:
+    addr = address.lower()
+    if addr in _token_cache:
+        return _token_cache[addr]
     try:
-        client = get_client()
-        result = client.execute(QUERY_RECENT_SWAPS, variable_values={
-            "since": str(since_ts),
-            "first": limit,
-        })
-        return result.get("swaps", [])
+        w3 = _get_w3()
+        c  = w3.eth.contract(address=Web3.to_checksum_address(address), abi=ERC20_ABI)
+        _token_cache[addr] = {"symbol": c.functions.symbol().call(), "decimals": c.functions.decimals().call()}
     except Exception as e:
-        logger.error(f"[fluxion] fetch_recent_swaps failed: {e}")
+        logger.debug("[fluxion] token meta failed %s: %s", address, e)
+        _token_cache[addr] = {"symbol": addr[:8] + "...", "decimals": 18}
+    return _token_cache[addr]
+
+
+def _ensure_pool_registry():
+    global _registry_fetched_at
+    if time.time() - _registry_fetched_at < REGISTRY_TTL and _pool_registry:
+        return
+    try:
+        w3      = _get_w3()
+        latest  = w3.eth.block_number
+        factory = w3.eth.contract(address=FACTORY_ADDRESS, abi=FACTORY_ABI)
+        events  = factory.events.PoolCreated.get_logs(
+            from_block=max(0, latest - 500_000), to_block=latest
+        )
+        for ev in events:
+            pool_addr = ev["args"]["pool"].lower()
+            m0 = _get_token_meta(ev["args"]["token0"])
+            m1 = _get_token_meta(ev["args"]["token1"])
+            _pool_registry[pool_addr] = {
+                "id": pool_addr, "dex": "fluxion",
+                "token0": ev["args"]["token0"].lower(),
+                "token1": ev["args"]["token1"].lower(),
+                "token0Symbol": m0["symbol"], "token1Symbol": m1["symbol"],
+                "decimals0": m0["decimals"],  "decimals1": m1["decimals"],
+                "feeTier": ev["args"]["fee"],
+            }
+        _registry_fetched_at = time.time()
+        logger.info("[fluxion] registry loaded — %d pools", len(_pool_registry))
+    except Exception as e:
+        logger.error("[fluxion] registry fetch failed: %s", e)
+
+
+def _decode_swap_log(log: dict) -> dict | None:
+    try:
+        pool_addr = log["address"].lower()
+        meta      = _pool_registry.get(pool_addr, {})
+        amount0, amount1, sqrtPriceX96, liquidity, tick = abi_decode(
+            ["int256", "int256", "uint160", "uint128", "int24"],
+            bytes.fromhex(log["data"][2:]),
+        )
+        sender    = "0x" + log["topics"][1][26:]
+        recipient = "0x" + log["topics"][2][26:]
+        dec0, dec1 = meta.get("decimals0", 18), meta.get("decimals1", 18)
+        amount_usd = (amount0 / (10 ** dec0)) if amount0 > 0 else (abs(amount1) / (10 ** dec1))
+        ts = int(log.get("blockTimestamp", "0x0"), 16)
+        return {
+            "id": f"{log['transactionHash']}-{int(log['logIndex'], 16)}",
+            "timestamp": ts, "txHash": log["transactionHash"],
+            "pool": {"id": pool_addr,
+                     "token0Symbol": meta.get("token0Symbol", "?"),
+                     "token1Symbol": meta.get("token1Symbol", "?"),
+                     "totalVolumeUSD": 0, "txCount": 0},
+            "sender":    {"id": sender,    "txCount": 0, "isAgent": False, "agentTokenId": None},
+            "recipient": {"id": recipient},
+            "amountUSD": round(amount_usd, 6),
+            "amount0":   amount0 / (10 ** dec0),
+            "amount1":   amount1 / (10 ** dec1),
+            "sqrtPriceX96": sqrtPriceX96, "tick": tick, "dex": "fluxion",
+        }
+    except Exception as e:
+        logger.debug("[fluxion] decode failed: %s", e)
+        return None
+
+
+def fetch_recent_swaps(since_ts: int, limit: int = 500) -> list:
+    _ensure_pool_registry()
+    if not _pool_registry:
+        return []
+    try:
+        w3     = _get_w3()
+        latest = w3.eth.block_number
+        now_ts = int(time.time())
+        delta  = (max(0, now_ts - since_ts) // MANTLE_BLOCK_TIME) + 10
+        from_b = max(0, latest - min(delta, RPC_BLOCK_LOOKBACK))
+        swaps  = []
+        for pool_addr in list(_pool_registry.keys()):
+            logs = w3.eth.get_logs({
+                "fromBlock": from_b, "toBlock": latest,
+                "address": Web3.to_checksum_address(pool_addr),
+                "topics": [SWAP_TOPIC],
+            })
+            for log in logs:
+                s = _decode_swap_log(dict(log))
+                if s and s["timestamp"] >= since_ts:
+                    swaps.append(s)
+            if len(swaps) >= limit:
+                break
+        swaps.sort(key=lambda s: s["timestamp"], reverse=True)
+        return swaps[:limit]
+    except Exception as e:
+        logger.error("[fluxion] fetch_recent_swaps failed: %s", e)
         return []
 
 
 def fetch_volume_buckets(pool_id: str, since_ts: int) -> list:
-    """Fetch 15-min volume buckets for a pool."""
+    _ensure_pool_registry()
     try:
-        client = get_client()
-        result = client.execute(QUERY_VOLUME_BUCKETS, variable_values={
-            "poolId": pool_id.lower(),
-            "since": str(since_ts),
+        w3     = _get_w3()
+        latest = w3.eth.block_number
+        now_ts = int(time.time())
+        delta  = (max(0, now_ts - since_ts) // MANTLE_BLOCK_TIME) + 10
+        from_b = max(0, latest - min(delta, RPC_BLOCK_LOOKBACK))
+        logs   = w3.eth.get_logs({
+            "fromBlock": from_b, "toBlock": latest,
+            "address": Web3.to_checksum_address(pool_id),
+            "topics": [SWAP_TOPIC],
         })
-        return result.get("volumeBuckets", [])
+        buckets: dict = defaultdict(lambda: {"volumeUSD": 0.0, "txCount": 0, "senders": set()})
+        for log in logs:
+            s = _decode_swap_log(dict(log))
+            if not s or s["timestamp"] < since_ts:
+                continue
+            bk = (s["timestamp"] // BUCKET_SIZE) * BUCKET_SIZE
+            buckets[bk]["volumeUSD"] += s["amountUSD"]
+            buckets[bk]["txCount"]   += 1
+            buckets[bk]["senders"].add(s["sender"]["id"])
+        return [{"bucketStart": bk, "volumeUSD": round(b["volumeUSD"], 6),
+                 "txCount": b["txCount"], "uniqueSenders": len(b["senders"])}
+                for bk, b in sorted(buckets.items())]
     except Exception as e:
-        logger.error(f"[fluxion] fetch_volume_buckets failed: {e}")
+        logger.error("[fluxion] fetch_volume_buckets failed %s: %s", pool_id, e)
         return []
 
 
 def fetch_daily_snapshots(pool_id: str, days: int = 7) -> list:
-    """Fetch daily snapshots for Bollinger baseline calculation."""
+    _ensure_pool_registry()
     try:
-        client = get_client()
-        result = client.execute(QUERY_DAILY_SNAPSHOTS, variable_values={
-            "poolId": pool_id.lower(),
-            "days":   days,
+        w3       = _get_w3()
+        latest   = w3.eth.block_number
+        now_ts   = int(time.time())
+        since_ts = now_ts - (days * 86400)
+        from_b   = max(0, latest - (days * 86400 // MANTLE_BLOCK_TIME) - 100)
+        logs     = w3.eth.get_logs({
+            "fromBlock": from_b, "toBlock": latest,
+            "address": Web3.to_checksum_address(pool_id),
+            "topics": [SWAP_TOPIC],
         })
-        return result.get("dailyPoolSnapshots", [])
+        daily: dict = defaultdict(lambda: {"volumeUSD": 0.0, "txCount": 0,
+                                            "highVolumeUSD": 0.0, "lowVolumeUSD": float("inf")})
+        for log in logs:
+            s = _decode_swap_log(dict(log))
+            if not s or s["timestamp"] < since_ts:
+                continue
+            day = datetime.fromtimestamp(s["timestamp"], tz=timezone.utc).strftime("%Y-%m-%d")
+            d = daily[day]
+            d["volumeUSD"]    += s["amountUSD"]
+            d["txCount"]      += 1
+            d["highVolumeUSD"] = max(d["highVolumeUSD"], s["amountUSD"])
+            d["lowVolumeUSD"]  = min(d["lowVolumeUSD"], s["amountUSD"])
+        result = []
+        for day in sorted(daily.keys(), reverse=True)[:days]:
+            d = daily[day]
+            result.append({
+                "date": day, "volumeUSD": round(d["volumeUSD"], 6),
+                "txCount": d["txCount"],
+                "highVolumeUSD": round(d["highVolumeUSD"], 6),
+                "lowVolumeUSD":  round(d["lowVolumeUSD"] if d["lowVolumeUSD"] != float("inf") else 0, 6),
+            })
+        return result
     except Exception as e:
-        logger.error(f"[fluxion] fetch_daily_snapshots failed: {e}")
+        logger.error("[fluxion] fetch_daily_snapshots failed %s: %s", pool_id, e)
         return []
 
 
 def fetch_top_pools(limit: int = 20) -> list:
-    """Fetch top Fluxion pools by volume."""
+    _ensure_pool_registry()
+    pools = list(_pool_registry.values())
     try:
-        client = get_client()
-        result = client.execute(QUERY_TOP_POOLS, variable_values={"first": limit})
-        return result.get("pools", [])
+        w3      = _get_w3()
+        latest  = w3.eth.block_number
+        since_b = max(0, latest - 4320)
+        activity: dict = defaultdict(int)
+        for addr in list(_pool_registry.keys())[:50]:
+            logs = w3.eth.get_logs({
+                "fromBlock": since_b, "toBlock": latest,
+                "address": Web3.to_checksum_address(addr),
+                "topics": [SWAP_TOPIC],
+            })
+            activity[addr] = len(logs)
+        pools.sort(key=lambda p: activity.get(p["id"], 0), reverse=True)
     except Exception as e:
-        logger.error(f"[fluxion] fetch_top_pools failed: {e}")
-        return []
+        logger.warning("[fluxion] fetch_top_pools sort failed: %s", e)
+    return pools[:limit]

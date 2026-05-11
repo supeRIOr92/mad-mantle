@@ -1,6 +1,12 @@
 """
-data_sources/aave.py
-Aave v3 Mantle — Flash loan, collateral dump, open borrow detection.
+data_sources/aave.py — Aave v3 Mantle
+Pool-level signal untuk scorer amplification.
+
+CHANGES:
+- BUG FIX: decimal hardcoded 1e6 → lookup per asset via ERC20
+- REMOVED: get_aave_modifier() — dead code, tidak dipanggil di scheduler.py
+- fetch_pool_signal() = single source of truth untuk scorer.py
+- get_wallet_aave_summary() tetap untuk wallet_profiler.py
 """
 
 from web3 import Web3
@@ -10,20 +16,13 @@ import logging
 from config import (
     MANTLE_RPC_URL,
     AAVE_POOL_ADDRESS,
-    AAVE_FLASH_LOAN_WINDOW_BLOCKS,
-    AAVE_COLLATERAL_DUMP_WINDOW_MIN,
-    AAVE_OPEN_BORROW_MIN_USD,
     AAVE_OPEN_BORROW_FRESH_MIN,
-    AAVE_MODIFIER_CAP,
+    AAVE_SIGNAL_WINDOW_BLOCKS,
 )
 
 logger = logging.getLogger(__name__)
 
-# ── ABI fragments ─────────────────────────────────────────────────────────────
-
 AAVE_POOL_ABI = [
-    # FlashLoan(address initiator, address target, address asset, uint256 amount,
-    #           uint8 interestRateMode, uint256 premium, uint16 referralCode)
     {
         "anonymous": False,
         "inputs": [
@@ -38,25 +37,6 @@ AAVE_POOL_ABI = [
         "name": "FlashLoan",
         "type": "event",
     },
-    # LiquidationCall(address collateralAsset, address debtAsset, address user,
-    #                 uint256 debtToCover, uint256 liquidatedCollateralAmount,
-    #                 address liquidator, bool receiveAToken)
-    {
-        "anonymous": False,
-        "inputs": [
-            {"indexed": True,  "name": "collateralAsset",            "type": "address"},
-            {"indexed": True,  "name": "debtAsset",                  "type": "address"},
-            {"indexed": True,  "name": "user",                       "type": "address"},
-            {"indexed": False, "name": "debtToCover",                "type": "uint256"},
-            {"indexed": False, "name": "liquidatedCollateralAmount", "type": "uint256"},
-            {"indexed": False, "name": "liquidator",                 "type": "address"},
-            {"indexed": False, "name": "receiveAToken",              "type": "bool"},
-        ],
-        "name": "LiquidationCall",
-        "type": "event",
-    },
-    # Borrow(address reserve, address user, address onBehalfOf, uint256 amount,
-    #        uint8 interestRateMode, uint256 borrowRate, uint16 referralCode)
     {
         "anonymous": False,
         "inputs": [
@@ -71,26 +51,33 @@ AAVE_POOL_ABI = [
         "name": "Borrow",
         "type": "event",
     },
-    # getUserAccountData(address user) view returns (...)
     {
         "inputs": [{"name": "user", "type": "address"}],
         "name": "getUserAccountData",
         "outputs": [
-            {"name": "totalCollateralBase",     "type": "uint256"},
-            {"name": "totalDebtBase",           "type": "uint256"},
-            {"name": "availableBorrowsBase",    "type": "uint256"},
+            {"name": "totalCollateralBase",         "type": "uint256"},
+            {"name": "totalDebtBase",               "type": "uint256"},
+            {"name": "availableBorrowsBase",        "type": "uint256"},
             {"name": "currentLiquidationThreshold", "type": "uint256"},
-            {"name": "ltv",                     "type": "uint256"},
-            {"name": "healthFactor",            "type": "uint256"},
+            {"name": "ltv",                         "type": "uint256"},
+            {"name": "healthFactor",                "type": "uint256"},
         ],
         "stateMutability": "view",
         "type": "function",
     },
 ]
 
-# ── Web3 setup ────────────────────────────────────────────────────────────────
-_w3: Web3 | None = None
+ERC20_DECIMALS_ABI = [
+    {"inputs": [], "name": "decimals", "outputs": [{"type": "uint8"}], "stateMutability": "view", "type": "function"},
+]
+
+_w3 = None
 _pool = None
+_decimals_cache: dict = {}
+_borrow_cache: dict = {}
+_cache_ts: float = 0.0
+CACHE_TTL = 60
+
 
 def _get_w3() -> Web3:
     global _w3
@@ -98,363 +85,146 @@ def _get_w3() -> Web3:
         _w3 = Web3(Web3.HTTPProvider(MANTLE_RPC_URL, request_kwargs={"timeout": 10}))
     return _w3
 
+
 def _get_pool():
     global _pool
     if _pool is None:
-        w3 = _get_w3()
-        _pool = w3.eth.contract(
+        _pool = _get_w3().eth.contract(
             address=Web3.to_checksum_address(AAVE_POOL_ADDRESS),
             abi=AAVE_POOL_ABI,
         )
     return _pool
 
-# ── Recent event cache (in-memory, TTL 60s) ───────────────────────────────────
 
-_flash_cache: dict[str, int] = {}   # wallet -> block number of last flash loan
-_borrow_cache: dict[str, dict] = {} # wallet -> {block, timestamp, amount_usd}
-_cache_ts: float = 0.0
-CACHE_TTL = 60  # seconds
+def _get_asset_decimals(asset: str) -> int:
+    """FIX: lookup decimals per asset, bukan hardcoded 1e6."""
+    addr = asset.lower()
+    if addr in _decimals_cache:
+        return _decimals_cache[addr]
+    try:
+        token = _get_w3().eth.contract(
+            address=Web3.to_checksum_address(asset), abi=ERC20_DECIMALS_ABI
+        )
+        dec = token.functions.decimals().call()
+        _decimals_cache[addr] = dec
+        return dec
+    except Exception as e:
+        logger.debug("[aave] decimals lookup failed %s: %s — default 18", asset, e)
+        _decimals_cache[addr] = 18
+        return 18
+
 
 def _refresh_cache_if_needed():
     global _cache_ts
     if time.time() - _cache_ts < CACHE_TTL:
         return
-    _fetch_recent_events()
-    _cache_ts = time.time()
-
-def _fetch_recent_events():
-    """Fetch FlashLoan + Borrow events from last ~30 blocks (~60s on Mantle ~2s/block)."""
-    global _flash_cache, _borrow_cache
     try:
-        w3   = _get_w3()
-        pool = _get_pool()
+        w3     = _get_w3()
+        pool   = _get_pool()
         latest = w3.eth.block_number
-        from_block = max(0, latest - 30)
-
-        # FlashLoan events
-        flash_events = pool.events.FlashLoan.get_logs(from_block=from_block, to_block=latest)
-        _flash_cache = {}
-        for ev in flash_events:
-            initiator = ev["args"]["initiator"].lower()
-            _flash_cache[initiator] = ev["blockNumber"]
-
-        # Borrow events — store latest borrow per wallet
-        borrow_events = pool.events.Borrow.get_logs(from_block=from_block, to_block=latest)
+        from_b = max(0, latest - 30)
+        global _borrow_cache
         _borrow_cache = {}
-        for ev in borrow_events:
+        for ev in pool.events.Borrow.get_logs(from_block=from_b, to_block=latest):
             wallet = ev["args"]["onBehalfOf"].lower()
+            asset  = ev["args"]["reserve"].lower()
+            dec    = _get_asset_decimals(asset)
             block_info = w3.eth.get_block(ev["blockNumber"])
             _borrow_cache[wallet] = {
-                "block":     ev["blockNumber"],
-                "timestamp": block_info["timestamp"],
-                "amount":    ev["args"]["amount"],
-                "reserve":   ev["args"]["reserve"].lower(),
+                "block":      ev["blockNumber"],
+                "timestamp":  block_info["timestamp"],
+                "amount_usd": ev["args"]["amount"] / (10 ** dec),
+                "reserve":    asset,
             }
-
+        _cache_ts = time.time()
     except Exception as e:
-        logger.warning("aave._fetch_recent_events failed: %s", e)
+        logger.warning("[aave] cache refresh failed: %s", e)
 
-# ── Detection functions ───────────────────────────────────────────────────────
-
-def flash_loan_detected(wallet: str, current_block: int) -> bool:
-    """
-    Returns True if wallet initiated a flash loan in the same block
-    as the current DEX swap (or within AAVE_FLASH_LOAN_WINDOW_BLOCKS).
-    """
-    _refresh_cache_if_needed()
-    wallet = wallet.lower()
-    flash_block = _flash_cache.get(wallet)
-    if flash_block is None:
-        return False
-    return abs(current_block - flash_block) <= AAVE_FLASH_LOAN_WINDOW_BLOCKS
-
-
-def collateral_dump_detected(wallet: str, swap_timestamp: int) -> bool:
-    """
-    Returns True if wallet borrowed from Aave (stablecoin) AND then
-    sold collateral on DEX within AAVE_COLLATERAL_DUMP_WINDOW_MIN minutes.
-
-    Logic: borrow_timestamp < swap_timestamp < borrow_timestamp + window
-    """
-    _refresh_cache_if_needed()
-    wallet = wallet.lower()
-    borrow = _borrow_cache.get(wallet)
-    if borrow is None:
-        return False
-
-    window_sec = AAVE_COLLATERAL_DUMP_WINDOW_MIN * 60
-    delta = swap_timestamp - borrow["timestamp"]
-    return 0 <= delta <= window_sec
-
-
-def open_borrow_gte(wallet: str, min_usd: float, fresh_min: int) -> bool:
-    """
-    Returns True if wallet has an open Aave borrow >= min_usd USD
-    AND the borrow is fresh (< fresh_min minutes old).
-
-    Uses getUserAccountData for live debt position + cache for freshness.
-    """
-    wallet = wallet.lower()
-
-    # Freshness check from borrow cache
-    borrow = _borrow_cache.get(wallet)
-    if borrow is None:
-        return False  # no recent borrow on record
-
-    age_min = (time.time() - borrow["timestamp"]) / 60
-    if age_min >= fresh_min:
-        return False  # borrow too old
-
-    # Debt position check via getUserAccountData
-    try:
-        pool = _get_pool()
-        data = pool.functions.getUserAccountData(
-            Web3.to_checksum_address(wallet)
-        ).call()
-        # totalDebtBase is in USD with 8 decimals (Aave v3 standard)
-        total_debt_usd = data[1] / 1e8
-        return total_debt_usd >= min_usd
-    except ContractLogicError as e:
-        logger.debug("getUserAccountData ContractLogicError for %s: %s", wallet, e)
-        return False
-    except Exception as e:
-        logger.warning("open_borrow_gte failed for %s: %s", wallet, e)
-        return False
-
-
-def collateral_dump_from_liquidation(wallet: str, window_min: int = 60) -> bool:
-    """
-    Supplementary: check if wallet was recently liquidated (LiquidationCall).
-    Liquidated positions often precede panic selling on DEX.
-    Not used in main modifier — available for future L3 signal.
-    """
-    try:
-        w3   = _get_w3()
-        pool = _get_pool()
-        latest    = w3.eth.block_number
-        from_block = max(0, latest - (window_min * 30))  # ~30 blocks/min on Mantle
-
-        events = pool.events.LiquidationCall.get_logs(
-            fromBlock=from_block,
-            toBlock=latest,
-            argument_filters={"user": Web3.to_checksum_address(wallet)},
-        )
-        return len(events) > 0
-    except Exception as e:
-        logger.warning("collateral_dump_from_liquidation failed for %s: %s", wallet, e)
-        return False
-
-
-# ── Main interface ────────────────────────────────────────────────────────────
-
-def get_aave_modifier(wallet: str, current_block: int, swap_timestamp: int) -> float:
-    """
-    Returns the Aave cross-protocol modifier for scoring.
-
-    Priority max selection (not stacking):
-        flash loan same block  -> 1.5 (hard cap)
-        collateral dump <15min -> max(current, 1.3)
-        open borrow fresh      -> max(current, 1.2)
-        nothing                -> 1.0
-
-    Returns: float in [1.0, 1.5]
-    """
-    modifier = 1.0
-
-    try:
-        if flash_loan_detected(wallet, current_block):
-            return AAVE_MODIFIER_CAP  # 1.5 — short-circuit, no need to check further
-
-        if collateral_dump_detected(wallet, swap_timestamp):
-            modifier = max(modifier, 1.3)
-
-        if open_borrow_gte(wallet, AAVE_OPEN_BORROW_MIN_USD, AAVE_OPEN_BORROW_FRESH_MIN):
-            modifier = max(modifier, 1.2)
-
-    except Exception as e:
-        logger.warning("get_aave_modifier failed for %s: %s", wallet, e)
-
-    return modifier
-
-
-def get_wallet_aave_summary(wallet: str) -> dict:
-    """
-    Returns a summary dict for wallet_profiler + alerter use.
-    {
-        "has_open_borrow": bool,
-        "total_debt_usd": float,
-        "health_factor": float,   # < 1.0 = liquidatable
-        "recent_flash_loan": bool,
-        "recent_borrow_fresh": bool,
-    }
-    """
-    result = {
-        "has_open_borrow":     False,
-        "total_debt_usd":      0.0,
-        "health_factor":       999.0,
-        "recent_flash_loan":   False,
-        "recent_borrow_fresh": False,
-    }
-    try:
-        _refresh_cache_if_needed()
-        w3 = _get_w3()
-        pool = _get_pool()
-
-        data = pool.functions.getUserAccountData(
-            Web3.to_checksum_address(wallet)
-        ).call()
-        total_debt_usd = data[1] / 1e8
-        health_factor  = data[5] / 1e18
-
-        result["has_open_borrow"] = total_debt_usd > 0
-        result["total_debt_usd"]  = round(total_debt_usd, 2)
-        result["health_factor"]   = round(health_factor, 4)
-
-        wallet_lc = wallet.lower()
-        result["recent_flash_loan"]   = wallet_lc in _flash_cache
-        result["recent_borrow_fresh"] = (
-            wallet_lc in _borrow_cache and
-            (time.time() - _borrow_cache[wallet_lc]["timestamp"]) / 60 < AAVE_OPEN_BORROW_FRESH_MIN
-        )
-
-    except Exception as e:
-        logger.warning("get_wallet_aave_summary failed for %s: %s", wallet, e)
-
-    return result
-
-# ══════════════════════════════════════════════════════════
-# Pool-level Aave signal (independen from per-wallet cache)
-# Single source of truth for scorer.py
-# ══════════════════════════════════════════════════════════
 
 def _signal_label(signal: float) -> str:
-    """Human-readable label dari nilai aave_signal."""
-    if signal >= 1.0:
-        return "FLASH_LOAN_LARGE"
-    elif signal >= 0.7:
-        return "FLASH_LOAN"
-    elif signal >= 0.6:
-        return "BORROW_LARGE"
-    elif signal >= 0.4:
-        return "BORROW_MID"
-    elif signal >= 0.2:
-        return "BORROW_SMALL"
-    else:
-        return "NO_ACTIVITY"
+    if signal >= 1.0: return "FLASH_LOAN_LARGE"
+    if signal >= 0.7: return "FLASH_LOAN"
+    if signal >= 0.6: return "BORROW_LARGE"
+    if signal >= 0.4: return "BORROW_MID"
+    if signal >= 0.2: return "BORROW_SMALL"
+    return "NO_ACTIVITY"
 
 
-def compute_aave_signal(events: list[dict]) -> float:
-    """
-    Graded scoring 0.0–1.0 dari pool-level Aave events.
-    Pakai max() — tidak stacking, ambil signal terkuat.
-
-    Scoring:
-        FLASH_LOAN > $500K → 1.0
-        FLASH_LOAN any     → 0.7
-        BORROW > $1M       → 0.6
-        BORROW > $100K     → 0.4
-        BORROW > $10K      → 0.2
-        No activity        → 0.0
-    """
+def compute_aave_signal(events: list) -> float:
     signal = 0.0
     for e in events:
-        event_type = e.get("type", "")
-        amount_usd = float(e.get("amount_usd", 0))
-
-        if event_type == "FLASH_LOAN":
-            if amount_usd > 500_000:
-                signal = max(signal, 1.0)
-            else:
-                signal = max(signal, 0.7)
-        elif event_type == "BORROW":
-            if amount_usd > 1_000_000:
-                signal = max(signal, 0.6)
-            elif amount_usd > 100_000:
-                signal = max(signal, 0.4)
-            elif amount_usd > 10_000:
-                signal = max(signal, 0.2)
-
+        t   = e.get("type", "")
+        usd = float(e.get("amount_usd", 0))
+        if t == "FLASH_LOAN":
+            signal = max(signal, 1.0 if usd > 500_000 else 0.7)
+        elif t == "BORROW":
+            if usd > 1_000_000: signal = max(signal, 0.6)
+            elif usd > 100_000: signal = max(signal, 0.4)
+            elif usd > 10_000:  signal = max(signal, 0.2)
     return round(signal, 4)
 
 
 def fetch_pool_signal(current_block: int) -> dict:
     """
-    Fetch FlashLoan + Borrow events dari Aave dalam window 50 blocks terakhir.
-    Independen dari per-wallet cache — single source of truth untuk scorer.
-
-    Returns:
-        {
-            "aave_signal": float,  # 0.0–1.0
-            "aave_label": str,     # human-readable
-            "events": list,        # raw events untuk logging/debug
-        }
+    Single source of truth untuk scorer.py.
+    Fetch FlashLoan + Borrow dari Aave dalam AAVE_SIGNAL_WINDOW_BLOCKS terakhir.
     """
-    from config import AAVE_SIGNAL_WINDOW_BLOCKS
-
-    result = {
-        "aave_signal": 0.0,
-        "aave_label": "NO_ACTIVITY",
-        "events": [],
-    }
-
+    result = {"aave_signal": 0.0, "aave_label": "NO_ACTIVITY", "events": []}
     try:
-        w3 = _get_w3()
-        pool = _get_pool()
+        pool    = _get_pool()
+        from_b  = max(0, current_block - AAVE_SIGNAL_WINDOW_BLOCKS)
+        events  = []
 
-        from_block = max(0, current_block - AAVE_SIGNAL_WINDOW_BLOCKS)
-        to_block = current_block
-        events = []
-
-        # FlashLoan events
-        flash_events = pool.events.FlashLoan.get_logs(
-            from_block=from_block,
-            to_block=to_block,
-        )
-
-        for ev in flash_events:
-            amount_raw = ev["args"]["amount"]
-            # Amount dalam token decimals — approximate USD via raw amount
-            # Untuk scoring purposes: treat raw amount as proxy
-            # (asset-specific decimals bisa di-refine kalau perlu)
-            amount_usd = amount_raw / 1e6  # assume USDC/USDT 6 decimals as baseline
+        for ev in pool.events.FlashLoan.get_logs(from_block=from_b, to_block=current_block):
+            asset = ev["args"]["asset"].lower()
+            dec   = _get_asset_decimals(asset)  # FIX
             events.append({
-                "type": "FLASH_LOAN",
-                "amount_usd": amount_usd,
-                "block": ev["blockNumber"],
-                "initiator": ev["args"]["initiator"].lower(),
-                "asset": ev["args"]["asset"].lower(),
+                "type":       "FLASH_LOAN",
+                "amount_usd": ev["args"]["amount"] / (10 ** dec),
+                "block":      ev["blockNumber"],
+                "initiator":  ev["args"]["initiator"].lower(),
+                "asset":      asset,
             })
 
-        # Borrow events
-        borrow_events = pool.events.Borrow.get_logs(
-            from_block=from_block,
-            to_block=to_block,
-        )
-
-        for ev in borrow_events:
-            amount_raw = ev["args"]["amount"]
-            amount_usd = amount_raw / 1e6  # same approximation
+        for ev in pool.events.Borrow.get_logs(from_block=from_b, to_block=current_block):
+            asset = ev["args"]["reserve"].lower()
+            dec   = _get_asset_decimals(asset)  # FIX
             events.append({
-                "type": "BORROW",
-                "amount_usd": amount_usd,
-                "block": ev["blockNumber"],
-                "wallet": ev["args"]["onBehalfOf"].lower(),
-                "asset": ev["args"]["reserve"].lower(),
+                "type":       "BORROW",
+                "amount_usd": ev["args"]["amount"] / (10 ** dec),
+                "block":      ev["blockNumber"],
+                "wallet":     ev["args"]["onBehalfOf"].lower(),
+                "asset":      asset,
             })
 
         signal = compute_aave_signal(events)
-        label = _signal_label(signal)
-
         result["aave_signal"] = signal
-        result["aave_label"] = label
-        result["events"] = events
-
-        logger.info(
-            "[aave.fetch_pool_signal] blocks=%d–%d events=%d signal=%.2f label=%s",
-            from_block, to_block, len(events), signal, label,
-        )
-
+        result["aave_label"]  = _signal_label(signal)
+        result["events"]      = events
+        logger.info("[aave] blocks=%d–%d events=%d signal=%.2f label=%s",
+                    from_b, current_block, len(events), signal, result["aave_label"])
     except Exception as e:
         logger.warning("[aave.fetch_pool_signal] failed: %s", e)
+    return result
 
+
+def get_wallet_aave_summary(wallet: str) -> dict:
+    """Untuk wallet_profiler.py dan alerter.py."""
+    result = {"has_open_borrow": False, "total_debt_usd": 0.0,
+               "health_factor": 999.0, "recent_borrow_fresh": False}
+    try:
+        _refresh_cache_if_needed()
+        data  = _get_pool().functions.getUserAccountData(
+            Web3.to_checksum_address(wallet)
+        ).call()
+        result["has_open_borrow"] = data[1] > 0
+        result["total_debt_usd"]  = round(data[1] / 1e8, 2)
+        result["health_factor"]   = round(data[5] / 1e18, 4)
+        borrow = _borrow_cache.get(wallet.lower())
+        if borrow:
+            result["recent_borrow_fresh"] = (time.time() - borrow["timestamp"]) / 60 < AAVE_OPEN_BORROW_FRESH_MIN
+    except ContractLogicError as e:
+        logger.debug("[aave] getUserAccountData error %s: %s", wallet, e)
+    except Exception as e:
+        logger.warning("[aave] get_wallet_aave_summary failed %s: %s", wallet, e)
     return result

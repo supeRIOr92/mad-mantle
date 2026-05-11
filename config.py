@@ -9,8 +9,8 @@ TELEGRAM_CHANNEL_ID = os.getenv("TELEGRAM_CHANNEL_ID")
 
 # ── RPC & Subgraph ────────────────────────────────────
 MANTLE_RPC_URL = os.getenv("MANTLE_RPC_URL", "https://rpc.mantle.xyz")
+RPC_BLOCK_LOOKBACK = int(os.getenv("RPC_BLOCK_LOOKBACK", "2000"))
 AAVE_POOL_ADDRESS = os.getenv("AAVE_POOL_ADDRESS", "0x458F293454fE0d67EC0655f3672301301DD51422")
-SUBGRAPH_URL = os.getenv("SUBGRAPH_URL", "https://api.goldsky.com/api/public/project_cmogywldzn5pt01wu4yx027en/subgraphs/mad-mantle/v1.2.0/gn")
 
 # ── APIs ──────────────────────────────────────────────
 MANTLESCAN_API_KEY = os.getenv("MANTLESCAN_API_KEY")
