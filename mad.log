@@ -16633,3 +16633,833 @@ asyncio.exceptions.CancelledError
 2026-05-12 10:04:55 | INFO     | mad.main — [main] Stopping scheduler...
 2026-05-12 10:04:55 | INFO     | apscheduler.scheduler — Scheduler has been shut down
 2026-05-12 10:04:55 | INFO     | mad.main — [main] RealClaw shutdown complete.
+2026-05-12 10:07:40 | INFO     | mad.main — RealClaw starting up...
+2026-05-12 10:07:40 | INFO     | mad.main — Data source: ✅ Direct RPC (rpc.mantle.xyz)
+2026-05-12 10:07:40 | INFO     | mad.main — Telegram Bot: ✅ SET
+2026-05-12 10:07:40 | INFO     | mad.main — Start time: 2026-05-12 03:07:40 UTC
+2026-05-12 10:07:42 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-12 10:07:42 | INFO     | database — [db] Supabase connection OK
+2026-05-12 10:07:42 | INFO     | mad.main — [main] Starting all services...
+2026-05-12 10:07:42 | INFO     | mad.main — [main] Alerter ready (direct httpx mode) ✅
+2026-05-12 10:07:42 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-12 10:07:42 | INFO     | database — [db] Supabase connection OK
+2026-05-12 10:07:42 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 10:07:42 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 10:07:42 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 10:07:42 | INFO     | scheduler — [scheduler] Jobs registered — scan=15min | digest=00:08 UTC | agent_refresh=1h
+2026-05-12 10:07:42 | INFO     | apscheduler.scheduler — Added job "AMD Main Scan" to job store "default"
+2026-05-12 10:07:42 | INFO     | apscheduler.scheduler — Added job "MAD Hourly Digest" to job store "default"
+2026-05-12 10:07:42 | INFO     | apscheduler.scheduler — Added job "ERC-8004 Agent Map Refresh" to job store "default"
+2026-05-12 10:07:42 | INFO     | apscheduler.scheduler — Scheduler started
+2026-05-12 10:07:42 | INFO     | scheduler — [scheduler] Scheduler started ✅
+2026-05-12 10:07:42 | INFO     | mad.main — [main] Running initial scan...
+2026-05-12 10:07:42 | INFO     | scheduler — [scheduler] Scan #1 started — normal — 03:07:42 UTC
+2026-05-12 10:08:10 | INFO     | data_sources.agents — [agents] Fetched 93 agents (scanned 0–101)
+2026-05-12 10:08:10 | INFO     | scheduler — [scheduler] Agent map refreshed — 5 agents
+2026-05-12 10:08:10 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:10 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:10 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:10 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:12 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:12 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:12 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:12 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:12 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:12 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:12 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:12 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:13 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:13 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:13 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:13 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:13 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:13 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:13 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:13 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:13 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:14 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:14 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:14 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:14 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:14 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:14 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:14 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:14 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:14 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:15 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:15 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:15 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:15 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:15 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:15 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:15 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:15 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:15 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:16 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:16 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:16 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:16 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:16 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:16 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:16 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:16 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:16 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:18 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:18 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:18 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:18 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:18 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:18 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:18 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:18 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:18 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:19 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:19 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:19 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:19 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:19 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:19 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:19 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:19 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:19 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:20 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:20 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:20 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:20 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:20 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:20 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:20 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:20 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:20 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:21 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 201 Created"
+2026-05-12 10:08:21 | INFO     | scheduler — [scheduler] Agent registry synced — 93 agents
+2026-05-12 10:08:22 | INFO     | data_sources.moe — [moe] registry loaded — 1 pools
+2026-05-12 10:08:24 | INFO     | data_sources.fluxion — [fluxion] registry loaded — 5 pools
+2026-05-12 10:08:29 | INFO     | data_sources.aave — [aave] blocks=95212448–95212498 events=0 signal=0.00 label=NO_ACTIVITY
+2026-05-12 10:08:29 | INFO     | scorer — [scorer] agni vol share 0.00% < floor — zeroing weight
+2026-05-12 10:08:29 | INFO     | scorer — [scorer] moe vol share 0.00% < floor — zeroing weight
+2026-05-12 10:08:29 | INFO     | scheduler — [scheduler] Scan #1 complete — s_final=9.1 level=none pools=5
+2026-05-12 10:08:29 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log "HTTP/2 201 Created"
+2026-05-12 10:08:29 | INFO     | database — [db] signal_log insert id=143 level=none s_final=9.1
+2026-05-12 10:08:29 | INFO     | scheduler — [scheduler] Signal persisted — row_id=143
+2026-05-12 10:22:42 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-05-12 10:37:42 +07)" (scheduled at 2026-05-12 10:22:42.574025+07:00)
+2026-05-12 10:22:42 | INFO     | scheduler — [scheduler] Scan #2 started — normal — 03:22:42 UTC
+2026-05-12 10:23:19 | INFO     | data_sources.aave — [aave] blocks=95212894–95212944 events=0 signal=0.00 label=NO_ACTIVITY
+2026-05-12 10:23:19 | INFO     | scorer — [scorer] agni vol share 0.00% < floor — zeroing weight
+2026-05-12 10:23:19 | INFO     | scorer — [scorer] moe vol share 0.00% < floor — zeroing weight
+2026-05-12 10:23:19 | INFO     | scheduler — [scheduler] Scan #2 complete — s_final=9.1 level=none pools=5
+2026-05-12 10:23:20 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log "HTTP/2 201 Created"
+2026-05-12 10:23:20 | INFO     | database — [db] signal_log insert id=144 level=none s_final=9.1
+2026-05-12 10:23:20 | INFO     | scheduler — [scheduler] Signal persisted — row_id=144
+2026-05-12 10:23:20 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-05-12 10:37:42 +07)" executed successfully
+2026-05-12 10:37:42 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-05-12 10:52:42 +07)" (scheduled at 2026-05-12 10:37:42.574025+07:00)
+2026-05-12 10:37:42 | INFO     | scheduler — [scheduler] Scan #3 started — normal — 03:37:42 UTC
+2026-05-12 10:37:52 | INFO     | mad.main — [main] Received signal 2 — shutting down...
+2026-05-12 10:37:52 | INFO     | mad.main — [main] Stopping scheduler...
+2026-05-12 10:37:52 | INFO     | apscheduler.scheduler — Scheduler has been shut down
+2026-05-12 10:37:52 | ERROR    | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-05-12 10:52:42 +07)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python312\Lib\site-packages\apscheduler\executors\base.py", line 181, in run_coroutine_job
+    retval = await job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\RIO SEPTIAN\Project\MAD\scheduler.py", line 167, in run_scan
+    pools = await discover_pools()
+            ^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\RIO SEPTIAN\Project\MAD\scheduler.py", line 80, in discover_pools
+    moe_pools = await loop.run_in_executor(None, moe.fetch_top_pools, 10)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+2026-05-12 10:37:52 | INFO     | mad.main — [main] RealClaw shutdown complete.
+2026-05-12 10:38:11 | INFO     | mad.main — RealClaw starting up...
+2026-05-12 10:38:11 | INFO     | mad.main — Data source: ✅ Direct RPC (rpc.mantle.xyz)
+2026-05-12 10:38:11 | INFO     | mad.main — Telegram Bot: ✅ SET
+2026-05-12 10:38:11 | INFO     | mad.main — Start time: 2026-05-12 03:38:11 UTC
+2026-05-12 10:38:12 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-12 10:38:12 | INFO     | database — [db] Supabase connection OK
+2026-05-12 10:38:12 | INFO     | mad.main — [main] Starting all services...
+2026-05-12 10:38:12 | INFO     | mad.main — [main] Alerter ready (direct httpx mode) ✅
+2026-05-12 10:38:12 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-12 10:38:12 | INFO     | database — [db] Supabase connection OK
+2026-05-12 10:38:12 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 10:38:12 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 10:38:12 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 10:38:12 | INFO     | scheduler — [scheduler] Jobs registered — scan=15min | digest=00:08 UTC | agent_refresh=1h
+2026-05-12 10:38:12 | INFO     | apscheduler.scheduler — Added job "AMD Main Scan" to job store "default"
+2026-05-12 10:38:12 | INFO     | apscheduler.scheduler — Added job "MAD Hourly Digest" to job store "default"
+2026-05-12 10:38:12 | INFO     | apscheduler.scheduler — Added job "ERC-8004 Agent Map Refresh" to job store "default"
+2026-05-12 10:38:12 | INFO     | apscheduler.scheduler — Scheduler started
+2026-05-12 10:38:12 | INFO     | scheduler — [scheduler] Scheduler started ✅
+2026-05-12 10:38:12 | INFO     | mad.main — [main] Running initial scan...
+2026-05-12 10:38:12 | INFO     | scheduler — [scheduler] Scan #1 started — normal — 03:38:12 UTC
+2026-05-12 10:38:41 | INFO     | data_sources.agents — [agents] Fetched 93 agents (scanned 0–101)
+2026-05-12 10:38:41 | INFO     | scheduler — [scheduler] Agent map refreshed — 5 agents
+2026-05-12 10:38:41 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:41 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:41 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:49 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:49 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:49 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:49 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:49 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:49 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:49 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:49 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:50 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:50 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:50 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:50 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:50 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:50 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:50 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:50 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:51 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:51 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:51 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:51 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:51 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:51 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:51 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:51 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:51 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:52 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:52 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:52 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:52 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:52 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:52 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:52 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:38:52 | INFO     | scheduler — [scheduler] Agent registry synced — 93 agents
+2026-05-12 10:38:53 | INFO     | data_sources.moe — [moe] registry loaded — 1 pools
+2026-05-12 10:38:56 | INFO     | data_sources.fluxion — [fluxion] registry loaded — 5 pools
+2026-05-12 10:39:02 | INFO     | data_sources.aave — [aave] blocks=95213365–95213415 events=0 signal=0.00 label=NO_ACTIVITY
+2026-05-12 10:39:02 | WARNING  | scorer — [scorer] agni: no DexScreener coverage — mode=fallback local_active=False
+2026-05-12 10:39:02 | ERROR    | mad.main — [main] Initial scan failed: name 'FALLBACK_DISCOUNT' is not defined
+2026-05-12 10:42:32 | INFO     | mad.main — [main] Received signal 2 — shutting down...
+2026-05-12 10:42:32 | INFO     | mad.main — [main] Stopping scheduler...
+2026-05-12 10:42:32 | INFO     | apscheduler.scheduler — Scheduler has been shut down
+2026-05-12 10:42:32 | INFO     | mad.main — [main] RealClaw shutdown complete.
+2026-05-12 10:42:40 | INFO     | mad.main — RealClaw starting up...
+2026-05-12 10:42:40 | INFO     | mad.main — Data source: ✅ Direct RPC (rpc.mantle.xyz)
+2026-05-12 10:42:40 | INFO     | mad.main — Telegram Bot: ✅ SET
+2026-05-12 10:42:40 | INFO     | mad.main — Start time: 2026-05-12 03:42:40 UTC
+2026-05-12 10:42:41 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-12 10:42:41 | INFO     | database — [db] Supabase connection OK
+2026-05-12 10:42:41 | INFO     | mad.main — [main] Starting all services...
+2026-05-12 10:42:41 | INFO     | mad.main — [main] Alerter ready (direct httpx mode) ✅
+2026-05-12 10:42:41 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-12 10:42:41 | INFO     | database — [db] Supabase connection OK
+2026-05-12 10:42:41 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 10:42:41 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 10:42:41 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 10:42:41 | INFO     | scheduler — [scheduler] Jobs registered — scan=15min | digest=00:08 UTC | agent_refresh=1h
+2026-05-12 10:42:41 | INFO     | apscheduler.scheduler — Added job "AMD Main Scan" to job store "default"
+2026-05-12 10:42:41 | INFO     | apscheduler.scheduler — Added job "MAD Hourly Digest" to job store "default"
+2026-05-12 10:42:41 | INFO     | apscheduler.scheduler — Added job "ERC-8004 Agent Map Refresh" to job store "default"
+2026-05-12 10:42:41 | INFO     | apscheduler.scheduler — Scheduler started
+2026-05-12 10:42:41 | INFO     | scheduler — [scheduler] Scheduler started ✅
+2026-05-12 10:42:41 | INFO     | mad.main — [main] Running initial scan...
+2026-05-12 10:42:41 | INFO     | scheduler — [scheduler] Scan #1 started — normal — 03:42:41 UTC
+2026-05-12 10:43:08 | INFO     | data_sources.agents — [agents] Fetched 93 agents (scanned 0–101)
+2026-05-12 10:43:08 | INFO     | scheduler — [scheduler] Agent map refreshed — 5 agents
+2026-05-12 10:43:08 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:08 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:08 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:08 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:09 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:09 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:09 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:09 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:09 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:09 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:09 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:09 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:10 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:10 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:10 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:10 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:10 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:10 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:10 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:10 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:10 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:12 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:12 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:12 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:12 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:12 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:12 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:12 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:12 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:13 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:13 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:13 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:13 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:13 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:13 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:13 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:13 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:13 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:14 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:14 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:14 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:14 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:14 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:14 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:14 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:14 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:14 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:15 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:15 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:15 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:15 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:15 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:15 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:15 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:15 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:16 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:16 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:16 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:16 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:16 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:16 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:16 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:16 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:16 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:18 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:18 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:18 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:18 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:18 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:18 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:18 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:18 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:18 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:19 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:19 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 10:43:19 | INFO     | scheduler — [scheduler] Agent registry synced — 93 agents
+2026-05-12 10:43:20 | INFO     | data_sources.moe — [moe] registry loaded — 1 pools
+2026-05-12 10:43:22 | INFO     | data_sources.fluxion — [fluxion] registry loaded — 5 pools
+2026-05-12 10:43:27 | INFO     | data_sources.aave — [aave] blocks=95213497–95213547 events=0 signal=0.00 label=NO_ACTIVITY
+2026-05-12 10:43:27 | WARNING  | scorer — [scorer] agni: no DexScreener coverage — mode=fallback local_active=False
+2026-05-12 10:43:27 | WARNING  | scorer — [scorer] moe: no DexScreener coverage — mode=fallback local_active=False
+2026-05-12 10:43:27 | INFO     | scheduler — [scheduler] Scan #1 complete — s_final=6.4 level=none pools=5
+2026-05-12 10:43:27 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log "HTTP/2 201 Created"
+2026-05-12 10:43:27 | INFO     | database — [db] signal_log insert id=145 level=none s_final=6.4
+2026-05-12 10:43:27 | INFO     | scheduler — [scheduler] Signal persisted — row_id=145
+2026-05-12 10:57:41 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-05-12 11:12:41 +07)" (scheduled at 2026-05-12 10:57:41.417541+07:00)
+2026-05-12 10:57:41 | INFO     | scheduler — [scheduler] Scan #2 started — normal — 03:57:41 UTC
+2026-05-12 10:58:29 | INFO     | data_sources.aave — [aave] blocks=95213944–95213994 events=0 signal=0.00 label=NO_ACTIVITY
+2026-05-12 10:58:29 | WARNING  | scorer — [scorer] agni: no DexScreener coverage — mode=fallback local_active=False
+2026-05-12 10:58:29 | WARNING  | scorer — [scorer] moe: no DexScreener coverage — mode=fallback local_active=False
+2026-05-12 10:58:29 | INFO     | scheduler — [scheduler] Scan #2 complete — s_final=6.4 level=none pools=5
+2026-05-12 10:58:30 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log "HTTP/2 201 Created"
+2026-05-12 10:58:30 | INFO     | database — [db] signal_log insert id=150 level=none s_final=6.4
+2026-05-12 10:58:30 | INFO     | scheduler — [scheduler] Signal persisted — row_id=150
+2026-05-12 10:58:30 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-05-12 11:12:41 +07)" executed successfully
+2026-05-12 11:03:01 | INFO     | mad.main — [main] Received signal 2 — shutting down...
+2026-05-12 11:03:01 | INFO     | mad.main — [main] Stopping scheduler...
+2026-05-12 11:03:01 | INFO     | apscheduler.scheduler — Scheduler has been shut down
+2026-05-12 11:03:01 | INFO     | mad.main — [main] RealClaw shutdown complete.
+2026-05-12 11:05:12 | INFO     | mad.main — RealClaw starting up...
+2026-05-12 11:05:12 | INFO     | mad.main — Data source: ✅ Direct RPC (rpc.mantle.xyz)
+2026-05-12 11:05:12 | INFO     | mad.main — Telegram Bot: ✅ SET
+2026-05-12 11:05:12 | INFO     | mad.main — Start time: 2026-05-12 04:05:12 UTC
+2026-05-12 11:05:13 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-12 11:05:13 | INFO     | database — [db] Supabase connection OK
+2026-05-12 11:05:13 | INFO     | mad.main — [main] Starting all services...
+2026-05-12 11:05:13 | INFO     | mad.main — [main] Alerter ready (direct httpx mode) ✅
+2026-05-12 11:05:13 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-12 11:05:13 | INFO     | database — [db] Supabase connection OK
+2026-05-12 11:05:13 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 11:05:13 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 11:05:13 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 11:05:13 | INFO     | scheduler — [scheduler] Jobs registered — scan=15min | digest=00:08 UTC | agent_refresh=1h
+2026-05-12 11:05:13 | INFO     | apscheduler.scheduler — Added job "AMD Main Scan" to job store "default"
+2026-05-12 11:05:13 | INFO     | apscheduler.scheduler — Added job "MAD Hourly Digest" to job store "default"
+2026-05-12 11:05:13 | INFO     | apscheduler.scheduler — Added job "ERC-8004 Agent Map Refresh" to job store "default"
+2026-05-12 11:05:13 | INFO     | apscheduler.scheduler — Scheduler started
+2026-05-12 11:05:13 | INFO     | scheduler — [scheduler] Scheduler started ✅
+2026-05-12 11:05:13 | INFO     | mad.main — [main] Running initial scan...
+2026-05-12 11:05:13 | INFO     | scheduler — [scheduler] Scan #1 started — normal — 04:05:13 UTC
+2026-05-12 11:05:40 | INFO     | data_sources.agents — [agents] Fetched 93 agents (scanned 0–101)
+2026-05-12 11:05:40 | INFO     | scheduler — [scheduler] Agent map refreshed — 5 agents
+2026-05-12 11:05:40 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:40 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:40 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:40 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:40 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:40 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:41 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:41 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:41 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:41 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:41 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:41 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:49 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:49 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:49 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:49 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:49 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:49 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:49 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:49 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:49 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:50 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:50 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:50 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:50 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:50 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:51 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:51 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:51 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:51 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:51 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:51 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:52 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:52 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:52 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:52 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:05:52 | INFO     | scheduler — [scheduler] Agent registry synced — 93 agents
+2026-05-12 11:05:53 | INFO     | data_sources.moe — [moe] registry loaded — 1 pools
+2026-05-12 11:05:56 | INFO     | data_sources.fluxion — [fluxion] registry loaded — 5 pools
+2026-05-12 11:06:01 | INFO     | data_sources.aave — [aave] blocks=95214175–95214225 events=0 signal=0.00 label=NO_ACTIVITY
+2026-05-12 11:06:01 | WARNING  | scorer — [scorer] agni: no DexScreener coverage — mode=fallback local_active=False
+2026-05-12 11:06:01 | WARNING  | scorer — [scorer] moe: no DexScreener coverage — mode=fallback local_active=False
+2026-05-12 11:06:01 | INFO     | scheduler — [scheduler] Scan #1 complete — s_final=6.4 level=none pools=5
+2026-05-12 11:06:01 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log "HTTP/2 201 Created"
+2026-05-12 11:06:01 | INFO     | database — [db] signal_log insert id=151 level=none s_final=6.4
+2026-05-12 11:06:01 | INFO     | scheduler — [scheduler] Signal persisted — row_id=151
+2026-05-12 11:06:35 | INFO     | mad.main — [main] Received signal 2 — shutting down...
+2026-05-12 11:06:35 | INFO     | mad.main — [main] Stopping scheduler...
+2026-05-12 11:06:35 | INFO     | apscheduler.scheduler — Scheduler has been shut down
+2026-05-12 11:06:35 | INFO     | mad.main — [main] RealClaw shutdown complete.
+2026-05-12 11:08:10 | INFO     | mad.main — RealClaw starting up...
+2026-05-12 11:08:10 | INFO     | mad.main — Data source: ✅ Direct RPC (rpc.mantle.xyz)
+2026-05-12 11:08:10 | INFO     | mad.main — Telegram Bot: ✅ SET
+2026-05-12 11:08:10 | INFO     | mad.main — Start time: 2026-05-12 04:08:10 UTC
+2026-05-12 11:08:11 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-12 11:08:11 | INFO     | database — [db] Supabase connection OK
+2026-05-12 11:08:11 | INFO     | mad.main — [main] Starting all services...
+2026-05-12 11:08:11 | INFO     | mad.main — [main] Alerter ready (direct httpx mode) ✅
+2026-05-12 11:08:11 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-12 11:08:11 | INFO     | database — [db] Supabase connection OK
+2026-05-12 11:08:11 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 11:08:11 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 11:08:11 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 11:08:11 | INFO     | scheduler — [scheduler] Jobs registered — scan=15min | digest=00:08 UTC | agent_refresh=1h
+2026-05-12 11:08:11 | INFO     | apscheduler.scheduler — Added job "AMD Main Scan" to job store "default"
+2026-05-12 11:08:11 | INFO     | apscheduler.scheduler — Added job "MAD Hourly Digest" to job store "default"
+2026-05-12 11:08:11 | INFO     | apscheduler.scheduler — Added job "ERC-8004 Agent Map Refresh" to job store "default"
+2026-05-12 11:08:11 | INFO     | apscheduler.scheduler — Scheduler started
+2026-05-12 11:08:11 | INFO     | scheduler — [scheduler] Scheduler started ✅
+2026-05-12 11:08:11 | INFO     | mad.main — [main] Running initial scan...
+2026-05-12 11:08:11 | INFO     | scheduler — [scheduler] Scan #1 started — normal — 04:08:11 UTC
+2026-05-12 11:08:37 | INFO     | data_sources.agents — [agents] Fetched 93 agents (scanned 0–101)
+2026-05-12 11:08:37 | INFO     | scheduler — [scheduler] Agent map refreshed — 5 agents
+2026-05-12 11:08:37 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:37 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:38 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:38 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:38 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:38 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:38 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:38 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:38 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:38 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:39 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:39 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:39 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:39 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:39 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:39 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:39 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:39 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:40 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:40 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:40 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:40 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:40 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:40 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:40 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:40 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:40 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:41 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:41 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:41 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:41 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:41 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:41 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:41 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:41 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:41 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:42 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:43 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:44 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:45 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:46 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:47 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:48 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:08:48 | INFO     | scheduler — [scheduler] Agent registry synced — 93 agents
+2026-05-12 11:08:49 | INFO     | data_sources.moe — [moe] registry loaded — 1 pools
+2026-05-12 11:08:52 | INFO     | data_sources.fluxion — [fluxion] registry loaded — 5 pools
+2026-05-12 11:08:57 | INFO     | data_sources.aave — [aave] blocks=95214263–95214313 events=0 signal=0.00 label=NO_ACTIVITY
+2026-05-12 11:08:57 | WARNING  | scorer — [scorer] agni: no DexScreener coverage — mode=fallback local_active=False
+2026-05-12 11:08:57 | WARNING  | scorer — [scorer] moe: no DexScreener coverage — mode=fallback local_active=False
+2026-05-12 11:08:57 | INFO     | scheduler — [scheduler] Scan #1 complete — s_final=6.4 level=none pools=5
+2026-05-12 11:08:57 | INFO     | scheduler — [scheduler] Profiling wallets — swap count: 0
+2026-05-12 11:08:57 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log "HTTP/2 201 Created"
+2026-05-12 11:08:57 | INFO     | database — [db] signal_log insert id=152 level=none s_final=6.4
+2026-05-12 11:08:57 | INFO     | scheduler — [scheduler] Signal persisted — row_id=152
+2026-05-12 11:10:54 | INFO     | mad.main — [main] Received signal 2 — shutting down...
+2026-05-12 11:10:54 | INFO     | mad.main — [main] Stopping scheduler...
+2026-05-12 11:10:54 | INFO     | apscheduler.scheduler — Scheduler has been shut down
+2026-05-12 11:10:54 | INFO     | mad.main — [main] RealClaw shutdown complete.
+2026-05-12 11:11:01 | INFO     | mad.main — RealClaw starting up...
+2026-05-12 11:11:01 | INFO     | mad.main — Data source: ✅ Direct RPC (rpc.mantle.xyz)
+2026-05-12 11:11:01 | INFO     | mad.main — Telegram Bot: ✅ SET
+2026-05-12 11:11:01 | INFO     | mad.main — Start time: 2026-05-12 04:11:01 UTC
+2026-05-12 11:11:02 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-12 11:11:02 | INFO     | database — [db] Supabase connection OK
+2026-05-12 11:11:02 | INFO     | mad.main — [main] Starting all services...
+2026-05-12 11:11:02 | INFO     | mad.main — [main] Alerter ready (direct httpx mode) ✅
+2026-05-12 11:11:02 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-12 11:11:02 | INFO     | database — [db] Supabase connection OK
+2026-05-12 11:11:02 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 11:11:02 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 11:11:02 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 11:11:02 | INFO     | scheduler — [scheduler] Jobs registered — scan=15min | digest=00:08 UTC | agent_refresh=1h
+2026-05-12 11:11:02 | INFO     | apscheduler.scheduler — Added job "AMD Main Scan" to job store "default"
+2026-05-12 11:11:02 | INFO     | apscheduler.scheduler — Added job "MAD Hourly Digest" to job store "default"
+2026-05-12 11:11:02 | INFO     | apscheduler.scheduler — Added job "ERC-8004 Agent Map Refresh" to job store "default"
+2026-05-12 11:11:02 | INFO     | apscheduler.scheduler — Scheduler started
+2026-05-12 11:11:02 | INFO     | scheduler — [scheduler] Scheduler started ✅
+2026-05-12 11:11:02 | INFO     | mad.main — [main] Running initial scan...
+2026-05-12 11:11:02 | INFO     | scheduler — [scheduler] Scan #1 started — normal — 04:11:02 UTC
+2026-05-12 11:11:29 | INFO     | data_sources.agents — [agents] Fetched 93 agents (scanned 0–101)
+2026-05-12 11:11:29 | INFO     | scheduler — [scheduler] Agent map refreshed — 5 agents
+2026-05-12 11:11:29 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:29 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:29 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:29 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:29 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:29 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:30 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:30 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:30 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:30 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:30 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:30 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:30 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:30 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:30 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:31 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:31 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:31 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:31 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:31 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:31 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:31 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:31 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:32 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:32 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:32 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:32 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:32 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:32 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:32 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:32 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:32 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:33 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:33 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:33 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:33 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:33 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:33 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:33 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:33 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:33 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:34 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:34 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:34 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:34 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:34 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:34 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:34 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:34 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:35 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:35 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:35 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:35 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:35 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:35 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:35 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:35 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:35 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:36 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:36 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:36 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:36 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:36 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:36 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:36 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:36 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:36 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:37 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:37 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:37 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:37 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:37 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:37 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:37 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:37 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:37 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:38 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:38 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:38 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:38 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:38 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:38 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:38 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:38 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:39 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:39 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:39 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:39 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:39 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:39 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:39 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:39 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:39 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/agent_registry?on_conflict=token_id "HTTP/2 200 OK"
+2026-05-12 11:11:39 | INFO     | scheduler — [scheduler] Agent registry synced — 93 agents
+2026-05-12 11:11:40 | INFO     | data_sources.moe — [moe] registry loaded — 1 pools
+2026-05-12 11:11:43 | INFO     | data_sources.fluxion — [fluxion] registry loaded — 5 pools
+2026-05-12 11:11:47 | INFO     | data_sources.aave — [aave] blocks=95214348–95214398 events=0 signal=0.00 label=NO_ACTIVITY
+2026-05-12 11:11:47 | WARNING  | scorer — [scorer] agni: no DexScreener coverage — mode=fallback local_active=False
+2026-05-12 11:11:47 | WARNING  | scorer — [scorer] moe: no DexScreener coverage — mode=fallback local_active=False
+2026-05-12 11:11:47 | INFO     | scheduler — [scheduler] Scan #1 complete — s_final=6.4 level=none pools=5
+2026-05-12 11:11:47 | INFO     | scheduler — [scheduler] Capital flow flags: 1
+2026-05-12 11:11:47 | INFO     | scheduler — [scheduler] Profiling wallets — swap count: 75
+2026-05-12 11:12:07 | WARNING  | data_sources.aave — [aave] get_wallet_aave_summary failed 0x5628a59df0ecac3f3171f877a94beb26ba6dfaa0: Could not transact with/call contract function, is contract deployed correctly and chain synced?
+2026-05-12 11:12:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/wallet_profile?on_conflict=address "HTTP/2 201 Created"
+2026-05-12 11:12:17 | INFO     | scheduler — [scheduler] Wallet profiles upserted — 1 wallets
+2026-05-12 11:12:17 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log "HTTP/2 201 Created"
+2026-05-12 11:12:17 | INFO     | database — [db] signal_log insert id=153 level=none s_final=6.4
+2026-05-12 11:12:17 | INFO     | scheduler — [scheduler] Signal persisted — row_id=153
+2026-05-12 11:26:02 | INFO     | apscheduler.executors.default — Running job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-05-12 11:41:02 +07)" (scheduled at 2026-05-12 11:26:02.868018+07:00)
+2026-05-12 11:26:02 | INFO     | scheduler — [scheduler] Scan #2 started — normal — 04:26:02 UTC
+2026-05-12 11:26:41 | INFO     | data_sources.aave — [aave] blocks=95214795–95214845 events=0 signal=0.00 label=NO_ACTIVITY
+2026-05-12 11:26:41 | WARNING  | scorer — [scorer] agni: no DexScreener coverage — mode=fallback local_active=False
+2026-05-12 11:26:41 | WARNING  | scorer — [scorer] moe: no DexScreener coverage — mode=fallback local_active=False
+2026-05-12 11:26:41 | INFO     | scheduler — [scheduler] Scan #2 complete — s_final=6.4 level=none pools=5
+2026-05-12 11:26:41 | INFO     | scheduler — [scheduler] Profiling wallets — swap count: 65
+2026-05-12 11:27:12 | WARNING  | data_sources.aave — [aave] get_wallet_aave_summary failed 0x5628a59df0ecac3f3171f877a94beb26ba6dfaa0: Could not transact with/call contract function, is contract deployed correctly and chain synced?
+2026-05-12 11:27:21 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/wallet_profile?on_conflict=address "HTTP/2 200 OK"
+2026-05-12 11:27:21 | INFO     | scheduler — [scheduler] Wallet profiles upserted — 1 wallets
+2026-05-12 11:27:22 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log "HTTP/2 201 Created"
+2026-05-12 11:27:22 | INFO     | database — [db] signal_log insert id=154 level=none s_final=6.4
+2026-05-12 11:27:22 | INFO     | scheduler — [scheduler] Signal persisted — row_id=154
+2026-05-12 11:27:22 | INFO     | apscheduler.executors.default — Job "AMD Main Scan (trigger: interval[0:15:00], next run at: 2026-05-12 11:41:02 +07)" executed successfully
+2026-05-12 11:28:34 | INFO     | mad.main — [main] Received signal 2 — shutting down...
+2026-05-12 11:28:34 | INFO     | mad.main — [main] Stopping scheduler...
+2026-05-12 11:28:34 | INFO     | apscheduler.scheduler — Scheduler has been shut down
+2026-05-12 11:28:34 | INFO     | mad.main — [main] RealClaw shutdown complete.

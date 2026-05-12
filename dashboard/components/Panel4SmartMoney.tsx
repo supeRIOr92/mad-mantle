@@ -42,12 +42,13 @@ return Math.min(score, 100);
 
 export default function Panel4SmartMoney() {
 const { mode, view } = useAppState();
-const { wallets, manipulators, smartMoney } = useWalletProfiles(10);
+const { wallets, manipulators, smartMoney, risky } = useWalletProfiles(10);
 
 const isRiskView = view === "risk";
 const displayWallets = isRiskView
-? [...manipulators, ...smartMoney].slice(0, 7)
+? risky.slice(0, 7)
 : smartMoney.slice(0, 5);
+
 return (
 <div className="panel h-full">
 <div className="mb-2">

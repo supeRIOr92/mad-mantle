@@ -133,7 +133,7 @@ async def scan_pool(
             daily_snapshots=daily,
             agent_map=state.agent_map,
         )
-
+        result["swaps"] = swaps
         return result
     except Exception as e:
         logger.error(f"[scheduler] scan_pool failed — {dex}/{pool_id}: {e}")
@@ -243,7 +243,8 @@ async def run_scan():
             logger.info(f"[scheduler] Capital flow flags: {cap_flags['total_flags']}")
     except Exception:
         pass
-
+    
+    logger.info(f"[scheduler] Profiling wallets — swap count: {len(best_result.get('swaps', []))}")
     # Profile top wallets unconditional — populate wallet_profile table
     try:
         profiles = profile_top_wallets(
