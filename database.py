@@ -5,6 +5,8 @@ Supabase backend: signal_log + wallet_profile + agent_registry + pool_baseline
 """
 
 import logging
+import os
+os.environ["HTTPX_HTTP2"] = "false"
 import json
 from datetime import date, datetime, timezone
 from typing import Optional
@@ -14,6 +16,7 @@ from config import SUPABASE_URL, SUPABASE_KEY
 logger = logging.getLogger(__name__)
 
 # ── Client ────────────────────────────────────────────────────────────────────
+
 _client: Optional[Client] = None
 
 def get_client() -> Client:
@@ -21,9 +24,9 @@ def get_client() -> Client:
     if _client is None:
         if not SUPABASE_URL or not SUPABASE_KEY:
             raise RuntimeError("SUPABASE_URL or SUPABASE_KEY not set")
-        from supabase.lib.client_options import ClientOptions
-        _client = create_client(SUPABASE_URL, SUPABASE_KEY, options=ClientOptions(httpx_client_args={"http2": False}))
+        _client = create_client(SUPABASE_URL, SUPABASE_KEY)
     return _client
+
 
 def init_db():
     """Verify Supabase connection. Tables created via SQL migration."""
