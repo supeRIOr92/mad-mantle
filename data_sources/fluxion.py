@@ -182,7 +182,7 @@ def fetch_recent_swaps(since_ts: int, limit: int = 500) -> list:
     try:
         w3 = _get_w3()
         latest = w3.eth.block_number
-        from_b = max(0, latest - min(delta, RPC_BLOCK_LOOKBACK))
+        from_b = max(0, latest - RPC_BLOCK_LOOKBACK)
         swaps = []
         for pool_addr in list(_pool_registry.keys()):
             logs = w3.eth.get_logs({
@@ -209,7 +209,7 @@ def fetch_volume_buckets(pool_id: str, since_ts: int) -> list:
     try:
         w3     = _get_w3()
         latest = w3.eth.block_number
-        from_b = max(0, latest - min(delta, RPC_BLOCK_LOOKBACK))
+        from_b = max(0, latest - RPC_BLOCK_LOOKBACK)
         logs   = w3.eth.get_logs({
             "fromBlock": from_b, "toBlock": latest,
             "address": Web3.to_checksum_address(pool_id),
