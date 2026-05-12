@@ -321,3 +321,6 @@ def fetch_top_pools(limit: int = 20) -> list:
     except Exception as e:
         logger.warning("[moe] fetch_top_pools sort failed: %s", e)
     return pools[:limit]
+
+# Alias for scheduler compatibility
+fetch_tx_count_buckets = fetch_volume_buckets
