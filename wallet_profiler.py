@@ -375,11 +375,14 @@ def profile_top_wallets(swaps: list[dict], anomaly_score: float, **score_kwargs)
 
     wallet_swaps: dict[str, list] = {}
     for s in swaps:
-        w = s.get("sender", "") or s.get("wallet", "")
-        if isinstance(w, dict):
-            w = w.get("id", "")
+        sender = s.get("sender") or s.get("wallet") or {}
+        if isinstance(sender, dict):
+            w = sender.get("id", "")
+        else:
+            w = str(sender)
+            w = w.strip().lower()
         if w:
-            wallet_swaps.setdefault(w.lower(), []).append(s)
+            wallet_swaps.setdefault(w, []).append(s)
 
     profiles = []
     for wallet, wswaps in list(wallet_swaps.items())[:10]:
