@@ -15583,3 +15583,1053 @@ asyncio.exceptions.CancelledError
 2026-05-11 16:37:29 | INFO     | mad.main — [main] Stopping scheduler...
 2026-05-11 16:37:29 | INFO     | apscheduler.scheduler — Scheduler has been shut down
 2026-05-11 16:37:29 | INFO     | mad.main — [main] RealClaw shutdown complete.
+2026-05-11 16:37:38 | INFO     | mad.main — RealClaw starting up...
+2026-05-11 16:37:38 | INFO     | mad.main — Data source: ✅ Direct RPC (rpc.mantle.xyz)
+2026-05-11 16:37:38 | INFO     | mad.main — Telegram Bot: ✅ SET
+2026-05-11 16:37:38 | INFO     | mad.main — Start time: 2026-05-11 09:37:38 UTC
+2026-05-11 16:37:40 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-11 16:37:40 | INFO     | database — [db] Supabase connection OK
+2026-05-11 16:37:40 | INFO     | mad.main — [main] Starting all services...
+2026-05-11 16:37:40 | INFO     | mad.main — [main] Alerter ready (direct httpx mode) ✅
+2026-05-11 16:37:40 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-11 16:37:40 | INFO     | database — [db] Supabase connection OK
+2026-05-11 16:37:40 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-11 16:37:40 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-11 16:37:40 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-11 16:37:40 | INFO     | scheduler — [scheduler] Jobs registered — scan=15min | digest=00:08 UTC | agent_refresh=1h
+2026-05-11 16:37:40 | INFO     | apscheduler.scheduler — Added job "AMD Main Scan" to job store "default"
+2026-05-11 16:37:40 | INFO     | apscheduler.scheduler — Added job "MAD Hourly Digest" to job store "default"
+2026-05-11 16:37:40 | INFO     | apscheduler.scheduler — Added job "ERC-8004 Agent Map Refresh" to job store "default"
+2026-05-11 16:37:40 | INFO     | apscheduler.scheduler — Scheduler started
+2026-05-11 16:37:40 | INFO     | scheduler — [scheduler] Scheduler started ✅
+2026-05-11 16:37:40 | INFO     | mad.main — [main] Running initial scan...
+2026-05-11 16:37:40 | INFO     | scheduler — [scheduler] Scan #1 started — normal — 09:37:40 UTC
+2026-05-11 16:38:03 | INFO     | data_sources.agents — [agents] Fetched 93 agents (scanned 0–101)
+2026-05-11 16:38:03 | INFO     | scheduler — [scheduler] Agent map refreshed — 5 agents
+2026-05-11 16:38:04 | INFO     | data_sources.moe — [moe] registry loaded — 1 pools
+2026-05-11 16:38:06 | INFO     | data_sources.fluxion — [fluxion] registry loaded — 4 pools
+2026-05-11 16:38:07 | INFO     | data_sources.fluxion — [fluxion] pool 0x38507b864a90bb5f16f8db11b149d0c6ac161e9b -- 0 raw logs from block 95180515 to 95180988
+2026-05-11 16:38:07 | INFO     | data_sources.fluxion — [fluxion] pool 0x38507b864a90bb5f16f8db11b149d0c6ac161e9b — 0 decoded swaps after filter
+2026-05-11 16:38:07 | INFO     | data_sources.fluxion — [fluxion] pool 0xcbca9184bb820e6a80e56974b5bb12438aefc286 -- 0 raw logs from block 95180515 to 95180988
+2026-05-11 16:38:07 | INFO     | data_sources.fluxion — [fluxion] pool 0xcbca9184bb820e6a80e56974b5bb12438aefc286 — 0 decoded swaps after filter
+2026-05-11 16:38:07 | INFO     | data_sources.fluxion — [fluxion] pool 0x509b9a0aa01a12245bc6b4874ddd16c470d353e2 -- 162 raw logs from block 95180515 to 95180988
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491342 since=1778491360 ok=False
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491342 since=1778491360 ok=False
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491342 since=1778491360 ok=False
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491344 since=1778491360 ok=False
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491344 since=1778491360 ok=False
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491350 since=1778491360 ok=False
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491358 since=1778491360 ok=False
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491366 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491382 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491382 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491384 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491384 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491384 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491400 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491426 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491450 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491478 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491478 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491496 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491498 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491540 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491542 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491542 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491542 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491544 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491544 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491544 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491546 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491556 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491572 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491572 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491572 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491578 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491582 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491598 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491598 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491614 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491624 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491632 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491640 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491646 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491654 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491660 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491666 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491666 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491682 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491688 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491696 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491702 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491712 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491712 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491724 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491732 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491738 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491740 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491740 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491752 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491754 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491754 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491760 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491762 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491776 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491778 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491794 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491796 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491804 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491812 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491812 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491814 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491822 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491822 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491838 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491838 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491848 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491858 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491868 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491872 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491876 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491876 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491876 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491878 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491914 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491928 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491958 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491992 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492004 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492022 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492032 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492042 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492048 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492050 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492064 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492090 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492092 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492098 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492098 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492098 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492102 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492102 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492102 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492106 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492106 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492110 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492116 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492122 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492130 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492132 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492134 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492140 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492142 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492152 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492166 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492170 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492180 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492180 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492190 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492194 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492202 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492208 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492212 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492212 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492218 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492222 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492222 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492222 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492224 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492224 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492226 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492226 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492230 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492238 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492244 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492264 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492270 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492276 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492276 since=1778491360 ok=True
+2026-05-11 16:38:07 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492286 since=1778491360 ok=True
+2026-05-11 16:38:07 | INFO     | data_sources.fluxion — [fluxion] pool 0x509b9a0aa01a12245bc6b4874ddd16c470d353e2 — 155 decoded swaps after filter
+2026-05-11 16:38:07 | INFO     | data_sources.fluxion — [fluxion] pool 0x70a608fa8ed5806028d3dfdadcf2406c51ee9947 -- 0 raw logs from block 95180515 to 95180988
+2026-05-11 16:38:07 | INFO     | data_sources.fluxion — [fluxion] pool 0x70a608fa8ed5806028d3dfdadcf2406c51ee9947 — 155 decoded swaps after filter
+2026-05-11 16:38:08 | INFO     | data_sources.fluxion — [fluxion] pool 0x38507b864a90bb5f16f8db11b149d0c6ac161e9b -- 0 raw logs from block 95180515 to 95180989
+2026-05-11 16:38:08 | INFO     | data_sources.fluxion — [fluxion] pool 0x38507b864a90bb5f16f8db11b149d0c6ac161e9b — 0 decoded swaps after filter
+2026-05-11 16:38:08 | INFO     | data_sources.fluxion — [fluxion] pool 0xcbca9184bb820e6a80e56974b5bb12438aefc286 -- 0 raw logs from block 95180515 to 95180989
+2026-05-11 16:38:08 | INFO     | data_sources.fluxion — [fluxion] pool 0xcbca9184bb820e6a80e56974b5bb12438aefc286 — 0 decoded swaps after filter
+2026-05-11 16:38:08 | INFO     | data_sources.fluxion — [fluxion] pool 0x509b9a0aa01a12245bc6b4874ddd16c470d353e2 -- 162 raw logs from block 95180515 to 95180989
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491342 since=1778491360 ok=False
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491342 since=1778491360 ok=False
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491342 since=1778491360 ok=False
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491344 since=1778491360 ok=False
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491344 since=1778491360 ok=False
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491350 since=1778491360 ok=False
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491358 since=1778491360 ok=False
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491366 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491382 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491382 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491384 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491384 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491384 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491400 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491426 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491450 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491478 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491478 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491496 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491498 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491540 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491542 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491542 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491542 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491544 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491544 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491544 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491546 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491556 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491572 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491572 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491572 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491578 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491582 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491598 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491598 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491614 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491624 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491632 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491640 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491646 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491654 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491660 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491666 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491666 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491682 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491688 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491696 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491702 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491712 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491712 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491724 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491732 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491738 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491740 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491740 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491752 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491754 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491754 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491760 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491762 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491776 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491778 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491794 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491796 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491804 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491812 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491812 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491814 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491822 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491822 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491838 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491838 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491848 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491858 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491868 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491872 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491876 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491876 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491876 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491878 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491914 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491928 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491958 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491992 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492004 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492022 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492032 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492042 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492048 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492050 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492064 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492090 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492092 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492098 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492098 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492098 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492102 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492102 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492102 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492106 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492106 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492110 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492116 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492122 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492130 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492132 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492134 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492140 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492142 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492152 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492166 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492170 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492180 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492180 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492190 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492194 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492202 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492208 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492212 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492212 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492218 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492222 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492222 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492222 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492224 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492224 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492226 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492226 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492230 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492238 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492244 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492264 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492270 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492276 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492276 since=1778491360 ok=True
+2026-05-11 16:38:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492286 since=1778491360 ok=True
+2026-05-11 16:38:08 | INFO     | data_sources.fluxion — [fluxion] pool 0x509b9a0aa01a12245bc6b4874ddd16c470d353e2 — 155 decoded swaps after filter
+2026-05-11 16:38:08 | INFO     | data_sources.fluxion — [fluxion] pool 0x70a608fa8ed5806028d3dfdadcf2406c51ee9947 -- 0 raw logs from block 95180515 to 95180989
+2026-05-11 16:38:08 | INFO     | data_sources.fluxion — [fluxion] pool 0x70a608fa8ed5806028d3dfdadcf2406c51ee9947 — 155 decoded swaps after filter
+2026-05-11 16:38:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x38507b864a90bb5f16f8db11b149d0c6ac161e9b -- 0 raw logs from block 95180515 to 95180989
+2026-05-11 16:38:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x38507b864a90bb5f16f8db11b149d0c6ac161e9b — 0 decoded swaps after filter
+2026-05-11 16:38:09 | INFO     | data_sources.fluxion — [fluxion] pool 0xcbca9184bb820e6a80e56974b5bb12438aefc286 -- 0 raw logs from block 95180515 to 95180989
+2026-05-11 16:38:09 | INFO     | data_sources.fluxion — [fluxion] pool 0xcbca9184bb820e6a80e56974b5bb12438aefc286 — 0 decoded swaps after filter
+2026-05-11 16:38:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x509b9a0aa01a12245bc6b4874ddd16c470d353e2 -- 162 raw logs from block 95180515 to 95180989
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491342 since=1778491360 ok=False
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491342 since=1778491360 ok=False
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491342 since=1778491360 ok=False
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491344 since=1778491360 ok=False
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491344 since=1778491360 ok=False
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491350 since=1778491360 ok=False
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491358 since=1778491360 ok=False
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491366 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491382 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491382 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491384 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491384 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491384 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491400 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491426 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491450 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491478 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491478 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491496 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491498 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491540 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491542 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491542 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491542 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491544 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491544 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491544 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491546 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491556 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491572 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491572 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491572 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491578 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491582 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491598 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491598 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491614 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491624 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491632 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491640 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491646 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491654 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491660 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491666 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491666 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491682 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491688 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491696 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491702 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491712 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491712 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491724 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491732 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491738 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491740 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491740 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491752 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491754 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491754 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491760 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491762 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491776 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491778 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491794 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491796 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491804 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491812 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491812 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491814 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491822 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491822 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491838 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491838 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491848 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491858 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491868 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491872 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491876 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491876 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491876 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491878 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491914 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491928 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491958 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491992 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492004 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492022 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492032 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492042 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492048 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492050 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492064 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492090 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492092 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492098 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492098 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492098 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492102 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492102 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492102 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492106 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492106 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492110 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492116 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492122 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492130 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492132 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492134 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492140 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492142 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492152 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492166 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492170 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492180 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492180 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492190 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492194 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492202 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492208 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492212 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492212 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492218 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492222 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492222 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492222 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492224 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492224 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492226 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492226 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492230 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492238 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492244 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492264 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492270 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492276 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492276 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492286 since=1778491360 ok=True
+2026-05-11 16:38:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x509b9a0aa01a12245bc6b4874ddd16c470d353e2 — 155 decoded swaps after filter
+2026-05-11 16:38:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x70a608fa8ed5806028d3dfdadcf2406c51ee9947 -- 0 raw logs from block 95180515 to 95180989
+2026-05-11 16:38:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x70a608fa8ed5806028d3dfdadcf2406c51ee9947 — 155 decoded swaps after filter
+2026-05-11 16:38:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x38507b864a90bb5f16f8db11b149d0c6ac161e9b -- 0 raw logs from block 95180515 to 95180989
+2026-05-11 16:38:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x38507b864a90bb5f16f8db11b149d0c6ac161e9b — 0 decoded swaps after filter
+2026-05-11 16:38:09 | INFO     | data_sources.fluxion — [fluxion] pool 0xcbca9184bb820e6a80e56974b5bb12438aefc286 -- 0 raw logs from block 95180515 to 95180989
+2026-05-11 16:38:09 | INFO     | data_sources.fluxion — [fluxion] pool 0xcbca9184bb820e6a80e56974b5bb12438aefc286 — 0 decoded swaps after filter
+2026-05-11 16:38:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x509b9a0aa01a12245bc6b4874ddd16c470d353e2 -- 162 raw logs from block 95180515 to 95180989
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491342 since=1778491360 ok=False
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491342 since=1778491360 ok=False
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491342 since=1778491360 ok=False
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491344 since=1778491360 ok=False
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491344 since=1778491360 ok=False
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491350 since=1778491360 ok=False
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491358 since=1778491360 ok=False
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491360 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491366 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491382 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491382 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491384 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491384 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491384 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491400 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491426 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491450 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491478 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491478 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491496 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491498 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491540 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491542 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491542 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491542 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491544 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491544 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491544 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491546 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491556 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491572 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491572 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491572 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491578 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491582 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491598 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491598 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491614 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491624 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491632 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491636 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491640 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491646 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491654 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491660 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491666 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491666 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491682 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491688 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491696 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491702 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491712 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491712 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491724 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491732 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491738 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491740 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491740 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491752 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491754 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491754 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491760 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491762 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491776 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491778 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491794 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491796 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491804 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491812 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491812 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491814 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491822 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491822 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491838 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491838 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491848 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491858 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491868 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491872 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491876 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491876 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491876 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491878 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491914 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491928 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491958 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778491992 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492004 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492022 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492032 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492042 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492048 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492050 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492064 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492090 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492092 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492098 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492098 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492098 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492102 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492102 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492102 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492106 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492106 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492110 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492116 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492122 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492130 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492132 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492134 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492138 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492140 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492142 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492152 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492166 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492168 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492170 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492180 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492180 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492190 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492194 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492202 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492208 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492212 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492212 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492218 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492222 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492222 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492222 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492224 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492224 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492226 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492226 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492230 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492238 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492244 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492264 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492270 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492274 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492276 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492276 since=1778491360 ok=True
+2026-05-11 16:38:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778492286 since=1778491360 ok=True
+2026-05-11 16:38:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x509b9a0aa01a12245bc6b4874ddd16c470d353e2 — 155 decoded swaps after filter
+2026-05-11 16:38:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x70a608fa8ed5806028d3dfdadcf2406c51ee9947 -- 0 raw logs from block 95180515 to 95180989
+2026-05-11 16:38:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x70a608fa8ed5806028d3dfdadcf2406c51ee9947 — 155 decoded swaps after filter
+2026-05-11 16:38:11 | INFO     | data_sources.aave — [aave] blocks=95180939–95180989 events=0 signal=0.00 label=NO_ACTIVITY
+2026-05-11 16:38:11 | INFO     | scheduler — [scheduler] Scan #1 complete — s_final=1.4 level=none pools=4
+2026-05-11 16:38:11 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log "HTTP/2 201 Created"
+2026-05-11 16:38:11 | INFO     | database — [db] signal_log insert id=141 level=none s_final=1.4
+2026-05-11 16:38:11 | INFO     | scheduler — [scheduler] Signal persisted — row_id=141
+2026-05-12 09:54:38 | INFO     | mad.main — RealClaw starting up...
+2026-05-12 09:54:38 | INFO     | mad.main — Data source: ✅ Direct RPC (rpc.mantle.xyz)
+2026-05-12 09:54:38 | INFO     | mad.main — Telegram Bot: ✅ SET
+2026-05-12 09:54:38 | INFO     | mad.main — Start time: 2026-05-12 02:54:38 UTC
+2026-05-12 09:54:40 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-12 09:54:40 | INFO     | database — [db] Supabase connection OK
+2026-05-12 09:54:40 | INFO     | mad.main — [main] Starting all services...
+2026-05-12 09:54:40 | INFO     | mad.main — [main] Alerter ready (direct httpx mode) ✅
+2026-05-12 09:54:40 | INFO     | httpx — HTTP Request: GET https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log?select=id&limit=1 "HTTP/2 200 OK"
+2026-05-12 09:54:40 | INFO     | database — [db] Supabase connection OK
+2026-05-12 09:54:40 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 09:54:40 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 09:54:40 | INFO     | apscheduler.scheduler — Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-12 09:54:40 | INFO     | scheduler — [scheduler] Jobs registered — scan=15min | digest=00:08 UTC | agent_refresh=1h
+2026-05-12 09:54:40 | INFO     | apscheduler.scheduler — Added job "AMD Main Scan" to job store "default"
+2026-05-12 09:54:40 | INFO     | apscheduler.scheduler — Added job "MAD Hourly Digest" to job store "default"
+2026-05-12 09:54:40 | INFO     | apscheduler.scheduler — Added job "ERC-8004 Agent Map Refresh" to job store "default"
+2026-05-12 09:54:40 | INFO     | apscheduler.scheduler — Scheduler started
+2026-05-12 09:54:40 | INFO     | scheduler — [scheduler] Scheduler started ✅
+2026-05-12 09:54:40 | INFO     | mad.main — [main] Running initial scan...
+2026-05-12 09:54:40 | INFO     | scheduler — [scheduler] Scan #1 started — normal — 02:54:40 UTC
+2026-05-12 09:55:31 | INFO     | data_sources.agents — [agents] Fetched 93 agents (scanned 0–101)
+2026-05-12 09:55:31 | INFO     | scheduler — [scheduler] Agent map refreshed — 5 agents
+2026-05-12 09:55:34 | INFO     | data_sources.moe — [moe] registry loaded — 1 pools
+2026-05-12 09:55:39 | INFO     | data_sources.fluxion — [fluxion] registry loaded — 5 pools
+2026-05-12 09:56:05 | INFO     | data_sources.fluxion — [fluxion] pool 0x38507b864a90bb5f16f8db11b149d0c6ac161e9b -- 0 raw logs from block 95211625 to 95212127
+2026-05-12 09:56:05 | INFO     | data_sources.fluxion — [fluxion] pool 0x38507b864a90bb5f16f8db11b149d0c6ac161e9b — 0 decoded swaps after filter
+2026-05-12 09:56:05 | INFO     | data_sources.fluxion — [fluxion] pool 0xcbca9184bb820e6a80e56974b5bb12438aefc286 -- 0 raw logs from block 95211625 to 95212127
+2026-05-12 09:56:05 | INFO     | data_sources.fluxion — [fluxion] pool 0xcbca9184bb820e6a80e56974b5bb12438aefc286 — 0 decoded swaps after filter
+2026-05-12 09:56:06 | INFO     | data_sources.fluxion — [fluxion] pool 0x509b9a0aa01a12245bc6b4874ddd16c470d353e2 -- 51 raw logs from block 95211625 to 95212127
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553562 since=1778553580 ok=False
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553574 since=1778553580 ok=False
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553594 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553608 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553610 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553612 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553626 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553640 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553696 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553698 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553698 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553698 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553700 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553704 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553708 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553708 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553712 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553740 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553742 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553742 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553984 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554014 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554020 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554020 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554034 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554050 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554050 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554076 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554076 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554092 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554098 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554104 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554108 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554108 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554298 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554320 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554378 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554390 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554404 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554418 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554428 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554442 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554450 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554456 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554460 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554474 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554490 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554510 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554524 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554546 since=1778553580 ok=True
+2026-05-12 09:56:06 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554562 since=1778553580 ok=True
+2026-05-12 09:56:06 | INFO     | data_sources.fluxion — [fluxion] pool 0x509b9a0aa01a12245bc6b4874ddd16c470d353e2 — 49 decoded swaps after filter
+2026-05-12 09:56:06 | INFO     | data_sources.fluxion — [fluxion] pool 0x70a608fa8ed5806028d3dfdadcf2406c51ee9947 -- 0 raw logs from block 95211625 to 95212127
+2026-05-12 09:56:06 | INFO     | data_sources.fluxion — [fluxion] pool 0x70a608fa8ed5806028d3dfdadcf2406c51ee9947 — 49 decoded swaps after filter
+2026-05-12 09:56:06 | INFO     | data_sources.fluxion — [fluxion] pool 0x26f3a215f65ceed026d3cb5428b0b268a7c31a33 -- 0 raw logs from block 95211625 to 95212127
+2026-05-12 09:56:06 | INFO     | data_sources.fluxion — [fluxion] pool 0x26f3a215f65ceed026d3cb5428b0b268a7c31a33 — 49 decoded swaps after filter
+2026-05-12 09:56:08 | INFO     | data_sources.fluxion — [fluxion] pool 0x38507b864a90bb5f16f8db11b149d0c6ac161e9b -- 0 raw logs from block 95211625 to 95212129
+2026-05-12 09:56:08 | INFO     | data_sources.fluxion — [fluxion] pool 0x38507b864a90bb5f16f8db11b149d0c6ac161e9b — 0 decoded swaps after filter
+2026-05-12 09:56:08 | INFO     | data_sources.fluxion — [fluxion] pool 0xcbca9184bb820e6a80e56974b5bb12438aefc286 -- 0 raw logs from block 95211625 to 95212129
+2026-05-12 09:56:08 | INFO     | data_sources.fluxion — [fluxion] pool 0xcbca9184bb820e6a80e56974b5bb12438aefc286 — 0 decoded swaps after filter
+2026-05-12 09:56:08 | INFO     | data_sources.fluxion — [fluxion] pool 0x509b9a0aa01a12245bc6b4874ddd16c470d353e2 -- 51 raw logs from block 95211625 to 95212129
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553562 since=1778553580 ok=False
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553574 since=1778553580 ok=False
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553594 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553608 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553610 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553612 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553626 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553640 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553696 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553698 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553698 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553698 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553700 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553704 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553708 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553708 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553712 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553740 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553742 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553742 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553984 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554014 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554020 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554020 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554034 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554050 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554050 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554076 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554076 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554092 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554098 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554104 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554108 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554108 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554298 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554320 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554378 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554390 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554404 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554418 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554428 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554442 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554450 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554456 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554460 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554474 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554490 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554510 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554524 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554546 since=1778553580 ok=True
+2026-05-12 09:56:08 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554562 since=1778553580 ok=True
+2026-05-12 09:56:08 | INFO     | data_sources.fluxion — [fluxion] pool 0x509b9a0aa01a12245bc6b4874ddd16c470d353e2 — 49 decoded swaps after filter
+2026-05-12 09:56:08 | INFO     | data_sources.fluxion — [fluxion] pool 0x70a608fa8ed5806028d3dfdadcf2406c51ee9947 -- 0 raw logs from block 95211625 to 95212129
+2026-05-12 09:56:08 | INFO     | data_sources.fluxion — [fluxion] pool 0x70a608fa8ed5806028d3dfdadcf2406c51ee9947 — 49 decoded swaps after filter
+2026-05-12 09:56:08 | INFO     | data_sources.fluxion — [fluxion] pool 0x26f3a215f65ceed026d3cb5428b0b268a7c31a33 -- 0 raw logs from block 95211625 to 95212129
+2026-05-12 09:56:08 | INFO     | data_sources.fluxion — [fluxion] pool 0x26f3a215f65ceed026d3cb5428b0b268a7c31a33 — 49 decoded swaps after filter
+2026-05-12 09:56:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x38507b864a90bb5f16f8db11b149d0c6ac161e9b -- 0 raw logs from block 95211625 to 95212129
+2026-05-12 09:56:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x38507b864a90bb5f16f8db11b149d0c6ac161e9b — 0 decoded swaps after filter
+2026-05-12 09:56:09 | INFO     | data_sources.fluxion — [fluxion] pool 0xcbca9184bb820e6a80e56974b5bb12438aefc286 -- 0 raw logs from block 95211625 to 95212129
+2026-05-12 09:56:09 | INFO     | data_sources.fluxion — [fluxion] pool 0xcbca9184bb820e6a80e56974b5bb12438aefc286 — 0 decoded swaps after filter
+2026-05-12 09:56:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x509b9a0aa01a12245bc6b4874ddd16c470d353e2 -- 51 raw logs from block 95211625 to 95212129
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553562 since=1778553580 ok=False
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553574 since=1778553580 ok=False
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553594 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553608 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553610 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553612 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553626 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553640 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553696 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553698 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553698 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553698 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553700 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553704 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553708 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553708 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553712 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553740 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553742 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553742 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553984 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554014 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554020 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554020 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554034 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554050 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554050 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554076 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554076 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554092 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554098 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554104 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554108 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554108 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554298 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554320 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554378 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554390 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554404 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554418 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554428 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554442 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554450 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554456 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554460 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554474 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554490 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554510 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554524 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554546 since=1778553580 ok=True
+2026-05-12 09:56:09 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554562 since=1778553580 ok=True
+2026-05-12 09:56:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x509b9a0aa01a12245bc6b4874ddd16c470d353e2 — 49 decoded swaps after filter
+2026-05-12 09:56:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x70a608fa8ed5806028d3dfdadcf2406c51ee9947 -- 0 raw logs from block 95211625 to 95212129
+2026-05-12 09:56:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x70a608fa8ed5806028d3dfdadcf2406c51ee9947 — 49 decoded swaps after filter
+2026-05-12 09:56:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x26f3a215f65ceed026d3cb5428b0b268a7c31a33 -- 0 raw logs from block 95211625 to 95212129
+2026-05-12 09:56:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x26f3a215f65ceed026d3cb5428b0b268a7c31a33 — 49 decoded swaps after filter
+2026-05-12 09:56:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x38507b864a90bb5f16f8db11b149d0c6ac161e9b -- 0 raw logs from block 95211626 to 95212130
+2026-05-12 09:56:09 | INFO     | data_sources.fluxion — [fluxion] pool 0x38507b864a90bb5f16f8db11b149d0c6ac161e9b — 0 decoded swaps after filter
+2026-05-12 09:56:09 | INFO     | data_sources.fluxion — [fluxion] pool 0xcbca9184bb820e6a80e56974b5bb12438aefc286 -- 0 raw logs from block 95211626 to 95212130
+2026-05-12 09:56:09 | INFO     | data_sources.fluxion — [fluxion] pool 0xcbca9184bb820e6a80e56974b5bb12438aefc286 — 0 decoded swaps after filter
+2026-05-12 09:56:10 | INFO     | data_sources.fluxion — [fluxion] pool 0x509b9a0aa01a12245bc6b4874ddd16c470d353e2 -- 50 raw logs from block 95211626 to 95212130
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553574 since=1778553580 ok=False
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553594 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553608 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553610 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553612 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553626 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553640 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553696 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553698 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553698 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553698 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553700 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553704 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553708 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553708 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553712 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553740 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553742 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553742 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553984 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554014 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554020 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554020 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554034 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554050 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554050 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554076 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554076 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554092 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554098 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554104 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554108 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554108 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554298 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554320 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554378 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554390 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554404 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554418 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554428 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554442 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554450 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554456 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554460 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554474 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554490 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554510 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554524 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554546 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554562 since=1778553580 ok=True
+2026-05-12 09:56:10 | INFO     | data_sources.fluxion — [fluxion] pool 0x509b9a0aa01a12245bc6b4874ddd16c470d353e2 — 49 decoded swaps after filter
+2026-05-12 09:56:10 | INFO     | data_sources.fluxion — [fluxion] pool 0x70a608fa8ed5806028d3dfdadcf2406c51ee9947 -- 0 raw logs from block 95211626 to 95212130
+2026-05-12 09:56:10 | INFO     | data_sources.fluxion — [fluxion] pool 0x70a608fa8ed5806028d3dfdadcf2406c51ee9947 — 49 decoded swaps after filter
+2026-05-12 09:56:10 | INFO     | data_sources.fluxion — [fluxion] pool 0x26f3a215f65ceed026d3cb5428b0b268a7c31a33 -- 0 raw logs from block 95211626 to 95212130
+2026-05-12 09:56:10 | INFO     | data_sources.fluxion — [fluxion] pool 0x26f3a215f65ceed026d3cb5428b0b268a7c31a33 — 49 decoded swaps after filter
+2026-05-12 09:56:10 | INFO     | data_sources.fluxion — [fluxion] pool 0x38507b864a90bb5f16f8db11b149d0c6ac161e9b -- 0 raw logs from block 95211625 to 95212130
+2026-05-12 09:56:10 | INFO     | data_sources.fluxion — [fluxion] pool 0x38507b864a90bb5f16f8db11b149d0c6ac161e9b — 0 decoded swaps after filter
+2026-05-12 09:56:10 | INFO     | data_sources.fluxion — [fluxion] pool 0xcbca9184bb820e6a80e56974b5bb12438aefc286 -- 0 raw logs from block 95211625 to 95212130
+2026-05-12 09:56:10 | INFO     | data_sources.fluxion — [fluxion] pool 0xcbca9184bb820e6a80e56974b5bb12438aefc286 — 0 decoded swaps after filter
+2026-05-12 09:56:10 | INFO     | data_sources.fluxion — [fluxion] pool 0x509b9a0aa01a12245bc6b4874ddd16c470d353e2 -- 51 raw logs from block 95211625 to 95212130
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553562 since=1778553580 ok=False
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553574 since=1778553580 ok=False
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553594 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553608 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553610 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553612 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553626 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553640 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553696 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553698 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553698 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553698 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553700 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553704 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553708 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553708 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553712 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553740 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553742 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553742 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778553984 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554014 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554020 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554020 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554034 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554050 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554050 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554076 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554076 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554092 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554098 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554104 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554108 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554108 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554298 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554320 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554378 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554390 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554404 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554418 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554428 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554442 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554450 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554456 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554460 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554474 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554490 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554510 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554524 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554546 since=1778553580 ok=True
+2026-05-12 09:56:10 | WARNING  | data_sources.fluxion — [fluxion] ts=1778554562 since=1778553580 ok=True
+2026-05-12 09:56:10 | INFO     | data_sources.fluxion — [fluxion] pool 0x509b9a0aa01a12245bc6b4874ddd16c470d353e2 — 49 decoded swaps after filter
+2026-05-12 09:56:10 | INFO     | data_sources.fluxion — [fluxion] pool 0x70a608fa8ed5806028d3dfdadcf2406c51ee9947 -- 0 raw logs from block 95211625 to 95212130
+2026-05-12 09:56:10 | INFO     | data_sources.fluxion — [fluxion] pool 0x70a608fa8ed5806028d3dfdadcf2406c51ee9947 — 49 decoded swaps after filter
+2026-05-12 09:56:11 | INFO     | data_sources.fluxion — [fluxion] pool 0x26f3a215f65ceed026d3cb5428b0b268a7c31a33 -- 0 raw logs from block 95211625 to 95212130
+2026-05-12 09:56:11 | INFO     | data_sources.fluxion — [fluxion] pool 0x26f3a215f65ceed026d3cb5428b0b268a7c31a33 — 49 decoded swaps after filter
+2026-05-12 09:56:14 | INFO     | data_sources.aave — [aave] blocks=95212082–95212132 events=0 signal=0.00 label=NO_ACTIVITY
+2026-05-12 09:56:14 | INFO     | scorer — [scorer] agni vol share 0.00% < floor — zeroing weight
+2026-05-12 09:56:14 | INFO     | scorer — [scorer] moe vol share 0.00% < floor — zeroing weight
+2026-05-12 09:56:14 | INFO     | scheduler — [scheduler] Scan #1 complete — s_final=9.1 level=none pools=5
+2026-05-12 09:56:15 | INFO     | httpx — HTTP Request: POST https://unipcvswzpmmrfkyqzuq.supabase.co/rest/v1/signal_log "HTTP/2 201 Created"
+2026-05-12 09:56:15 | INFO     | database — [db] signal_log insert id=142 level=none s_final=9.1
+2026-05-12 09:56:15 | INFO     | scheduler — [scheduler] Signal persisted — row_id=142
+2026-05-12 10:04:55 | INFO     | mad.main — [main] Received signal 2 — shutting down...
+2026-05-12 10:04:55 | INFO     | mad.main — [main] Stopping scheduler...
+2026-05-12 10:04:55 | INFO     | apscheduler.scheduler — Scheduler has been shut down
+2026-05-12 10:04:55 | INFO     | mad.main — [main] RealClaw shutdown complete.

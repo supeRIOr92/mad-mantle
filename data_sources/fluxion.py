@@ -193,16 +193,11 @@ def fetch_recent_swaps(since_ts: int, limit: int = 500) -> list:
                 "address": Web3.to_checksum_address(pool_addr),
                 "topics": [SWAP_TOPIC],
             })
-            logger.info("[fluxion] pool %s -- %d raw logs from block %d to %d", pool_addr, len(logs), from_b, latest)
             for log in logs:
                 s = _decode_swap_log(dict(log))
                 if s:
-                    logger.warning("[fluxion] ts=%d since=%d ok=%s", s["timestamp"], since_ts, s["timestamp"] >= since_ts)
                     if s["timestamp"] >= since_ts:
                         swaps.append(s)
-                else:
-                    logger.warning("[fluxion] decode None tx=%s", log.get("transactionHash", "?"))
-            logger.info("[fluxion] pool %s — %d decoded swaps after filter", pool_addr, len(swaps))
             if len(swaps) >= limit:
                 break
         swaps.sort(key=lambda s: s["timestamp"], reverse=True)

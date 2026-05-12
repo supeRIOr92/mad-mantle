@@ -54,6 +54,15 @@ async def refresh_agent_map():
         state.agent_map = build_agent_map(agents)
         state.agent_map_refreshed_at = datetime.now(timezone.utc)
         logger.info(f"[scheduler] Agent map refreshed — {len(state.agent_map)} agents")
+        
+        for a in agents:
+            db.upsert_agent(
+                token_id=a["token_id"],
+                owner_address=a["owner_address"],
+                reputation_score=a["reputation_score"],
+                metadata={"token_uri": a.get("token_uri", ""), "is_high_risk": a.get("is_high_risk", False)},
+            )
+        logger.info(f"[scheduler] Agent registry synced — {len(agents)} agents")
     except Exception as e:
         logger.error(f"[scheduler] Agent map refresh failed: {e}")
 
@@ -221,13 +230,47 @@ async def run_scan():
     best_result = max(all_results, key=lambda r: r.get("s_dex", 0))
 
     # Profile top wallets / capital flow flags (non-blocking, best effort)
-    if alert_level != "none":
-        try:
-            cap_flags = flag_capital_flows(best_result.get("swaps", []))
-            if cap_flags["total_flags"] > 0:
-                logger.info(f"[scheduler] Capital flow flags: {cap_flags['total_flags']}")
-        except Exception:
-            pass
+    try:
+        cap_flags = flag_capital_flows(best_result.get("swaps", []))
+        if cap_flags["total_flags"] > 0:
+            logger.info(f"[scheduler] Capital flow flags: {cap_flags['total_flags']}")
+    except Exception:
+        pass
+
+    # Profile top wallets unconditional — populate wallet_profile table
+    try:
+        profiles = profile_top_wallets(
+            swaps=best_result.get("swaps", []),
+            anomaly_score=best_result.get("s_dex", 0),
+            wash_ratio=best_result.get("l2_score", 0) / 25.0,
+            total_volume=best_result.get("volume_usd", 0),
+        )
+        for p in profiles:
+            db.upsert_wallet(
+                address=p["wallet"],
+                total_volume_usd=p.get("total_volume", 0),
+                tx_count=len([s for s in best_result.get("swaps", []) if (s.get("sender", {}) or {}).get("id", "") == p["wallet"]]),
+                wash_ratio=p.get("wash_ratio", 0),
+                wash_label=p.get("wash_label", "CLEAN"),
+                agent_type=p.get("agent_type", "UNKNOWN WALLET"),
+                archetype=p.get("archetype", "UNKNOWN"),
+                is_probable_agent=p.get("agent_type") in ("PROBABLE AGENT", "CONFIRMED AGENT"),
+                agent_token_id=p.get("erc8004_token_id"),
+                reputation_score=p.get("rep_score", 50.0),
+                roi_7d=p.get("roi_7d"),
+                smart_score=p.get("smart_score", 0),
+                aave_modifier=p.get("aave_modifier", 1.0),
+                aave_debt_usd=p.get("aave_debt_usd", 0),
+                aave_health_factor=p.get("aave_health_factor", 999.0),
+                aave_flash_loan=p.get("aave_flash_loan", False),
+                aave_fresh_borrow=p.get("aave_fresh_borrow", False),
+                risk_label=p.get("wash_label", "CLEAN"),
+                environment="live",
+            )
+        if profiles:
+            logger.info(f"[scheduler] Wallet profiles upserted — {len(profiles)} wallets")
+    except Exception as e:
+        logger.warning(f"[scheduler] Wallet profiling failed: {e}")
 
     # Persist + broadcast only when there's a signal
     signal_record = {
@@ -281,7 +324,8 @@ async def run_scan():
     _update_watch_mode(s_final, scheduler)
 
     state.last_scan_ts = now
-    
+
+
 # ── Watch Mode ────────────────────────────────────────────
 
 def _update_watch_mode(s_final: float, scheduler: AsyncIOScheduler):
@@ -313,11 +357,9 @@ def _set_interval(scheduler: AsyncIOScheduler, minutes: int):
     except Exception as e:
         logger.warning(f"[scheduler] reschedule failed: {e}")
 
-
 # ── Scheduler Setup ───────────────────────────────────────
 
 scheduler = AsyncIOScheduler(timezone="UTC")
-
 
 def setup_scheduler():
     """Register all jobs."""
