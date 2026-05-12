@@ -409,7 +409,6 @@ def setup_scheduler():
 
 def start_scheduler():
     """Start scheduler (non-blocking)."""
-    init_db()
     setup_scheduler()
     scheduler.start()
     logger.info("[scheduler] Scheduler started ✅")
