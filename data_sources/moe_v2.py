@@ -295,7 +295,7 @@ def fetch_daily_snapshots(pool_id: str, days: int = 7) -> list:
             day = datetime.fromtimestamp(s["timestamp"], tz=timezone.utc).strftime("%Y-%m-%d")
             daily[day]["volumeUSD"] += s["amountUSD"]
             daily[day]["txCount"]   += 1
-        return [{"date": day, "txCount": d["txCount"], "volumeUSD": round(d["volumeUSD"], 6)}
+        return [{"date": day, "txCount": daily[day]["txCount"], "volumeUSD": round(daily[day]["volumeUSD"], 6)}
                 for day in sorted(daily.keys(), reverse=True)[:days]]
     except Exception as e:
         logger.error("[moe] fetch_daily_snapshots failed %s: %s", pool_id, e)
