@@ -5,6 +5,7 @@
 #   Swap topic: 0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822
 #   Signature:  Swap(address sender, uint256 amount0In, uint256 amount1In,
 #                    uint256 amount0Out, uint256 amount1Out, address to)
+#   Factory:    0x5bef015ca9424a7c07b68490616a4c1f094bedec (MoeFactory)
 #   Active pool: 0x763868612858358f62b05691dB82Ad35a9b3E110 (MOE/WMNT)
 #
 # Detection: Z-Score + Bollinger (matching Fluxion — UniV2 microstructure)
@@ -22,13 +23,10 @@ from config import MANTLE_RPC_URL, RPC_BLOCK_LOOKBACK
 
 logger = logging.getLogger(__name__)
 
-SWAP_TOPIC    = "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"
-BUCKET_SIZE   = 15 * 60
+SWAP_TOPIC        = "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"
+FACTORY_ADDRESS   = Web3.to_checksum_address("0x5bef015ca9424a7c07b68490616a4c1f094bedec")
+BUCKET_SIZE       = 15 * 60
 MANTLE_BLOCK_TIME = 2
-
-# UniV2 factory for Merchant Moe AMM
-# Pools discovered via DexScreener + on-chain verification
-FACTORY_ADDRESS = Web3.to_checksum_address("0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32")
 
 FACTORY_ABI = [
     {
@@ -47,6 +45,15 @@ FACTORY_ABI = [
 ERC20_ABI = [
     {"inputs": [], "name": "symbol",   "outputs": [{"type": "string"}], "stateMutability": "view", "type": "function"},
     {"inputs": [], "name": "decimals", "outputs": [{"type": "uint8"}],  "stateMutability": "view", "type": "function"},
+]
+
+# Fallback: known active pools in case factory discovery returns 0
+KNOWN_POOLS = [
+    {
+        "address": "0x763868612858358f62b05691db82ad35a9b3e110",
+        "token0":  "0x4515A45337F461A11Ff0FE8aBF3c606AE5dC00c9",  # MOE
+        "token1":  "0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8",  # WMNT
+    }
 ]
 
 _w3 = None
@@ -103,22 +110,10 @@ def _ensure_pool_registry():
         _registry_fetched_at = time.time()
         logger.info("[moe] registry loaded — %d pools", len(_pool_registry))
     except Exception as e:
-        logger.error("[moe] registry fetch failed: %s", e)
-        # Fallback: hardcode known active pool if factory discovery fails
-        _seed_known_pools()
-        _registry_fetched_at = time.time()
+        logger.error("[moe] registry fetch failed: %s — seeding known pools", e)
 
-
-def _seed_known_pools():
-    """Fallback: seed known active Moe AMM pools directly."""
-    known = [
-        {
-            "address": "0x763868612858358f62b05691db82ad35a9b3e110",
-            "token0":  "0x4515A45337F461A11Ff0FE8aBF3c606AE5dC00c9",  # MOE
-            "token1":  "0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8",  # WMNT
-        }
-    ]
-    for p in known:
+    # Fallback: ensure known active pools always present
+    for p in KNOWN_POOLS:
         addr = p["address"].lower()
         if addr not in _pool_registry:
             m0 = _get_token_meta(p["token0"])
@@ -130,7 +125,11 @@ def _seed_known_pools():
                 "decimals0": m0["decimals"],   "decimals1": m1["decimals"],
                 "feeTier": None, "txCount": 0, "totalVolumeUSD": 0.0, "lastSwapAt": None,
             }
-    logger.info("[moe] seeded %d known pools", len(_pool_registry))
+    if not _pool_registry:
+        logger.error("[moe] no pools in registry after fallback")
+    else:
+        _registry_fetched_at = time.time()
+        logger.info("[moe] registry ready — %d pools", len(_pool_registry))
 
 
 def _decode_swap_log(log: dict) -> dict | None:
