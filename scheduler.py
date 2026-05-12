@@ -17,7 +17,7 @@ from config import (
     POLL_WATCH_DEESCALATE,
     DIGEST_HOUR_UTC,
 )
-from data_sources import moe, fluxion
+from data_sources import moe_v2 as moe, fluxion
 from data_sources.aave import fetch_pool_signal
 from data_sources.agents import fetch_all_agents, build_agent_map
 from detector import run_detection
@@ -244,7 +244,6 @@ async def run_scan():
     except Exception:
         pass
     
-    logger.info(f"[scheduler] Profiling wallets — swap count: {len(best_result.get('swaps', []))}")
     # Profile top wallets unconditional — populate wallet_profile table
     try:
         profiles = profile_top_wallets(
