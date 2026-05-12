@@ -8,6 +8,7 @@ from config import (
     DEX_WEIGHTS,
     DEXSCREENER_BASE,
     DEXSCREENER_WEIGHT_FLOOR,
+    FALLBACK_DISCOUNT,
     CORROBORATION_MODIFIER,
     THRESHOLD_WATCHING,
     THRESHOLD_ALERT,
@@ -54,6 +55,7 @@ def fetch_dexscreener_volumes(pool_addresses: list[str]) -> dict[str, float]:
 def compute_dynamic_weights(
     dex_results: list[dict],
     ds_volumes: dict[str, float],
+    local_swap_counts: dict[str, int] = None,
 ) -> dict[str, float]:
     """
     Adjust DEX weights based on real vol_24h from DexScreener.
@@ -62,6 +64,7 @@ def compute_dynamic_weights(
     """
     # Start with baseline weights
     weights = dict(DEX_WEIGHTS)
+    local_swap_counts = local_swap_counts or {}
 
     # Map dex → pool vol from DexScreener
     dex_vols: dict[str, float] = {}
@@ -74,12 +77,29 @@ def compute_dynamic_weights(
     total_vol = sum(dex_vols.values())
 
     if total_vol > 0:
-        for dex in weights:
-            vol_share = dex_vols.get(dex, 0.0) / total_vol
+        for dex in list(weights.keys()):
+            local_active = local_swap_counts.get(dex, 0) > 0
+
+            # Case 1: DexScreener no coverage — fallback to discounted prior
+            if dex not in dex_vols:
+                logger.warning(f"[scorer] {dex}: no DexScreener coverage — mode=fallback local_active={local_active}")
+                weights[dex] = DEX_WEIGHTS.get(dex, 0.0) * FALLBACK_DISCOUNT
+                continue
+
+            vol_share = dex_vols[dex] / total_vol
+
+            # Case 2: DexScreener low/zero but MAD sees local activity — observability mismatch
+            if vol_share < DEXSCREENER_WEIGHT_FLOOR and local_active:
+                logger.warning(f"[scorer] {dex}: vol_share={vol_share:.2%} < floor but local swaps detected — mode=fallback")
+                weights[dex] = DEX_WEIGHTS.get(dex, 0.0) * FALLBACK_DISCOUNT
+                continue
+
+            # Case 3: genuinely inactive
             if vol_share < DEXSCREENER_WEIGHT_FLOOR:
-                logger.info(f"[scorer] {dex} vol share {vol_share:.2%} < floor — zeroing weight")
+                logger.info(f"[scorer] {dex}: vol_share={vol_share:.2%} — mode=inactive")
                 weights[dex] = 0.0
             else:
+                # Case 4: observed data — full trust
                 weights[dex] = vol_share
 
     # Renormalize
@@ -105,7 +125,9 @@ def compute_corroboration(dex_results: list[dict], threshold: float = 40.0) -> i
     flagged = sum(1 for r in dex_results if r.get("s_dex", 0) >= threshold)
     return max(flagged, 1)
 
+
 # ── Aave Integration (v3.0) ───────────────────────────────
+
 def apply_aave_signal(s_moe: float, aave_signal: float) -> tuple[float, float]:
     """
     Apply Aave signal to risk score with hard gate.
@@ -123,6 +145,7 @@ def apply_aave_signal(s_moe: float, aave_signal: float) -> tuple[float, float]:
     aave_signal_effective = aave_signal if s_moe >= AAVE_HARD_GATE_THRESHOLD else 0.0
     risk_score = s_moe * (1 + AAVE_ALPHA * aave_signal_effective)
     return round(min(max(risk_score, 0.0), 100.0), 2), round(aave_signal_effective, 4)
+
 
 # ── Phase 1 Conservative Mode ─────────────────────────────
 
@@ -169,14 +192,16 @@ def get_alert_level(s_final: float, phase1: bool = False) -> str:
     else:
         return "none"
 
+
 # ── Final Score ───────────────────────────────────────────
 
 def compute_final_score(
     dex_results: list[dict],
     ds_volumes: dict[str, float] = None,
     phase1: bool = False,
-    aave_signal: float = 0.0,        # v3.0
-    aave_label: str = "NO_ACTIVITY", # v3.0
+    aave_signal: float = 0.0,
+    aave_label: str = "NO_ACTIVITY",
+    local_swap_counts: dict[str, int] = None,
 ) -> dict:
     """
     Compute weighted S_final from per-DEX S_DEX scores,
@@ -207,7 +232,7 @@ def compute_final_score(
     ds_volumes = ds_volumes or {}
 
     # Dynamic weights
-    weights = compute_dynamic_weights(dex_results, ds_volumes)
+    weights = compute_dynamic_weights(dex_results, ds_volumes, local_swap_counts)
 
     # Aggregate per DEX: Top-K=2 with outlier dampening
     dex_pool_scores: dict[str, list[float]] = {}

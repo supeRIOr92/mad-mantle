@@ -184,6 +184,12 @@ async def run_scan():
         logger.info("[scheduler] Scan complete — no data")
         return
 
+    # Build local swap counts per DEX for observability check
+    local_swap_counts: dict[str, int] = {}
+    for r in all_results:
+        dex = r.get("dex", "")
+        local_swap_counts[dex] = local_swap_counts.get(dex, 0) + len(r.get("swaps", []))
+
     # Fetch DexScreener volumes for dynamic weighting
     loop = asyncio.get_event_loop()
     try:
@@ -216,6 +222,7 @@ async def run_scan():
         all_results, ds_volumes, phase1=phase1,
         aave_signal=aave_data["aave_signal"],
         aave_label=aave_data["aave_label"],
+        local_swap_counts=local_swap_counts,
     )
     s_final = final["s_final"]
     alert_level = final["alert_level"]
@@ -324,7 +331,6 @@ async def run_scan():
     _update_watch_mode(s_final, scheduler)
 
     state.last_scan_ts = now
-
 
 # ── Watch Mode ────────────────────────────────────────────
 
