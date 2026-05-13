@@ -47,12 +47,12 @@ export default function ToastAlert() {
         setShown(true);
         const statusText =
           latest.alert_level === "none" && latest.s_final < 20
-            ? "Normal — tidak ada anomaly terdeteksi."
+            ? "Normal — no anomaly detected."
             : latest.alert_level === "watching"
-            ? `Elevated — s_final=${latest.s_final.toFixed(1)}, dalam pengawasan.`
-            : `ALERT — s_final=${latest.s_final.toFixed(1)}, anomaly terdeteksi.`;
+            ? `Elevated — s_final=${latest.s_final.toFixed(1)}, under observation.`
+            : `ALERT — s_final=${latest.s_final.toFixed(1)}, anomaly detected.`;
 
-        showToast(`MAD aktif · ${statusText}`, "info");
+        showToast(`MAD active · ${statusText}`, "info");
         setLastAlertLevel(latest.alert_level);
         return;
       }
@@ -65,12 +65,12 @@ export default function ToastAlert() {
         setLastAlertLevel(latest.alert_level);
         if (latest.alert_level === "watching") {
           showToast(
-            `⚠ WATCHING — s_final=${latest.s_final.toFixed(1)} melewati threshold. Pool sedang dipantau ketat.`,
+            `⚠ WATCHING — s_final=${latest.s_final.toFixed(1)} crossed threshold. Pool under close surveillance.`,
             "warning"
           );
         } else if (latest.alert_level === "alert" || latest.alert_level === "high_conf") {
           showToast(
-            `🚨 ALERT — s_final=${latest.s_final.toFixed(1)}. Manipulation pattern terdeteksi. Cek Risk View.`,
+            `🚨 ALERT — s_final=${latest.s_final.toFixed(1)}. Manipulation pattern detected. Check Risk View.`,
             "alert"
           );
         }

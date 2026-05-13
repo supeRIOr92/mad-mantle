@@ -169,8 +169,8 @@ export default function WhitepaperPage() {
         │
         ▼
   Data Sources
-  ├── Fluxion (UniV3 fork)     — eth_getLogs, ABI decode
-  ├── Merchant Moe (LB 2.2)   — bytes32 swap decode
+  ├── Fluxion (UniV3 fork)     — eth_getLogs, PoolCreated discovery
+  ├── Merchant Moe (UniV2)    — allPairs() enumeration, min-activity filter
   └── Aave v3                  — borrow/flash loan events
         │
         ▼
@@ -228,7 +228,7 @@ pts          = min(20,  20 × breach_ratio / 0.50)
 σ_multiplier = 2.0  (baseline)
              = 2.5  (adaptive — if today's range > 3× 7d avg range)`}</FormulaCard>
 
-          <SubTitle>Poisson Deviation · max 20 pts <span className="text-[#8B949E] font-normal text-sm">(Merchant Moe LB pools)</span></SubTitle>
+          <SubTitle>Poisson Deviation · max 20 pts <span className="text-[#8B949E] font-normal text-sm">(Merchant Moe pools)</span></SubTitle>
           <FormulaCard label="FORMULA">{`λ       = mean_daily_tx / 96   (96 buckets/day at 15-min intervals)
 p_value = P(X ≥ current_tx | λ)
 
@@ -236,7 +236,7 @@ p < 0.001  →  20 pts
 p < 0.010  →  15 pts
 p < 0.050  →  10 pts`}</FormulaCard>
 
-          <SubTitle>Rate-of-Change · max 20 pts <span className="text-[#8B949E] font-normal text-sm">(Merchant Moe LB pools)</span></SubTitle>
+          <SubTitle>Rate-of-Change · max 20 pts <span className="text-[#8B949E] font-normal text-sm">(Merchant Moe pools)</span></SubTitle>
           <FormulaCard label="FORMULA">{`ratio = current_tx_per_bucket / avg_tx_per_bucket (7d)
 
 ratio ≥ 5.0×   →  20 pts
@@ -535,6 +535,13 @@ S_final drops below 50 for 2 consecutive scans  →  Watch mode OFF (15 min)`}</
               fix="Add market_regime field to all API responses: { active_dexes, confidence_cap, mode: 'low-liquidity' | 'normal' | 'high-activity' }. Already in v2.0 API schema."
               frame="Transparency gap, not a detection gap. MAD's scores are valid — they just need environmental context. Already addressed in v2.0 API design."
             />
+            <LimitationCard
+              number={4}
+              title="Low-Liquidity Pool Noise Inflates Anomaly Scores"
+              current="Merchant Moe UniV2 has 229 registered pairs, of which the majority are ghost pools with 0–2 swaps per scan window. A near-zero baseline means any minimal activity triggers a high Z-score — not because manipulation occurred, but because the statistical floor is too thin. This inflates Moe&apos;s s_dex contribution and can produce elevated s_final readings that do not reflect genuine anomalies."
+              fix="Introduce a minimum activity filter (MIN_POOL_SWAPS) to exclude pools below a swap count threshold from Z-score computation. Only pools with statistically meaningful participation contribute to scoring. Configurable via environment variable. v2.0 fix."
+              frame="MAD prioritizes statistically meaningful liquidity environments. Pools below the activity threshold are still monitored for observability — they simply do not contribute to anomaly scoring until their baseline is stable. This is consistent with how institutional surveillance systems apply minimum liquidity thresholds before treating a venue as signal-grade."
+            />
           </div>
         </Section>
 
@@ -544,8 +551,8 @@ S_final drops below 50 for 2 consecutive scans  →  Watch mode OFF (15 min)`}</
           <CodeCard label="ON-CHAIN REFERENCES">{`ERC-8004 Identity Registry:    0x8004A169FB4a3325136EB29fA0ceB6D2e539a432
 ERC-8004 Reputation Registry:  0x8004BAa17C55a88189AE136b182e5fdA19dE9b63
 Fluxion Factory:               0xF883162Ed9c7E8EF604214c964c678E40c9B737C
-Merchant Moe LB Factory:       0xa6630671775c4EA2743840F9A5016dCf2A104054
-Aave v3 Pool:                  0xe9E52021f4e11DEAD8661812A0A6c8627abA2a54`}</CodeCard>
+Merchant Moe Factory (UniV2):  0x5bef015ca9424a7c07b68490616a4c1f094bedec
+Aave v3 Pool:                  0x458F293454fE0d67EC0655f3672301301DD51422`}</CodeCard>
 
           <SubTitle>Infrastructure</SubTitle>
           <CodeCard label="SYSTEM SPECS">{`RPC:            https://rpc.mantle.xyz  (public, no key required)
