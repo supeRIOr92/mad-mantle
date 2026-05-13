@@ -22,14 +22,14 @@ const interval = setInterval(fetchData, 5000);
 return () => clearInterval(interval);
 }, [mode, limit]);
 
-const manipulators = wallets.filter((w) => w.agent_type === "MANIPULATOR");
+const manipulators = wallets.filter((w) => w.agent_type === "Suspicious Coordination");
 const smartMoney = wallets.filter((w) =>
-w.agent_type === "SMART MONEY" ||
-w.agent_type === "CONFIRMED AGENT" ||
-w.agent_type === "PROBABLE AGENT"
+  w.agent_type === "SMART MONEY" ||
+  w.agent_type === "Registered Agent" ||
+  w.agent_type === "Probable Automation"
 );
 const risky = wallets.filter((w) =>
-w.agent_type === "MANIPULATOR" ||
+  w.agent_type === "Suspicious Coordination" ||
 (w.wash_ratio || 0) > 5 ||
 (w.risk_label !== "CLEAN" && w.risk_label != null)
 );

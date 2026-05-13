@@ -31,11 +31,11 @@ logger = logging.getLogger(__name__)
 
 # ── Labels ────────────────────────────────────────────────────────────────────
 
-AGENT_TYPE_CONFIRMED   = "CONFIRMED AGENT"
-AGENT_TYPE_PROBABLE    = "PROBABLE AGENT"
-AGENT_TYPE_MANIPULATOR = "MANIPULATOR"
-AGENT_TYPE_SMART_MONEY = "SMART MONEY"
-AGENT_TYPE_UNKNOWN     = "UNKNOWN WALLET"
+AGENT_TYPE_CONFIRMED   = "Registered Agent"
+AGENT_TYPE_PROBABLE    = "Probable Automation"
+AGENT_TYPE_MANIPULATOR = "Suspicious Coordination"
+AGENT_TYPE_SMART_MONEY = "Smart Money"
+AGENT_TYPE_UNKNOWN     = "Unclassified"
 
 ARCHETYPE_FLASH_WASH = "FLASH_WASH"
 ARCHETYPE_COORD_WASH = "COORDINATED_WASH"
