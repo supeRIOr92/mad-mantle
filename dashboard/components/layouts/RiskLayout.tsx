@@ -1,12 +1,10 @@
 "use client";
-import Panel2LiveFeed from "@/components/Panel2LiveFeed";
 import Panel4SmartMoney from "@/components/Panel4SmartMoney";
 import Panel5AgentReport from "@/components/Panel5AgentReport";
-import Panel7VolumeChart from "@/components/Panel7VolumeChart";
 import PanelAlerts from "@/components/PanelAlerts";
 import PanelSignals from "@/components/PanelSignals";
 import PanelTopRiskPools from "@/components/PanelTopRiskPools";
-import PanelEcosystemHealth from "@/components/PanelEcosystemHealth";
+import PanelAgentGraph from "@/components/PanelAgentGraph";
 import SectionHeader from "@/components/SectionHeader";
 import Footer from "@/components/Footer";
 
@@ -52,16 +50,11 @@ export default function RiskLayout() {
         <section>
           <SectionHeader
             title="Agent Forensics"
-            subtitle="AI agent activity mapped to ERC-8004 identity registry"
+            subtitle="Behavioral affinity network — wallets coordinating in shared liquidity environments"
             accent="slate"
           />
-          <div
-            className="grid gap-3 mt-3"
-            style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}
-          >
-            <Panel2LiveFeed />
-            <Panel7VolumeChart />
-            <PanelEcosystemHealth />
+          <div className="mt-3">
+            <PanelAgentGraph />
           </div>
         </section>
 
