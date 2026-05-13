@@ -223,8 +223,7 @@ def get_wallet_aave_summary(wallet: str) -> dict:
         borrow = _borrow_cache.get(wallet.lower())
         if borrow:
             result["recent_borrow_fresh"] = (time.time() - borrow["timestamp"]) / 60 < AAVE_OPEN_BORROW_FRESH_MIN
-    except ContractLogicError as e:
-        logger.debug("[aave] getUserAccountData error %s: %s", wallet, e)
     except Exception as e:
-        logger.warning("[aave] get_wallet_aave_summary failed %s: %s", wallet, e)
+        logger.debug("[aave] getUserAccountData skip %s: %s", wallet, e)
     return result
+

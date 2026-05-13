@@ -8,6 +8,11 @@
 #   Factory:    0x5bef015ca9424a7c07b68490616a4c1f094bedec (MoeFactory)
 #   Active pool: 0x763868612858358f62b05691dB82Ad35a9b3E110 (MOE/WMNT)
 #
+# Pool discovery — 3 strategies (in order):
+#   1. PairCreated events (lookback 50k blocks)
+#   2. allPairs() enumeration (direct factory state read)
+#   3. KNOWN_POOLS fallback (hardcoded)
+#
 # Detection: Z-Score + Bollinger (matching Fluxion — UniV2 microstructure)
 # DEX name:  "moe" (unchanged — scorer weight 0.45 preserved)
 
@@ -39,7 +44,38 @@ FACTORY_ABI = [
         ],
         "name": "PairCreated",
         "type": "event",
-    }
+    },
+    {
+        "inputs": [],
+        "name": "allPairsLength",
+        "outputs": [{"name": "", "type": "uint256"}],
+        "stateMutability": "view",
+        "type": "function",
+    },
+    {
+        "inputs": [{"name": "", "type": "uint256"}],
+        "name": "allPairs",
+        "outputs": [{"name": "", "type": "address"}],
+        "stateMutability": "view",
+        "type": "function",
+    },
+]
+
+PAIR_ABI = [
+    {
+        "inputs": [],
+        "name": "token0",
+        "outputs": [{"name": "", "type": "address"}],
+        "stateMutability": "view",
+        "type": "function",
+    },
+    {
+        "inputs": [],
+        "name": "token1",
+        "outputs": [{"name": "", "type": "address"}],
+        "stateMutability": "view",
+        "type": "function",
+    },
 ]
 
 ERC20_ABI = [
@@ -47,7 +83,7 @@ ERC20_ABI = [
     {"inputs": [], "name": "decimals", "outputs": [{"type": "uint8"}],  "stateMutability": "view", "type": "function"},
 ]
 
-# Fallback: known active pools in case factory discovery returns 0
+# Fallback: known active pools in case all discovery strategies return 0
 KNOWN_POOLS = [
     {
         "address": "0x763868612858358f62b05691db82ad35a9b3e110",
@@ -88,12 +124,15 @@ def _ensure_pool_registry():
     global _registry_fetched_at
     if time.time() - _registry_fetched_at < REGISTRY_TTL and _pool_registry:
         return
+
     try:
         w3      = _get_w3()
         latest  = w3.eth.block_number
         factory = w3.eth.contract(address=FACTORY_ADDRESS, abi=FACTORY_ABI)
-        events  = factory.events.PairCreated.get_logs(
-            from_block=max(0, latest - 500_000), to_block=latest
+
+        # Strategy 1: PairCreated events — lookback 50k (not 500k, RPC limit)
+        events = factory.events.PairCreated.get_logs(
+            from_block=max(0, latest - 50_000), to_block=latest
         )
         for ev in events:
             pool_addr = ev["args"]["pair"].lower()
@@ -107,12 +146,40 @@ def _ensure_pool_registry():
                 "decimals0": m0["decimals"],  "decimals1": m1["decimals"],
                 "feeTier": None, "txCount": 0, "totalVolumeUSD": 0.0, "lastSwapAt": None,
             }
-        _registry_fetched_at = time.time()
-        logger.info("[moe] registry loaded — %d pools", len(_pool_registry))
+        logger.info("[moe] registry loaded — %d pools (events)", len(_pool_registry))
+
+        # Strategy 2: allPairs enumeration — direct state read, no event dependency
+        if not _pool_registry:
+            try:
+                total = factory.functions.allPairsLength().call()
+                logger.info("[moe] allPairsLength = %d — enumerating (max 50)", total)
+                for i in range(min(total, 50)):
+                    try:
+                        pair_addr = factory.functions.allPairs(i).call().lower()
+                        pair_contract = w3.eth.contract(
+                            address=Web3.to_checksum_address(pair_addr), abi=PAIR_ABI
+                        )
+                        t0 = pair_contract.functions.token0().call()
+                        t1 = pair_contract.functions.token1().call()
+                        m0 = _get_token_meta(t0)
+                        m1 = _get_token_meta(t1)
+                        _pool_registry[pair_addr] = {
+                            "id": pair_addr, "dex": "moe",
+                            "token0": t0.lower(), "token1": t1.lower(),
+                            "token0Symbol": m0["symbol"], "token1Symbol": m1["symbol"],
+                            "decimals0": m0["decimals"],  "decimals1": m1["decimals"],
+                            "feeTier": None, "txCount": 0, "totalVolumeUSD": 0.0, "lastSwapAt": None,
+                        }
+                    except Exception as e:
+                        logger.debug("[moe] allPairs[%d] failed: %s", i, e)
+                logger.info("[moe] registry loaded — %d pools (allPairs)", len(_pool_registry))
+            except Exception as e:
+                logger.warning("[moe] allPairs enumeration failed: %s", e)
+
     except Exception as e:
         logger.error("[moe] registry fetch failed: %s — seeding known pools", e)
 
-    # Fallback: ensure known active pools always present
+    # Strategy 3: KNOWN_POOLS fallback — always ensure active pool present
     for p in KNOWN_POOLS:
         addr = p["address"].lower()
         if addr not in _pool_registry:
@@ -125,8 +192,9 @@ def _ensure_pool_registry():
                 "decimals0": m0["decimals"],   "decimals1": m1["decimals"],
                 "feeTier": None, "txCount": 0, "totalVolumeUSD": 0.0, "lastSwapAt": None,
             }
+
     if not _pool_registry:
-        logger.error("[moe] no pools in registry after fallback")
+        logger.error("[moe] no pools in registry after all strategies")
     else:
         _registry_fetched_at = time.time()
         logger.info("[moe] registry ready — %d pools", len(_pool_registry))
@@ -160,12 +228,10 @@ def _decode_swap_log(log: dict) -> dict | None:
 
         dec0, dec1 = meta.get("decimals0", 18), meta.get("decimals1", 18)
 
-        # Volume = larger of in/out amounts (avoid double-counting)
         vol0 = max(amount0In, amount0Out) / (10 ** dec0)
         vol1 = max(amount1In, amount1Out) / (10 ** dec1)
         amount_usd = vol0 if vol0 > 0 else vol1
 
-        # Timestamp
         ts = 0
         raw_ts = log.get("blockTimestamp")
         if raw_ts:
@@ -321,6 +387,7 @@ def fetch_top_pools(limit: int = 20) -> list:
     except Exception as e:
         logger.warning("[moe] fetch_top_pools sort failed: %s", e)
     return pools[:limit]
+
 
 # Alias for scheduler compatibility
 fetch_tx_count_buckets = fetch_volume_buckets
