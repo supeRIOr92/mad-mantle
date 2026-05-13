@@ -59,8 +59,10 @@ export default function ActivityLayout() {
             style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}
           >
             <Panel4SmartMoney />
-            <Panel6BubbleChart />
             <Panel7VolumeChart />
+          </div>
+          <div className="mt-3">
+            <Panel6BubbleChart />
           </div>
         </section>
 

@@ -4,7 +4,7 @@ import Panel5AgentReport from "@/components/Panel5AgentReport";
 import PanelAlerts from "@/components/PanelAlerts";
 import PanelSignals from "@/components/PanelSignals";
 import PanelTopRiskPools from "@/components/PanelTopRiskPools";
-import PanelAgentGraph from "@/components/PanelAgentGraph";
+import Panel6BubbleChart from "@/components/Panel6BubbleChart";
 import SectionHeader from "@/components/SectionHeader";
 import Footer from "@/components/Footer";
 
@@ -54,7 +54,7 @@ export default function RiskLayout() {
             accent="slate"
           />
           <div className="mt-3">
-            <PanelAgentGraph />
+            <Panel6BubbleChart />
           </div>
         </section>
 
