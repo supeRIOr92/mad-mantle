@@ -27,7 +27,7 @@ export default function SectionHeader({ title, subtitle, accent = "slate" }: Sec
           {title}
         </span>
         {subtitle && (
-          <span className="text-xs text-slate-500 truncate">{subtitle}</span>
+          <span className="text-xs text-slate-500 leading-tight break-words">{subtitle}</span>
         )}
       </div>
     </div>

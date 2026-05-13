@@ -280,8 +280,14 @@ export default function PanelAgentGraph() {
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ x: number; y: number; node: GraphNode } | null>(null);
   const [isEmpty, setIsEmpty] = useState(false);
-  const [dimensions, setDimensions] = useState({ width: 800, height: 420 });
+  const [dimensions, setDimensions] = useState({ width: 800, height: 320 });
   const { mode } = useAppState();
+
+  // Pan & zoom state
+  const panRef = useRef({ x: 0, y: 0 });
+  const zoomRef = useRef(1);
+  const isPanningRef = useRef(false);
+  const lastPanPos = useRef({ x: 0, y: 0 });
 
   // Fetch data
   useEffect(() => {
@@ -315,12 +321,13 @@ export default function PanelAgentGraph() {
     return () => clearInterval(interval);
   }, [mode]);
 
-  // Resize observer
+  // Resize observer — height capped at 320px on desktop
   useEffect(() => {
     if (!containerRef.current) return;
     const obs = new ResizeObserver((entries) => {
       const { width } = entries[0].contentRect;
-      setDimensions({ width: Math.floor(width), height: Math.floor(width * 0.5) });
+      const h = Math.min(320, Math.floor(width * 0.42));
+      setDimensions({ width: Math.floor(width), height: h });
     });
     obs.observe(containerRef.current);
     return () => obs.disconnect();
@@ -344,35 +351,75 @@ export default function PanelAgentGraph() {
         );
         frame++;
       }
+      ctx.save();
+      ctx.translate(panRef.current.x, panRef.current.y);
+      ctx.scale(zoomRef.current, zoomRef.current);
       renderGraph(ctx, nodesRef.current, edgesRef.current, hoveredNode, dimensions.width, dimensions.height);
+      ctx.restore();
       animRef.current = requestAnimationFrame(animate);
     };
     animRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animRef.current);
   }, [hoveredNode, dimensions]);
 
-  // Mouse interaction
+  // Mouse interaction — pan, zoom, hover
+  const screenToWorld = useCallback((sx: number, sy: number) => {
+    return {
+      x: (sx - panRef.current.x) / zoomRef.current,
+      y: (sy - panRef.current.y) / zoomRef.current,
+    };
+  }, []);
+
+  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+    isPanningRef.current = true;
+    lastPanPos.current = { x: e.clientX, y: e.clientY };
+  }, []);
+
+  const handleMouseUp = useCallback(() => {
+    isPanningRef.current = false;
+  }, []);
+
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLCanvasElement>) => {
+      if (isPanningRef.current) {
+        panRef.current.x += e.clientX - lastPanPos.current.x;
+        panRef.current.y += e.clientY - lastPanPos.current.y;
+        lastPanPos.current = { x: e.clientX, y: e.clientY };
+        return;
+      }
       const canvas = canvasRef.current;
       if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
-      const mx = e.clientX - rect.left;
-      const my = e.clientY - rect.top;
+      const world = screenToWorld(e.clientX - rect.left, e.clientY - rect.top);
 
       const hit = nodesRef.current.find((n) => {
-        const dx = n.x - mx;
-        const dy = n.y - my;
-        return Math.sqrt(dx * dx + dy * dy) <= n.radius + 4;
+        const dx = n.x - world.x;
+        const dy = n.y - world.y;
+        return Math.sqrt(dx * dx + dy * dy) <= (n.radius + 4) / zoomRef.current;
       });
 
       setHoveredNode(hit?.id ?? null);
       setTooltip(hit ? { x: e.clientX - rect.left, y: e.clientY - rect.top, node: hit } : null);
     },
-    []
+    [screenToWorld]
   );
 
+  const handleWheel = useCallback((e: React.WheelEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+    const newZoom = Math.max(0.3, Math.min(3, zoomRef.current * delta));
+    panRef.current.x = mx - (mx - panRef.current.x) * (newZoom / zoomRef.current);
+    panRef.current.y = my - (my - panRef.current.y) * (newZoom / zoomRef.current);
+    zoomRef.current = newZoom;
+  }, []);
+
   const handleMouseLeave = useCallback(() => {
+    isPanningRef.current = false;
     setHoveredNode(null);
     setTooltip(null);
   }, []);
@@ -425,9 +472,12 @@ export default function PanelAgentGraph() {
               ref={canvasRef}
               width={dimensions.width}
               height={dimensions.height}
+              onMouseDown={handleMouseDown}
+              onMouseUp={handleMouseUp}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              className="w-full cursor-crosshair"
+              onWheel={handleWheel}
+              className="w-full cursor-grab active:cursor-grabbing"
             />
             {/* Tooltip */}
             {tooltip && (
