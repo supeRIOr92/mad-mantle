@@ -13,7 +13,7 @@ import Footer from "@/components/Footer";
 export default function RiskLayout() {
   return (
     <main className="flex-1 flex flex-col">
-      <div className="flex-1 p-3 sm:p-4 space-y-5">
+      <div className="flex-1 px-4 sm:px-8 lg:px-12 py-4 sm:py-6 space-y-6">
 
         {/* ── THREAT DETECTION ── */}
         <section>

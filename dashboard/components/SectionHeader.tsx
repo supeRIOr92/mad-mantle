@@ -20,14 +20,14 @@ export default function SectionHeader({ title, subtitle, accent = "slate" }: Sec
   };
 
   return (
-    <div className={`flex items-center gap-3 px-1 pt-2 pb-1 border-b ${accentMap[accent]}`}>
-      <div className={`w-1 h-4 rounded-full flex-shrink-0 ${barMap[accent]}`} />
-      <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3 min-w-0">
-        <span className={`text-[10px] font-bold tracking-widest uppercase ${accentMap[accent].split(" ")[0]}`}>
+    <div className={`flex items-center gap-3 px-1 pt-3 pb-2 border-b ${accentMap[accent]}`}>
+      <div className={`w-1.5 h-5 rounded-full flex-shrink-0 ${barMap[accent]}`} />
+      <div className="flex flex-col gap-0.5 min-w-0">
+        <span className={`text-sm font-bold tracking-widest uppercase ${accentMap[accent].split(" ")[0]}`}>
           {title}
         </span>
         {subtitle && (
-          <span className="text-[10px] text-slate-600 hidden sm:inline truncate">— {subtitle}</span>
+          <span className="text-xs text-slate-500 truncate">{subtitle}</span>
         )}
       </div>
     </div>
