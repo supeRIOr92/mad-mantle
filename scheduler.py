@@ -259,7 +259,6 @@ async def run_scan():
             to_block=current_block,
         )
 
-        )
         for p in profiles:
             db.upsert_wallet(
                 address=p["wallet"],
