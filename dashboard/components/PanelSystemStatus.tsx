@@ -13,7 +13,7 @@ function aaveBadgeColor(label: string) {
 
 export default function PanelSystemStatus() {
   const { mode } = useAppState();
-  const { scans } = usePoolScans(10);
+  const { scans, totalCount } = usePoolScans(10);
   const [uptime, setUptime] = useState("00:00:00");
   const [startTime] = useState(Date.now());
 
@@ -115,7 +115,7 @@ export default function PanelSystemStatus() {
 
         <div className="flex justify-between pb-1">
           <span className="text-slate-500">Total scans</span>
-          <span className="text-white">{scans.length}</span>
+          <span className="text-white">{totalCount}</span>
         </div>
       </div>
 

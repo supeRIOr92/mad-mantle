@@ -3,7 +3,7 @@ import { usePoolScans } from "@/lib/hooks/usePoolScans";
 import { useAlerts } from "@/lib/hooks/useAlerts";
 
 export default function PanelModelStatus() {
-const { scans } = usePoolScans(200);
+const { scans, totalCount } = usePoolScans(200);
 const { alerts, signals } = useAlerts();
 
 const sampleSize = scans.length;
@@ -46,7 +46,7 @@ Accuracy will stabilize after data accumulation
 <div className="text-[10px] text-slate-500">Signal Rate</div>
 </div>
 <div>
-<div className="text-xl font-bold text-white">{sampleSize}</div>
+<div className="text-xl font-bold text-white">{totalCount}</div>
 <div className="text-[10px] text-slate-500">30d samples</div>
 </div>
 </div>
