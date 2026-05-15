@@ -26,6 +26,7 @@ from config import (
 from data_sources.agents import get_agent_identity, get_agent_reputation
 from data_sources.mantlescan import get_wallet_roi
 from data_sources.aave import get_wallet_aave_summary
+from data_sources.contract_breadth import get_contract_breadth
 
 logger = logging.getLogger(__name__)
 
@@ -52,18 +53,26 @@ WASH_LABEL_CLEAN = "CLEAN"
 
 # ── SECTION 1 — Agent heuristics ─────────────────────────────────────────────
 
-def _check_heuristics(swaps: list[dict]) -> int:
+def _check_heuristics(swaps: list[dict], contract_breadth: int = 0) -> int:
     """
-    Returns count of heuristics matched (0-4).
+    Returns count of heuristics matched (0-6).
       1. High frequency  — >= AGENT_HIGH_FREQ_TX_MIN swaps in window
       2. Round amounts   — > AGENT_ROUND_AMOUNT_PCT of amounts are round numbers
       3. Fast execution  — avg time between swaps < AGENT_EXEC_TIME_MAX_SEC
       4. Low variance    — coefficient of variation (CV) < AGENT_CV_MAX
+      5. Contract breadth — interacted with 2 protocol categories in window (+1)
+      6. Contract breadth — interacted with 3+ protocol categories in window (+2 total)
     """
     if not swaps:
         return 0
 
     score = 0
+
+    # 5 & 6. Contract breadth (Layer 3 — multi-protocol AI agent signal)
+    if contract_breadth >= 3:
+        score += 2
+    elif contract_breadth == 2:
+        score += 1
 
     # 1. High frequency
     if len(swaps) >= AGENT_HIGH_FREQ_TX_MIN:
@@ -107,6 +116,7 @@ def classify_agent_type(
     wash_ratio: float,
     cycle_detected: bool,
     roi_7d: Optional[float] = None,
+    contract_breadth: int = 0,
 ) -> str:
     """
     Classify wallet into one of 5 agent types.
@@ -120,7 +130,7 @@ def classify_agent_type(
     identity     = get_agent_identity(wallet)
     is_confirmed = identity is not None
 
-    heuristic_count = _check_heuristics(swaps)
+    heuristic_count = _check_heuristics(swaps, contract_breadth=contract_breadth)
     is_probable = (not is_confirmed) and (heuristic_count >= SMART_MONEY_HEURISTIC_MIN)
 
     is_agent = is_confirmed or is_probable
@@ -255,14 +265,25 @@ def build_wallet_profile(
     corroboration: int,
     aave_modifier: float,
     tx_per_minute: float,
+    from_block: int = 0,
+    to_block: int = 0,
 ) -> dict:
     """
     Build full wallet profile dict.
     Called by scorer.py after scoring pipeline.
     Persisted to Supabase wallet_profiles table.
     """
+    # Layer 3 — Contract breadth (AI agent multi-protocol detection)
+    breadth_data = {"contract_breadth": 0, "breadth_categories": [], "breadth_contracts": []}
+    if from_block > 0 and to_block > 0:
+        try:
+            breadth_data = get_contract_breadth(wallet, from_block, to_block)
+        except Exception as e:
+            logger.debug("[breadth] skipped for %s: %s", wallet, e)
+
     # ROI from MantleScan
     roi_7d = None
+
     try:
         roi_7d = get_wallet_roi(wallet, days=7)
     except Exception as e:
@@ -294,7 +315,8 @@ def build_wallet_profile(
     )
     agent_type  = classify_agent_type(
         wallet, swaps, anomaly_score, wash_ratio,
-        cycle_count >= 1, roi_7d
+        cycle_count >= 1, roi_7d,
+        contract_breadth=breadth_data["contract_breadth"],
     )
     smart_score = compute_smart_score(
         roi_7d if roi_7d is not None else 0.0,
@@ -337,10 +359,13 @@ def build_wallet_profile(
         "aave_flash_loan":    aave_summary.get("recent_flash_loan", False),
         "aave_fresh_borrow":  aave_summary.get("recent_borrow_fresh", False),
 
+        # Layer 3 — Contract breadth
+        "contract_breadth":    breadth_data["contract_breadth"],
+        "breadth_categories":  breadth_data["breadth_categories"],
+
         # Meta
         "updated_at": int(time.time()),
     }
-
 
 # ── SECTION 7 — Alert-ready summary ──────────────────────────────────────────
 
