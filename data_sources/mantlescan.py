@@ -15,7 +15,7 @@ def _get(params: dict) -> dict:
     params["apikey"] = MANTLESCAN_API_KEY
     params["chainid"] = MANTLE_CHAIN_ID
     try:
-        resp = requests.get(BASE_URL, params=params, timeout=15)
+        resp = requests.get(BASE_URL, params=params, timeout=8)
         resp.raise_for_status()
         data = resp.json()
         if data.get("status") == "0":

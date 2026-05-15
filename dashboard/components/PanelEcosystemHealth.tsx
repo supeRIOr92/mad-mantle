@@ -3,7 +3,7 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "rec
 import { usePoolScans } from "@/lib/hooks/usePoolScans";
 
 export default function PanelEcosystemHealth() {
-const { scans, avgScore, scoreTimeline, topRisk } = usePoolScans(48);
+const { scans, totalCount, avgScore, scoreTimeline, topRisk } = usePoolScans(48);
 
 const activePoolCount = new Set(scans.map((s) => s.pool_address)).size;
 
@@ -46,7 +46,7 @@ Ecosystem Health
 <div className="text-[10px] text-slate-500">Active Pools</div>
 </div>
 <div>
-<div className="text-2xl font-bold text-white">{scans.length}</div>
+<div className="text-2xl font-bold text-white">{totalCount}</div>
 <div className="text-[10px] text-slate-500">Total Scans</div>
 </div>
 </div>
