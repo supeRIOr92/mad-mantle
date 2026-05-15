@@ -25,8 +25,9 @@ return () => clearInterval(interval);
 const manipulators = wallets.filter((w) => w.agent_type === "Suspicious Coordination");
 const smartMoney = wallets.filter((w) =>
   w.agent_type === "SMART MONEY" ||
-  w.agent_type === "Registered Agent" ||
-  w.agent_type === "Probable Automation"
+  w.agent_type === "Registered Agent" &&
+  (w.smart_score || 0) > 0 &&
+  (w.total_volume_usd || 0) > 0
 );
 const risky = wallets.filter((w) =>
   w.agent_type === "Suspicious Coordination" ||
