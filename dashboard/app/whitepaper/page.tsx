@@ -58,17 +58,34 @@ export default function WhitepaperPage() {
         {/* ── 1. Executive Summary ── */}
         <Section id="1" title="Executive Summary">
           <p className="text-[#E6EDF3] leading-7 mb-4">
-            MAD is real-time market integrity infrastructure for Mantle Network&apos;s agent-native DeFi ecosystem.
-            Every 15 minutes, MAD scans every active liquidity pool on Fluxion and Merchant Moe, runs each pool
-            through a three-layer probabilistic detection engine, and surfaces manipulation signals before the market reacts.
+            MAD scans every active liquidity pool on Mantle every 15 minutes, runs each pool through a
+            three-layer detection engine, and fires an alert before the market reacts.
           </p>
           <p className="text-[#E6EDF3] leading-7 mb-4">
-            MAD knows not just <em>what</em> is happening in a pool — but <em>who</em> is doing it, whether they are a
-            registered AI agent or a human, and whether their behavior pattern matches known manipulation archetypes.
+            It knows not just <em>what</em> is happening — but <em>who</em> is doing it. Every wallet is
+            cross-referenced against the ERC-8004 on-chain agent registry in real time. MAD distinguishes
+            a legitimate market-making agent from a manipulating one. No existing surveillance tool does this.
           </p>
-          <InfoCard label="BOTTOM LINE" color="amber">
-            Built for DEXes, protocols, and funds that need to know if the liquidity they&apos;re seeing is real.
-            Powered entirely by direct on-chain RPC — no subgraph dependency, no third-party indexing cost.
+          <div className="grid grid-cols-3 gap-4 my-6">
+            {[
+              { label: "Scan interval", value: "15 min" },
+              { label: "Detection layers", value: "3 (L1 · L2 · L3)" },
+              { label: "Agent registry", value: "94 agents live" },
+            ].map(({ label, value }) => (
+              <div key={label} className="bg-[#161B22] border border-[#30363D] rounded-lg p-4 text-center">
+                <div className="text-[#22D3EE] text-xl font-bold mb-1">{value}</div>
+                <div className="text-[#8B949E] text-xs">{label}</div>
+              </div>
+            ))}
+          </div>
+          <p className="text-[#E6EDF3] leading-7 mb-4">
+            MAD runs on a single Railway instance, reads directly from Mantle RPC, stores signals in Supabase,
+            and delivers alerts via Telegram — zero subgraph dependency, zero indexing cost.
+          </p>
+          <InfoCard label="WHO IT IS FOR" color="amber">
+            DEX operators who need to know if their volume is real. Funds who need pre-trade market intelligence.
+            Protocols who need to detect wash trading before it distorts their metrics.
+            And AI agents on Mantle who need a signal layer before executing trades.
           </InfoCard>
         </Section>
 
