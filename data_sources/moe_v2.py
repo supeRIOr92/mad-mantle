@@ -28,7 +28,8 @@ from config import MANTLE_RPC_URL, RPC_BLOCK_LOOKBACK
 
 logger = logging.getLogger(__name__)
 
-SWAP_TOPIC        = "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"
+SWAP_TOPIC = "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822"
+MIN_POOL_SWAPS = 3 # skip pools with fewer than 3 swaps in window (noise filter)
 FACTORY_ADDRESS   = Web3.to_checksum_address("0x5bef015ca9424a7c07b68490616a4c1f094bedec")
 BUCKET_SIZE       = 15 * 60
 MANTLE_BLOCK_TIME = 2
@@ -332,13 +333,21 @@ def fetch_volume_buckets(pool_id: str, since_ts: int) -> list:
             buckets[bk]["volumeUSD"] += s["amountUSD"]
             buckets[bk]["txCount"]   += 1
             buckets[bk]["senders"].add(s["sender"]["id"])
-        return [{"bucketStart": bk, "volumeUSD": round(b["volumeUSD"], 6),
-                 "txCount": b["txCount"], "uniqueSenders": len(b["senders"])}
-                for bk, b in sorted(buckets.items())]
+        total_swaps = sum(b["txCount"] for b in buckets.values())
+        if total_swaps < MIN_POOL_SWAPS:
+            return []
+        return [
+            {
+                "bucketStart": bk,
+                "volumeUSD": round(b["volumeUSD"], 6),
+                "txCount": b["txCount"],
+                "uniqueSenders": len(b["senders"]),
+            }
+            for bk, b in sorted(buckets.items())
+        ]
     except Exception as e:
         logger.error("[moe] fetch_volume_buckets failed %s: %s", pool_id, e)
         return []
-
 
 def fetch_daily_snapshots(pool_id: str, days: int = 7) -> list:
     _ensure_pool_registry()
