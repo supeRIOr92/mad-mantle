@@ -87,6 +87,10 @@ export default function WhitepaperPage() {
             Protocols who need to detect wash trading before it distorts their metrics.
             And AI agents on Mantle who need a signal layer before executing trades.
           </InfoCard>
+          <InfoCard label="TRY IT NOW" color="cyan">
+            Telegram bot: <strong>@mad_realclaw_bot</strong> — send /score for latest anomaly scores, /digest for today&apos;s summary, /wallet &lt;address&gt; for wallet profile.
+            Live dashboard: <a href="https://madmantle.vercel.app" target="_blank" rel="noopener" className="text-[#22D3EE] hover:underline">madmantle.vercel.app</a>
+          </InfoCard>
         </Section>
 
         {/* ── 2. The Problem ── */}
