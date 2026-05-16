@@ -44,7 +44,7 @@ async def _rate_limited_send(payload: dict) -> bool:
         logger.warning("[alerter] TELEGRAM_BOT_TOKEN or channel_id not set — skip")
         return False
 
-    payload = {**payload, "chat_id": channel_id}
+    payload = {**payload, "chat_id": channel_id, "parse_mode": "HTML"}
 
     elapsed = time.time() - _last_sent_ts
     if elapsed < _RATE_LIMIT_SEC:
@@ -132,85 +132,66 @@ def build_anomaly_alert(
     prediction: Optional[dict] = None,
     tx_hashes: Optional[list] = None,
 ) -> str:
-    sep = "━" * 49
+    wallet = profile.get("wallet", "")
+    agent_type = profile.get("agent_type", "")
+    aave_mod = profile.get("aave_modifier", 1.0)
+    cycle_count = profile.get("cycle_count", 0)
+    wash_label = profile.get("wash_label", "")
 
-    wallet        = profile.get("wallet", "")
-    wallet_short  = wallet[:6] + ".." + wallet[-2:] if len(wallet) > 8 else wallet
-    token_id      = f"#{profile['erc8004_token_id']}" if profile.get("erc8004_token_id") else ""
-    rep           = profile.get("rep_score", 50)
-    agent_type    = profile.get("agent_type", "UNKNOWN WALLET")
-    archetype     = profile.get("archetype", "UNKNOWN")
-    cycle_count   = profile.get("cycle_count", 0)
-    corroboration = profile.get("corroboration", 1)
+    if score >= THRESHOLD_HIGH_CONF:
+        header = "🚨 High confidence anomaly detected on Mantle."
+    else:
+        header = "⚠️ Heads up. Something suspicious is happening on Mantle."
 
-    lines = [
-        "🚨 ANOMALY DETECTED — MAD: Mantle Anomaly Detector",
-        sep,
-        "",
-        f"📊 Score     {score:.0f}/100  {_score_bar(score)}  {_score_label(score)}",
-        f"🏊 Pool      {pool_name} — {dex_name}",
-        f"🔍 Layers    L1({l1_detail}:{l1_score:.0f}) + L2(Wash+Conc:{l2_score:.0f}) + L3(Cycle:{l3_score:.0f})",
-        f"🧼 Wash      {_wash_detail(profile)}",
-        f"🤖 Agent     {wallet_short} {token_id} | Rep: {rep}/100",
-        f"             Type: {agent_type} | Archetype: {archetype}",
-    ]
+    pool_display = f"{dex_name.upper()} pool {pool_name}"
 
+    detections = []
+    if wash_label and wash_label not in ("CLEAN", "MONITORING"):
+        detections.append("✅ Wash trading pattern")
+    if agent_type == "Suspicious Coordination":
+        detections.append("✅ Coordinated wallet activity")
     if cycle_count > 0:
-        lines.append(f"🔄 Cycles    {cycle_count} A→B→A confirmed in 24h")
+        detections.append("✅ Repeated buy/sell cycles detected")
+    if aave_mod >= 1.3:
+        detections.append("✅ Aave lending activity linked to this pool")
+    if l3_score > 0:
+        detections.append("✅ Multi-protocol interaction pattern")
+    if not detections:
+        detections.append("✅ Statistical anomaly in trading volume")
 
-    lines.append(f"🔗 Corr.     {_corr_label(corroboration)}")
+    dump_window = prediction.get("dump_window_min", 90) if prediction else 90
+    detection_block = "\n".join(detections)
+    now_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
-    aave_line = _aave_line(profile)
-    if aave_line:
-        lines.append(aave_line)
+    wallet_line = ""
+    if wallet:
+        w_short = wallet[:6] + ".." + wallet[-4:]
+        wallet_line = f'\n🔍 Suspect wallet: <a href="https://mantlescan.xyz/address/{wallet}">{w_short}</a>'
 
-    lines.append("")
-    lines.append(sep)
-
-    if prediction:
-        similar     = prediction.get("similar_count", 0)
-        accuracy    = prediction.get("accuracy_30d", 0.0)
-        rug_prob    = prediction.get("rug_prob", 0.0)
-        dump_window = prediction.get("dump_window_min", 0)
-        price_drop  = prediction.get("price_drop_pct", 0.0)
-        confidence  = prediction.get("confidence", 0.0)
-        pred_arch   = prediction.get("archetype", archetype)
-
-        conf_label = (
-            "HIGH" if confidence >= 0.7
-            else "MEDIUM" if confidence >= 0.4
-            else "LOW"
-        )
-
-        lines += [
-            "",
-            "🔮 RISK PREDICTION ENGINE",
-            sep,
-            f"   Archetype     {pred_arch}",
-            f"   Similar cases {similar} historical matches (top-{min(similar, 5)})",
-            f"   Accuracy 30d  {accuracy * 100:.0f}%",
-            f"   Confidence    {conf_label} ({confidence:.0%})",
-            "",
-            f"   Rug prob      {rug_prob * 100:.0f}%",
-            f"   Dump window   ~{dump_window} min",
-            f"   Price drop    ~{price_drop:.0f}%",
-            sep,
-        ]
-
+    tx_block = ""
     if tx_hashes:
-        lines.append("")
-        lines.append("🔗 Transactions")
-        for h in tx_hashes[:5]:
-            lines.append(f"   {MANTLESCAN_TX.format(hash=h)}")
+        tx_lines = ["", "🔗 Transactions"]
+        for h in tx_hashes[:3]:
+            tx_lines.append(f'<a href="https://mantlescan.xyz/tx/{h}">{h[:10]}...</a>')
+        tx_block = "\n".join(tx_lines)
 
-    lines.append("")
-    lines.append(f"⏱ {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} UTC  |  mad.vercel.app")
+    text = f"""{header}
 
-    return "\n".join(lines)
+{pool_display} is showing signs of market manipulation.
 
+What we detected
+{detection_block}{wallet_line}
+
+Be careful.
+→ Avoid opening positions in this pool right now
+→ Watch this pool for the next {dump_window} minutes
+→ Full report: https://madmantle.vercel.app{tx_block}
+
+⏱ {now_str}"""
+
+    return text
 
 # ── SMART MONEY alert builder ─────────────────────────────────────────────────
-
 def build_smart_money_alert(
     wallet: str,
     pool_name: str,
@@ -225,48 +206,39 @@ def build_smart_money_alert(
     erc8004_token_id: Optional[int] = None,
     aave_modifier: float = 1.0,
 ) -> str:
-    sep = "━" * 49
+    wallet_short = wallet[:6] + ".." + wallet[-4:] if len(wallet) > 10 else wallet
+    roi_sign = "+" if roi_7d >= 0 else ""
+    is_agent = agent_type in ("Registered Agent", "SMART MONEY", "Probable Automation")
+    now_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    mantlescan = f"https://mantlescan.xyz/address/{wallet}"
 
-    wallet_short = wallet[:6] + ".." + wallet[-2:] if len(wallet) > 8 else wallet
-    token_id     = f"#{erc8004_token_id}" if erc8004_token_id else ""
-    roi_sign     = "+" if roi_7d >= 0 else ""
-    score_bar    = _score_bar(min(smart_score * 50, 100))
+    signals = []
+    if roi_7d and roi_7d >= 10:
+        signals.append(f"✅ {roi_sign}{roi_7d:.1f}% ROI in the last 7 days")
+    signals.append("✅ Clean trading pattern — no wash detected")
+    if is_agent:
+        signals.append("✅ Identified as an AI agent on Mantle")
+    if volume_usd >= 10000:
+        signals.append(f"✅ ${volume_usd:,.0f} volume in current window")
+    signals_block = "\n".join(signals)
 
-    lines = [
-        "💡 OPPORTUNITY DETECTED — MAD: Mantle Anomaly Detector",
-        sep,
-        "",
-        f"🧠 Smart Money {wallet_short} {token_id}",
-        f"   Rep Score    {rep_score:.0f}/100",
-        f"   Agent Type   {agent_type}",
-        f"   Archetype    {archetype}",
-        "",
-        "📈 Performance",
-        f"   ROI 7d       {roi_sign}{roi_7d:.1f}%",
-        f"   Smart Score  {smart_score:.3f}  {score_bar}",
-        "",
-        "🏊 Activity",
-        f"   Pool         {pool_name} — {dex_name}",
-        f"   Volume       ${volume_usd:,.0f}",
-        f"   TX Count     {tx_count}",
-    ]
+    text = f"""💡 A smart wallet just moved on Mantle.
 
-    aave_line = _aave_line({"aave_modifier": aave_modifier})
-    if aave_line:
-        lines.append("")
-        lines.append(aave_line)
+<a href="{mantlescan}">{wallet_short}</a> is showing strong performance signals.
 
-    lines += [
-        "",
-        sep,
-        f"⏱ {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} UTC  |  mad.vercel.app",
-    ]
+What we know
+{signals_block}
 
-    return "\n".join(lines)
+What you can do
+→ <a href="{mantlescan}">Track this wallet on MantleScan</a>
+→ Monitor which pools they enter next
+→ Dashboard: https://madmantle.vercel.app
 
+⏱ {now_str}"""
+
+    return text
 
 # ── DAILY DIGEST builder ──────────────────────────────────────────────────────
-
 def build_daily_digest(
     scan_count: int,
     alert_count: int,
@@ -277,46 +249,42 @@ def build_daily_digest(
     phase1_active: bool = False,
     start_date: str = "",
 ) -> str:
-    sep = "━" * 49
     now_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    phase_tag = " [PHASE 1 — CONSERVATIVE]" if phase1_active else ""
 
     lines = [
-        f"📋 DAILY DIGEST — MAD{phase_tag}",
-        f"   {now_str}",
-        sep,
+        "📋 MAD Daily Report — Mantle Network",
         "",
-        "📊 Session Summary",
-        f"   Scans run      {scan_count}",
-        f"   Alerts fired   {alert_count}",
-        f"   Watching       {watching_count}",
-        f"   Total volume   ${total_volume_usd:,.0f}",
+        "Here's what happened today.",
+        "",
+        "📊 Activity",
+        f"Scans completed {scan_count}",
+        f"Anomalies detected {alert_count}",
+        f"Currently watching {watching_count}",
+        f"Total volume ${total_volume_usd:,.0f}",
     ]
 
     if top_pools:
-        lines += ["", "🏊 Top Pools by Score"]
+        lines += ["", "🏊 Most active pools"]
         for i, p in enumerate(top_pools[:5], 1):
-            pool  = p.get("pool_name", "unknown")
-            dex   = p.get("dex", "")
-            s_dex = p.get("s_dex", 0.0)
-            vol   = p.get("volume_usd", 0.0)
-            lines.append(f"   {i}. {pool} ({dex}) — Score: {s_dex:.0f} | Vol: ${vol:,.0f}")
+            pool = p.get("pool_name", "unknown")
+            dex = p.get("dex", "").upper()
+            score = p.get("s_dex", 0.0)
+            vol = p.get("volume_usd", 0.0)
+            lines.append(f"{i}. {pool} ({dex}) — Score: {score:.0f} | Vol: ${vol:,.0f}")
 
     if top_wallets:
-        lines += ["", "🧠 Top Smart Money"]
+        lines += ["", "🧠 Top performing wallets"]
         for i, w in enumerate(top_wallets[:5], 1):
-            wallet   = w.get("wallet", w.get("address", ""))
-            ws       = wallet[:6] + ".." + wallet[-2:] if len(wallet) > 8 else wallet
-            roi      = w.get("roi_7d", 0.0) or 0.0
-            score    = w.get("smart_score", 0.0) or 0.0
-            atype    = w.get("agent_type", w.get("risk_label", "UNKNOWN"))
+            addr = w.get("wallet", w.get("address", ""))
+            addr_s = addr[:6] + ".." + addr[-4:] if len(addr) > 10 else addr
+            roi = w.get("roi_7d", 0.0) or 0.0
+            atype = w.get("agent_type", w.get("risk_label", ""))
             roi_sign = "+" if roi >= 0 else ""
-            lines.append(f"   {i}. {ws} | {atype} | ROI: {roi_sign}{roi:.1f}% | Score: {score:.3f}")
+            url = f"https://mantlescan.xyz/address/{addr}"
+            lines.append(f'{i}. <a href="{url}">{addr_s}</a> — {roi_sign}{roi:.1f}% ROI | {atype}')
 
-    lines += ["", sep, "mad.vercel.app"]
-
+    lines += ["", "https://madmantle.vercel.app", f"⏱ {now_str}"]
     return "\n".join(lines)
-
 
 # ── Broadcast functions ───────────────────────────────────────────────────────
 
@@ -380,10 +348,9 @@ async def broadcast_signal(signal: dict, verbose: bool = False) -> bool:
         )
 
     if DEMO_MODE:
-        text = "[DEMO ALERT] ⚠️\n" + text
+        text = "[DEMO] ⚠️\n" + text
 
     payload = {
-        "chat_id":                  TELEGRAM_CHANNEL_ID,
         "text":                     text,
         "disable_web_page_preview": True,
     }

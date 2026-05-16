@@ -96,9 +96,9 @@ isManipulator
 >
 <div className="flex items-center gap-2 mb-1">
 <span className="text-slate-600 text-[10px] w-4">{globalIndex}</span>
-<span className="text-xs text-white font-mono">
+<a href={`https://mantlescan.xyz/address/${w.address}`} target="_blank" rel="noopener noreferrer" className="text-xs text-white font-mono hover:text-cyan-400 transition-colors">
 {w.address.slice(0, 6)}..{w.address.slice(-4)}
-</span>
+</a>
 {w.is_simulated && (
 <span className="text-[9px] text-amber-400 border border-amber-500/40 px-1 rounded">SIM</span>
 )}

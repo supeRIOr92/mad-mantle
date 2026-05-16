@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from config import TELEGRAM_BOT_TOKEN
 from database import init_db
 from scheduler import start_scheduler, scheduler, run_scan
-# alerter uses direct httpx — no bot app needed
+from bot import run_bot as run_bot_polling
 
 # ── Logging Setup ─────────────────────────────────────────
 
@@ -33,7 +33,7 @@ BANNER = """
 ╔══════════════════════════════════════════════════╗
 ║     MAD — Mantle Anomaly Detector                ║
 ║     AI Alpha & Risk Detection — Mantle Network   ║
-║     v2.0 — Turing Test 2026                      ║
+║     v1.0 — Turing Test 2026                      ║
 ╚══════════════════════════════════════════════════╝
 """
 
@@ -53,14 +53,22 @@ def handle_shutdown(sig, frame):
     shutdown_event.set()
 
 # ── Bot Runner ────────────────────────────────────────────
-
 async def run_bot():
-    """Alerter uses direct httpx — no bot polling needed."""
+    """Run Telegram bot polling + wait for shutdown."""
     if not TELEGRAM_BOT_TOKEN:
-        logger.warning("[main] No bot token — alerts disabled")
-    else:
-        logger.info("[main] Alerter ready (direct httpx mode) ✅")
+        logger.warning("[main] No bot token — bot polling disabled")
+        await shutdown_event.wait()
+        return
+
+    logger.info("[main] Starting Telegram bot polling ✅")
+    polling_task = asyncio.create_task(run_bot_polling())
     await shutdown_event.wait()
+    polling_task.cancel()
+
+    try:
+        await polling_task
+    except asyncio.CancelledError:
+        logger.info("[main] Bot polling stopped")
 
 # ── Scheduler Runner ──────────────────────────────────────
 

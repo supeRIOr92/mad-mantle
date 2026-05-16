@@ -99,13 +99,11 @@ _pool_registry: dict = {}
 _registry_fetched_at: float = 0.0
 REGISTRY_TTL = 3600
 
-
 def _get_w3() -> Web3:
     global _w3
     if _w3 is None or not _w3.is_connected():
         _w3 = Web3(Web3.HTTPProvider(MANTLE_RPC_URL, request_kwargs={"timeout": 15}))
     return _w3
-
 
 def _get_token_meta(address: str) -> dict:
     addr = address.lower()
@@ -119,7 +117,6 @@ def _get_token_meta(address: str) -> dict:
         logger.debug("[moe] token meta failed %s: %s", address, e)
         _token_cache[addr] = {"symbol": addr[:8] + "...", "decimals": 18}
     return _token_cache[addr]
-
 
 def _ensure_pool_registry():
     global _registry_fetched_at
@@ -199,7 +196,6 @@ def _ensure_pool_registry():
     else:
         _registry_fetched_at = time.time()
         logger.info("[moe] registry ready — %d pools", len(_pool_registry))
-
 
 def _decode_swap_log(log: dict) -> dict | None:
     """Decode UniV2-style Swap event."""
@@ -284,7 +280,6 @@ def _decode_swap_log(log: dict) -> dict | None:
         logger.debug("[moe] decode failed: %s", e)
         return None
 
-
 def fetch_recent_swaps(since_ts: int, limit: int = 500) -> list:
     _ensure_pool_registry()
     if not _pool_registry:
@@ -293,25 +288,31 @@ def fetch_recent_swaps(since_ts: int, limit: int = 500) -> list:
         w3     = _get_w3()
         latest = w3.eth.block_number
         from_b = max(0, latest - RPC_BLOCK_LOOKBACK)
-        swaps  = []
+        swaps = []
+
         for pool_addr in list(_pool_registry.keys()):
-            logs = w3.eth.get_logs({
-                "fromBlock": from_b, "toBlock": latest,
-                "address": Web3.to_checksum_address(pool_addr),
-                "topics": [SWAP_TOPIC],
-            })
-            for log in logs:
-                s = _decode_swap_log(dict(log))
-                if s and s["timestamp"] >= since_ts:
-                    swaps.append(s)
+            try:
+                logs = w3.eth.get_logs({
+                    "fromBlock": from_b, "toBlock": latest,
+                    "address": Web3.to_checksum_address(pool_addr),
+                    "topics": [SWAP_TOPIC],
+                })
+                for log in logs:
+                    s = _decode_swap_log(dict(log))
+                    if s and s["timestamp"] >= since_ts:
+                        swaps.append(s)
+            except Exception as e:
+                logger.warning("[moe] pool %s fetch failed: %s", pool_addr, e)
+                continue
+
             if len(swaps) >= limit:
                 break
+
         swaps.sort(key=lambda s: s["timestamp"], reverse=True)
         return swaps[:limit]
     except Exception as e:
         logger.error("[moe] fetch_recent_swaps failed: %s", e)
         return []
-
 
 def fetch_volume_buckets(pool_id: str, since_ts: int) -> list:
     _ensure_pool_registry()
@@ -376,7 +377,6 @@ def fetch_daily_snapshots(pool_id: str, days: int = 7) -> list:
         logger.error("[moe] fetch_daily_snapshots failed %s: %s", pool_id, e)
         return []
 
-
 def fetch_top_pools(limit: int = 20) -> list:
     _ensure_pool_registry()
     pools = list(_pool_registry.values())
@@ -396,7 +396,6 @@ def fetch_top_pools(limit: int = 20) -> list:
     except Exception as e:
         logger.warning("[moe] fetch_top_pools sort failed: %s", e)
     return pools[:limit]
-
 
 # Alias for scheduler compatibility
 fetch_tx_count_buckets = fetch_volume_buckets

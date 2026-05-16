@@ -81,8 +81,11 @@ s.alert_level === "alert" || s.alert_level === "high_conf"
 
 {/* Pool + DEX */}
 <div className="flex-1 min-w-0">
-<span className="text-white font-mono">{shortAddr(s.pool_address)}</span>
+<a href={`https://mantlescan.xyz/address/${s.pool_address}`} target="_blank" rel="noopener noreferrer" className="text-white font-mono hover:text-cyan-400 transition-colors">
+{shortAddr(s.pool_address)}
+</a>
 <span className="text-slate-600 ml-1">{s.dex?.toUpperCase()}</span>
+
 {topWallet?.agent_type === "MANIPULATOR" && (
 <span className="text-red-400 ml-1 text-[9px]">⚠ suspect wallet</span>
 )}
