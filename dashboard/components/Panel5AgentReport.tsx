@@ -42,7 +42,7 @@ Wallet activity within normal patterns
 ) : (
 <div className="space-y-2 text-[11px]">
 {[
-["Address", <span className="font-mono text-white">{wallet.address.slice(0, 6)}..{wallet.address.slice(-4)}</span>],
+["Address", <a href={`https://mantlescan.xyz/address/${wallet.address}`} target="_blank" rel="noopener noreferrer" className="font-mono text-white hover:text-cyan-400 transition-colors">{wallet.address.slice(0, 6)}..{wallet.address.slice(-4)}</a>],
 ["Type", <span className={wallet.agent_type === "MANIPULATOR" ? "text-red-400 font-bold" : "text-cyan-400"}>{wallet.agent_type}</span>],
 ["ERC-8004", wallet.agent_token_id ? `Token #${wallet.agent_token_id} · Rep ${wallet.reputation_score}/100` : "Unregistered"],
 ["Archetype", <span className="text-slate-300">{wallet.archetype || "UNKNOWN"}</span>],

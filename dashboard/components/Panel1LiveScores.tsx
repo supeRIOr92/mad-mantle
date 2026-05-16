@@ -81,7 +81,10 @@ return (
 <div key={s.id} className="flex items-center gap-3 p-2 rounded bg-mad-bg hover:bg-slate-900 cursor-pointer transition-colors">
 <div className="flex-1 min-w-0">
 <div className="flex items-center gap-2 mb-1">
-<span className="text-xs text-white font-medium truncate">{shortPool(s.pool_address)}</span>
+<a
+href={`https://mantlescan.xyz/address/${s.pool_address}`}
+target="_blank" rel="noopener noreferrer" className="text-xs text-white font-medium truncate hover:text-cyan-400 transition-colors">
+{shortPool(s.pool_address)} </a>
 <span className={`text-[10px] px-1.5 py-0.5 rounded border font-bold ${badge.cls}`}>{badge.label}</span>
 <span className="text-xs text-slate-400 ml-auto">{s.dex?.toUpperCase()}</span>
 </div>
