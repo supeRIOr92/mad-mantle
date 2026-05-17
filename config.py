@@ -28,6 +28,15 @@ AGNI_FACTORY  = "0x25780dc8Fc3cfBD75F33bFDAB65e969b603b2035"
 MOE_LB_FACTORY = "0xa6630671775c4EA2743840F9A5016dCf2A104054"
 FLUXION_POOL  = "0x560d064493de5a23e72ed916caf92ec6e8924948"
 
+# Stablecoins on Mantle (chainId 5000) — used for amountUSD calculation in swap decode
+# Source: token-list.mantle.xyz (verified)
+MANTLE_STABLECOINS = {
+"0x09bc4e0d864854c6afb6eb9a9cdf58ac190d0df9", # USDC
+"0x201eba5cc46d216ce6dc03f6a759e8e766e956ae", # USDT
+"0x5d3a1ff2b6bab83b63cd9ad0787074081a52ef34", # USDe
+"0x0994206dfe8de6ec6920ff4d779b0d950605fb53", # crvUSD
+}
+
 # ── Detection Parameters ──────────────────────────────
 # L1
 ZSCORE_PRIMARY_WINDOW_MIN    = 15
