@@ -17,7 +17,7 @@ from config import (
     POLL_WATCH_DEESCALATE,
     DIGEST_HOUR_UTC,
 )
-from data_sources import moe_v2 as moe, fluxion
+from data_sources import moe_v2 as moe, fluxion, agni
 from data_sources.aave import fetch_pool_signal
 from data_sources.agents import fetch_all_agents, build_agent_map
 from detector import run_detection
@@ -87,12 +87,17 @@ async def discover_pools() -> dict[str, list]:
     except Exception as e:
         logger.error(f"[scheduler] Fluxion pool discovery failed: {e}")
         fluxion_pools = []
+    try:
+        agni_pools = await loop.run_in_executor(None, agni.fetch_top_pools, 10)
+    except Exception as e:
+        logger.error(f"[scheduler] Agni pool discovery failed: {e}")
+        agni_pools = []
 
     return {
         "moe": moe_pools,
         "fluxion": fluxion_pools,
+        "agni": agni_pools,
     }
-
 
 # ── Per-Pool Scan ─────────────────────────────────────────
 
