@@ -3,10 +3,10 @@
 # Detection: Z-Score + Bollinger (same as before)
 #
 # Verified onchain:
-#   Swap topic: 0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67
-#   Signature:  Swap(address sender, address recipient, int256 amount0, int256 amount1,
-#                    uint160 sqrtPriceX96, uint128 liquidity, int24 tick)
-#   Factory:    0xF883162Ed9c7E8EF604214c964c678E40c9B737C
+# Swap topic: 0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67
+# Signature: Swap(address sender, address recipient, int256 amount0, int256 amount1,
+#            uint160 sqrtPriceX96, uint128 liquidity, int24 tick)
+# Factory: 0xF883162Ed9c7E8EF604214c964c678E40c9B737C
 
 import logging
 import time
@@ -16,24 +16,24 @@ from datetime import datetime, timezone
 from web3 import Web3
 from eth_abi import decode as abi_decode
 
-from config import MANTLE_RPC_URL, RPC_BLOCK_LOOKBACK
+from config import MANTLE_RPC_URL, RPC_BLOCK_LOOKBACK, MANTLE_STABLECOINS
 
 logger = logging.getLogger(__name__)
 
-SWAP_TOPIC      = "0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67"
+SWAP_TOPIC = "0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67"
 FACTORY_ADDRESS = Web3.to_checksum_address("0xF883162Ed9c7E8EF604214c964c678E40c9B737C")
-BUCKET_SIZE     = 15 * 60
+BUCKET_SIZE = 15 * 60
 MANTLE_BLOCK_TIME = 2
 
 FACTORY_ABI = [
     {
         "anonymous": False,
         "inputs": [
-            {"indexed": True,  "name": "token0",      "type": "address"},
-            {"indexed": True,  "name": "token1",      "type": "address"},
-            {"indexed": True,  "name": "fee",         "type": "uint24"},
+            {"indexed": True, "name": "token0", "type": "address"},
+            {"indexed": True, "name": "token1", "type": "address"},
+            {"indexed": True, "name": "fee", "type": "uint24"},
             {"indexed": False, "name": "tickSpacing", "type": "int24"},
-            {"indexed": False, "name": "pool",        "type": "address"},
+            {"indexed": False, "name": "pool", "type": "address"},
         ],
         "name": "PoolCreated",
         "type": "event",
@@ -41,8 +41,8 @@ FACTORY_ABI = [
 ]
 
 ERC20_ABI = [
-    {"inputs": [], "name": "symbol",   "outputs": [{"type": "string"}], "stateMutability": "view", "type": "function"},
-    {"inputs": [], "name": "decimals", "outputs": [{"type": "uint8"}],  "stateMutability": "view", "type": "function"},
+    {"inputs": [], "name": "symbol", "outputs": [{"type": "string"}], "stateMutability": "view", "type": "function"},
+    {"inputs": [], "name": "decimals", "outputs": [{"type": "uint8"}], "stateMutability": "view", "type": "function"},
 ]
 
 _w3 = None
@@ -65,7 +65,7 @@ def _get_token_meta(address: str) -> dict:
         return _token_cache[addr]
     try:
         w3 = _get_w3()
-        c  = w3.eth.contract(address=Web3.to_checksum_address(address), abi=ERC20_ABI)
+        c = w3.eth.contract(address=Web3.to_checksum_address(address), abi=ERC20_ABI)
         _token_cache[addr] = {"symbol": c.functions.symbol().call(), "decimals": c.functions.decimals().call()}
     except Exception as e:
         logger.debug("[fluxion] token meta failed %s: %s", address, e)
@@ -78,10 +78,10 @@ def _ensure_pool_registry():
     if time.time() - _registry_fetched_at < REGISTRY_TTL and _pool_registry:
         return
     try:
-        w3      = _get_w3()
-        latest  = w3.eth.block_number
+        w3 = _get_w3()
+        latest = w3.eth.block_number
         factory = w3.eth.contract(address=FACTORY_ADDRESS, abi=FACTORY_ABI)
-        events  = factory.events.PoolCreated.get_logs(
+        events = factory.events.PoolCreated.get_logs(
             from_block=max(0, latest - 500_000), to_block=latest
         )
         for ev in events:
@@ -93,7 +93,7 @@ def _ensure_pool_registry():
                 "token0": ev["args"]["token0"].lower(),
                 "token1": ev["args"]["token1"].lower(),
                 "token0Symbol": m0["symbol"], "token1Symbol": m1["symbol"],
-                "decimals0": m0["decimals"],  "decimals1": m1["decimals"],
+                "decimals0": m0["decimals"], "decimals1": m1["decimals"],
                 "feeTier": ev["args"]["fee"],
             }
         _registry_fetched_at = time.time()
@@ -103,29 +103,61 @@ def _ensure_pool_registry():
     except Exception as e:
         logger.error("[fluxion] registry fetch failed: %s", e)
 
+
+def _calc_amount_usd(amount0: int, amount1: int, meta: dict) -> float:
+    """
+    Calculate amountUSD using stablecoin-aware logic.
+    If one side of the pair is a known stablecoin, use that side's amount.
+    Otherwise fall back to whichever side moved more (positive amount).
+    """
+    token0 = meta.get("token0", "").lower()
+    token1 = meta.get("token1", "").lower()
+    dec0 = meta.get("decimals0", 18)
+    dec1 = meta.get("decimals1", 18)
+
+    is_stable0 = token0 in MANTLE_STABLECOINS
+    is_stable1 = token1 in MANTLE_STABLECOINS
+
+    if is_stable0:
+        return abs(amount0) / (10 ** dec0)
+    if is_stable1:
+        return abs(amount1) / (10 ** dec1)
+
+    # No stablecoin in pair — fall back to the side with positive inflow
+    if amount0 > 0:
+        return amount0 / (10 ** dec0)
+    return abs(amount1) / (10 ** dec1)
+
+
 def _decode_swap_log(log: dict) -> dict | None:
     try:
         pool_addr = log["address"].lower()
         meta = _pool_registry.get(pool_addr, {})
+
         # Handle HexBytes or str for data
         raw_data = log["data"]
         if isinstance(raw_data, (bytes, bytearray)):
             data_bytes = bytes(raw_data)
         else:
             data_bytes = bytes.fromhex(str(raw_data).removeprefix("0x"))
+
         amount0, amount1, sqrtPriceX96, liquidity, tick = abi_decode(
             ["int256", "int256", "uint160", "uint128", "int24"],
             data_bytes,
         )
+
         # Handle HexBytes for topics
         def topic_to_hex(t) -> str:
             if isinstance(t, (bytes, bytearray)):
                 return t.hex()
             return str(t).removeprefix("0x")
+
         sender = "0x" + topic_to_hex(log["topics"][1])[24:]
         recipient = "0x" + topic_to_hex(log["topics"][2])[24:]
+
         dec0, dec1 = meta.get("decimals0", 18), meta.get("decimals1", 18)
-        amount_usd = (amount0 / (10 ** dec0)) if amount0 > 0 else (abs(amount1) / (10 ** dec1))
+        amount_usd = _calc_amount_usd(amount0, amount1, meta)
+
         # Get timestamp
         ts = 0
         raw_ts = log.get("blockTimestamp")
@@ -140,12 +172,14 @@ def _decode_swap_log(log: dict) -> dict | None:
             if isinstance(block_num, (bytes, bytearray)):
                 block_num = int.from_bytes(block_num, "big")
             ts = w3.eth.get_block(block_num)["timestamp"]
+
         # Handle HexBytes for transactionHash and logIndex
         tx_h = log["transactionHash"]
         if isinstance(tx_h, (bytes, bytearray)):
             tx_h = "0x" + tx_h.hex()
         else:
             tx_h = str(tx_h)
+
         log_idx = log["logIndex"]
         if isinstance(log_idx, (bytes, bytearray)):
             log_idx = int.from_bytes(log_idx, "big")
@@ -153,6 +187,7 @@ def _decode_swap_log(log: dict) -> dict | None:
             log_idx = int(log_idx, 16)
         else:
             log_idx = int(log_idx)
+
         return {
             "id": f"{tx_h}-{log_idx}",
             "timestamp": ts,
@@ -177,6 +212,7 @@ def _decode_swap_log(log: dict) -> dict | None:
         logger.warning("[fluxion] decode failed: %s", e)
         return None
 
+
 def fetch_recent_swaps(since_ts: int, limit: int = 500) -> list:
     _ensure_pool_registry()
     if not _pool_registry:
@@ -195,9 +231,8 @@ def fetch_recent_swaps(since_ts: int, limit: int = 500) -> list:
             })
             for log in logs:
                 s = _decode_swap_log(dict(log))
-                if s:
-                    if s["timestamp"] >= since_ts:
-                        swaps.append(s)
+                if s and s["timestamp"] >= since_ts:
+                    swaps.append(s)
             if len(swaps) >= limit:
                 break
         swaps.sort(key=lambda s: s["timestamp"], reverse=True)
@@ -206,13 +241,14 @@ def fetch_recent_swaps(since_ts: int, limit: int = 500) -> list:
         logger.error("[fluxion] fetch_recent_swaps failed: %s", e)
         return []
 
+
 def fetch_volume_buckets(pool_id: str, since_ts: int) -> list:
     _ensure_pool_registry()
     try:
-        w3     = _get_w3()
+        w3 = _get_w3()
         latest = w3.eth.block_number
         from_b = max(0, latest - RPC_BLOCK_LOOKBACK)
-        logs   = w3.eth.get_logs({
+        logs = w3.eth.get_logs({
             "fromBlock": from_b, "toBlock": latest,
             "address": Web3.to_checksum_address(pool_id),
             "topics": [SWAP_TOPIC],
@@ -224,7 +260,7 @@ def fetch_volume_buckets(pool_id: str, since_ts: int) -> list:
                 continue
             bk = (s["timestamp"] // BUCKET_SIZE) * BUCKET_SIZE
             buckets[bk]["volumeUSD"] += s["amountUSD"]
-            buckets[bk]["txCount"]   += 1
+            buckets[bk]["txCount"] += 1
             buckets[bk]["senders"].add(s["sender"]["id"])
         return [{"bucketStart": bk, "volumeUSD": round(b["volumeUSD"], 6),
                  "txCount": b["txCount"], "uniqueSenders": len(b["senders"])}
@@ -237,28 +273,28 @@ def fetch_volume_buckets(pool_id: str, since_ts: int) -> list:
 def fetch_daily_snapshots(pool_id: str, days: int = 7) -> list:
     _ensure_pool_registry()
     try:
-        w3       = _get_w3()
-        latest   = w3.eth.block_number
-        now_ts   = int(time.time())
+        w3 = _get_w3()
+        latest = w3.eth.block_number
+        now_ts = int(time.time())
         since_ts = now_ts - (days * 86400)
-        from_b   = max(0, latest - RPC_BLOCK_LOOKBACK)
-        logs     = w3.eth.get_logs({
+        from_b = max(0, latest - RPC_BLOCK_LOOKBACK)
+        logs = w3.eth.get_logs({
             "fromBlock": from_b, "toBlock": latest,
             "address": Web3.to_checksum_address(pool_id),
             "topics": [SWAP_TOPIC],
         })
         daily: dict = defaultdict(lambda: {"volumeUSD": 0.0, "txCount": 0,
-                                            "highVolumeUSD": 0.0, "lowVolumeUSD": float("inf")})
+                                           "highVolumeUSD": 0.0, "lowVolumeUSD": float("inf")})
         for log in logs:
             s = _decode_swap_log(dict(log))
             if not s or s["timestamp"] < since_ts:
                 continue
             day = datetime.fromtimestamp(s["timestamp"], tz=timezone.utc).strftime("%Y-%m-%d")
             d = daily[day]
-            d["volumeUSD"]    += s["amountUSD"]
-            d["txCount"]      += 1
+            d["volumeUSD"] += s["amountUSD"]
+            d["txCount"] += 1
             d["highVolumeUSD"] = max(d["highVolumeUSD"], s["amountUSD"])
-            d["lowVolumeUSD"]  = min(d["lowVolumeUSD"], s["amountUSD"])
+            d["lowVolumeUSD"] = min(d["lowVolumeUSD"], s["amountUSD"])
         result = []
         for day in sorted(daily.keys(), reverse=True)[:days]:
             d = daily[day]
@@ -266,7 +302,7 @@ def fetch_daily_snapshots(pool_id: str, days: int = 7) -> list:
                 "date": day, "volumeUSD": round(d["volumeUSD"], 6),
                 "txCount": d["txCount"],
                 "highVolumeUSD": round(d["highVolumeUSD"], 6),
-                "lowVolumeUSD":  round(d["lowVolumeUSD"] if d["lowVolumeUSD"] != float("inf") else 0, 6),
+                "lowVolumeUSD": round(d["lowVolumeUSD"] if d["lowVolumeUSD"] != float("inf") else 0, 6),
             })
         return result
     except Exception as e:
@@ -278,8 +314,8 @@ def fetch_top_pools(limit: int = 20) -> list:
     _ensure_pool_registry()
     pools = list(_pool_registry.values())
     try:
-        w3      = _get_w3()
-        latest  = w3.eth.block_number
+        w3 = _get_w3()
+        latest = w3.eth.block_number
         since_b = max(0, latest - 4320)
         activity: dict = defaultdict(int)
         for addr in list(_pool_registry.keys())[:50]:
