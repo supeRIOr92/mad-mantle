@@ -72,11 +72,26 @@ def _get_token_meta(address: str) -> dict:
         _token_cache[addr] = {"symbol": addr[:8] + "...", "decimals": 18}
     return _token_cache[addr]
 
+KNOWN_POOLS = [
+    {
+        "id": "0xeafc4d6d4c3391cd4fc10c85d2f5f972d58c0dd5",
+        "dex": "agni",
+        "token0": "0x5d3a1ff2b6bab83b63cd9ad0787074081a52ef34",
+        "token1": "0x78c1b0c915c4faa5fffa6cabf0219da63d7f4cb8",
+        "token0Symbol": "USDe",
+        "token1Symbol": "WMNT",
+        "decimals0": 18,
+        "decimals1": 18,
+        "feeTier": 500,
+    },
+]
 
 def _ensure_pool_registry():
     global _registry_fetched_at
     if time.time() - _registry_fetched_at < REGISTRY_TTL and _pool_registry:
         return
+    for p in KNOWN_POOLS:
+        _pool_registry[p["id"]] = p
     try:
         w3 = _get_w3()
         latest = w3.eth.block_number
