@@ -82,7 +82,7 @@ def _ensure_pool_registry():
         latest = w3.eth.block_number
         factory = w3.eth.contract(address=FACTORY_ADDRESS, abi=FACTORY_ABI)
         events = factory.events.PoolCreated.get_logs(
-            from_block=max(0, latest - 500_000), to_block=latest
+            from_block=max(0, latest - 1_000_000), to_block=latest
         )
         for ev in events:
             pool_addr = ev["args"]["pool"].lower()
