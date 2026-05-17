@@ -98,6 +98,8 @@ def _ensure_pool_registry():
             }
         _registry_fetched_at = time.time()
         logger.info("[fluxion] registry loaded — %d pools", len(_pool_registry))
+        for addr, p in _pool_registry.items():
+            logger.info("[fluxion] pool: %s (%s/%s)", addr, p["token0Symbol"], p["token1Symbol"])
     except Exception as e:
         logger.error("[fluxion] registry fetch failed: %s", e)
 
