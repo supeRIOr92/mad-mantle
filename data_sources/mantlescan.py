@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from config import MANTLESCAN_API_KEY, MANTLE_CHAIN_ID
 
 logger = logging.getLogger(__name__)
-BASE_URL = "https://explorer.mantle.xyz/api"
+BASE_URL = "https://api.etherscan.io/v2/api"
 
 def _get(params: dict) -> dict:
     params["apikey"] = MANTLESCAN_API_KEY
