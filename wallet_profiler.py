@@ -417,19 +417,21 @@ def profile_top_wallets(swaps: list[dict], anomaly_score: float, **score_kwargs)
             conc    = vol / (score_kwargs.get("total_volume", vol) + 1e-9)
 
             profile = build_wallet_profile(
-                wallet        = wallet,
-                swaps         = wswaps,
+                wallet = wallet,
+                swaps = wswaps,
                 anomaly_score = anomaly_score,
-                wash_ratio    = score_kwargs.get("wash_ratio", 0.0),
-                inflow        = inflow,
-                outflow       = outflow,
-                total_volume  = vol,
+                wash_ratio = score_kwargs.get("wash_ratio", 0.0),
+                inflow = inflow,
+                outflow = outflow,
+                total_volume = vol,
                 concentration = conc,
-                cycle_count   = score_kwargs.get("cycle_count", 0),
+                cycle_count = score_kwargs.get("cycle_count", 0),
                 volume_spike_x = score_kwargs.get("volume_spike_x", 1.0),
                 corroboration = score_kwargs.get("corroboration", 1),
                 aave_modifier = score_kwargs.get("aave_modifier", 1.0),
-                tx_per_minute = len(wswaps) / max(score_kwargs.get("window_min", 15), 1),
+                from_block = score_kwargs.get("from_block", 0),
+                to_block = score_kwargs.get("to_block", 0),
+                tx_per_minute = len(wswaps) / max(s core_kwargs.get("window_min", 15), 1),
             )
             profiles.append(profile)
         except Exception as e:

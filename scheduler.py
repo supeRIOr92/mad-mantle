@@ -363,9 +363,9 @@ def _update_watch_mode(s_final: float, scheduler: AsyncIOScheduler):
             state.watch_deescalate_count = 0
             _set_interval(scheduler, POLL_DEFAULT_MIN)
             logger.info(f"[scheduler] Watch mode OFF — back to {POLL_DEFAULT_MIN}min")
-    else:
-        state.watch_deescalate_count = 0
 
+    elif s_final >= POLL_WATCH_TRIGGER:
+        state.watch_deescalate_count = 0
 
 def _set_interval(scheduler: AsyncIOScheduler, minutes: int):
     """Update scan job interval dynamically."""

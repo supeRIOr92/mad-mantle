@@ -86,10 +86,7 @@ def l1_bollinger(daily_snapshots: list[dict], current_vol: float) -> tuple[float
     Max 20 pts.
     """
     if len(daily_snapshots) < BOLLINGER_PERIOD:
-        # Use available data if less than period
-        if len(daily_snapshots) < 5:
-            return 0.0, {"method": "bollinger", "reason": "insufficient data"}
-
+        return 0.0, {"method": "bollinger", "reason": "insufficient data"}
     volumes = [float(s["volumeUSD"]) for s in daily_snapshots]
     mean = np.mean(volumes)
     std = np.std(volumes)
