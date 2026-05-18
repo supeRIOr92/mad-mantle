@@ -165,7 +165,7 @@ async def run_scan():
     # Refresh agent map if stale (>1h)
     if (
         not state.agent_map_refreshed_at
-        or (now - state.agent_map_refreshed_at).seconds > 3600
+        or (now - state.agent_map_refreshed_at).total_seconds() > 3600
     ):
         await refresh_agent_map()
 
