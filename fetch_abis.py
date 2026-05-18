@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 MANTLESCAN_API_KEY = os.getenv("MANTLESCAN_API_KEY", "")
-BASE_URL = "https://api.etherscan.io/v2/api"
+BASE_URL = "https://api.mantlescan.xyz/api"
 ABI_DIR = Path("subgraph/abis")
 
 # ── Contracts to fetch ────────────────────────────────────
@@ -63,7 +63,7 @@ def fetch_abi(name: str, address: str) -> dict | None:
         "module": "contract",
         "action": "getabi",
         "address": address,
-        "apikey": MANTLESCAN_API_KEY, "chainid": 5000,
+        "apikey": MANTLESCAN_API_KEY,
     }
 
     try:

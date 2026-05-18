@@ -467,6 +467,15 @@ def l3_cycle_detection(swaps: list[dict]) -> tuple[float, dict]:
 
     # Detect simple cycles (A→B→A)
     cycles_found = []
+    # Guard: skip cycle detection if graph too large (performance risk)
+    MAX_NODES_FOR_CYCLES = 100
+    if G.number_of_nodes() > MAX_NODES_FOR_CYCLES:
+        logger.warning(
+            "[L3] cycle detection skipped — graph too large (%d nodes > %d limit)",
+            G.number_of_nodes(), MAX_NODES_FOR_CYCLES,
+        )
+        return 0.0, {"method": "cycle_detection", "reason": "graph_too_large", "nodes": G.number_of_nodes()}
+
     try:
         for cycle in nx.simple_cycles(G):
             if len(cycle) <= CYCLE_MAX_HOPS:
