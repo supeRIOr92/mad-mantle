@@ -26,7 +26,6 @@ CONTRACT_REGISTRY = {
         "0xd4bd5e47548d8a6ba2a0bf4ce073cbf8fa523dcc",
         "0xe92249760e1443fbbea45b03f607ba84471fa793",
         "0x2b70c4e7ca8e920435a5db191e066e9e3afd8db3",
-        "0x218bf598d1453383e2f4aa7b14fffb9bfb102d637",
     ],
     "lending": [
         "0x458f293454fe0d67ec0655f3672301301dd51422",
@@ -34,7 +33,6 @@ CONTRACT_REGISTRY = {
     ],
     "synthetic": [
         "0x96702be57cd9777f835117a809c7124fe4ec989a",
-        "0x8ad3c73f833d3f9a523ab01476625f269aeab7cf0",
         "0xe92f673ca36c5e2efd2de7628f815f84807e803f",
         "0xc845b2894dbddd03858fd2d643b4ef725fe0849d",
         "0xa753a7395cae905cd615da0b82a53e0560f250af",
@@ -49,8 +47,10 @@ for _cat, _addrs in CONTRACT_REGISTRY.items():
     for _addr in _addrs:
         _ADDRESS_TO_CATEGORY[_addr.lower()] = _cat
 
-ALL_CONTRACT_ADDRESSES = list(_ADDRESS_TO_CATEGORY.keys())
-
+ALL_CONTRACT_ADDRESSES = [
+    a for a in _ADDRESS_TO_CATEGORY.keys()
+    if len(a) == 42 and a.startswith("0x")
+]
 
 def _rpc_call(payload: dict) -> dict:
     data = json.dumps(payload).encode()
