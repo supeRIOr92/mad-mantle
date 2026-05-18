@@ -20,9 +20,12 @@ logger = logging.getLogger(__name__)
 _client: Optional[Client] = None
 
 def get_client() -> Client:
+    global _client
     if not SUPABASE_URL or not SUPABASE_KEY:
         raise RuntimeError("SUPABASE_URL or SUPABASE_KEY not set")
-    return create_client(SUPABASE_URL, SUPABASE_KEY)
+    if not _client:
+        _client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    return _client
 
 def init_db():
     """Verify Supabase connection. Tables created via SQL migration."""

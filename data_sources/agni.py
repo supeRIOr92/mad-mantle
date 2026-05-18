@@ -241,7 +241,6 @@ def fetch_recent_swaps(since_ts: int, limit: int = 500) -> list:
         logger.error("[agni] fetch_recent_swaps failed: %s", e)
         return []
 
-
 def fetch_volume_buckets(pool_id: str, since_ts: int) -> list:
     _ensure_pool_registry()
     try:
@@ -328,4 +327,8 @@ def fetch_top_pools(limit: int = 20) -> list:
         pools.sort(key=lambda p: activity.get(p["id"], 0), reverse=True)
     except Exception as e:
         logger.warning("[agni] fetch_top_pools sort failed: %s", e)
+<<<<<<< HEAD
     return pools[:limit]
+=======
+    return pools[:limit]
+>>>>>>> 15cd7a5e (fix: crash bugs, dead imports, singleton client, agni timestamp filter)

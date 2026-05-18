@@ -8,7 +8,7 @@ Exposes: recent signals, wallet profiles, pool stats, predictor.
 import logging
 import json
 from typing import Any
-from database import get_recent_signals, get_connection
+from database import get_recent_signals, get_client
 from predictor import predict, build_feature_vector
 
 logger = logging.getLogger(__name__)
@@ -20,8 +20,8 @@ TOOLS = {
     "get_recent_signals": {
         "description": "Get recent anomaly signals from MAD signal_log.",
         "params": {
-            "limit":       {"type": "int",    "default": 10,   "description": "Max signals to return (1-50)"},
-            "alert_level": {"type": "string", "default": None, "description": "Filter: watching | alert | high_conf"},
+            "limit":       {"type": "int",    "default": 10,    "description": "Max signals to return (1-50)"},
+            "alert_level": {"type": "string", "default": None,  "description": "Filter: watching | alert | high_conf"},
             "environment": {"type": "string", "default": "live","description": "Filter: live | demo"},
         },
     },
@@ -35,7 +35,7 @@ TOOLS = {
         "description": "Get signal stats for a specific pool address.",
         "params": {
             "pool_address": {"type": "string", "required": True, "description": "Pool contract address"},
-            "limit":        {"type": "int",    "default": 20,   "description": "Max records"},
+            "limit":        {"type": "int",    "default": 20,    "description": "Max records"},
         },
     },
     "run_prediction": {
@@ -77,20 +77,16 @@ def _handle_get_recent_signals(params: dict) -> dict:
     signals = get_recent_signals(limit=limit, alert_level=alert_level, environment=environment)
     return {"count": len(signals), "signals": signals}
 
+
 def _handle_get_wallet_profile(params: dict) -> dict:
     address = params.get("address", "").lower()
     if not address:
         return {"error": "address is required"}
 
-    with get_connection() as conn:
-        row = conn.execute(
-            "SELECT * FROM wallet_profile WHERE address = ?", (address,)
-        ).fetchone()
-
-    if not row:
+    res = get_client().table("wallet_profile").select("*").eq("address", address).limit(1).execute()
+    if not res.data:
         return {"error": f"wallet {address} not found"}
-
-    return {"wallet": dict(row)}
+    return {"wallet": res.data[0]}
 
 
 def _handle_get_pool_stats(params: dict) -> dict:
@@ -100,29 +96,23 @@ def _handle_get_pool_stats(params: dict) -> dict:
     if not pool_address:
         return {"error": "pool_address is required"}
 
-    with get_connection() as conn:
-        rows = conn.execute("""
-            SELECT dex, pool_address, s_final, alert_level, volume_usd,
-                   l1_score, l2_score, l3_score, corroboration, created_at
-            FROM signal_log
-            WHERE pool_address = ?
-            ORDER BY created_at DESC
-            LIMIT ?
-        """, (pool_address, limit)).fetchall()
+    res = get_client().table("signal_log").select(
+        "dex, pool_address, s_final, alert_level, volume_usd, l1_score, l2_score, l3_score, corroboration, created_at"
+    ).eq("pool_address", pool_address).order("created_at", desc=True).limit(limit).execute()
 
-        if not rows:
-            return {"error": f"no signals for pool {pool_address}"}
+    if not res.data:
+        return {"error": f"no signals for pool {pool_address}"}
 
-        records = [dict(r) for r in rows]
-        avg_score = sum(r["s_final"] for r in records) / len(records)
-        max_score = max(r["s_final"] for r in records)
+    records = res.data
+    avg_score = sum(r["s_final"] for r in records) / len(records)
+    max_score = max(r["s_final"] for r in records)
 
     return {
-        "pool_address": pool_address,
-        "total_signals": len(records),
-        "avg_score":     round(avg_score, 2),
-        "max_score":     round(max_score, 2),
-        "signals":       records,
+        "pool_address":   pool_address,
+        "total_signals":  len(records),
+        "avg_score":      round(avg_score, 2),
+        "max_score":      round(max_score, 2),
+        "signals":        records,
     }
 
 
@@ -150,18 +140,11 @@ def _handle_get_top_wallets(params: dict) -> dict:
 
     limit = min(int(params.get("limit", 10)), 50)
 
-    with get_connection() as conn:
-        rows = conn.execute(f"""
-            SELECT address, roi_7d, wash_ratio, reputation_score,
-                   risk_label, is_probable_agent, agent_token_id
-            FROM wallet_profile
-            WHERE {order_by} IS NOT NULL
-            ORDER BY {order_by} DESC
-            LIMIT ?
-        """, (limit,)).fetchall()
+    res = get_client().table("wallet_profile").select(
+        "address, roi_7d, wash_ratio, reputation_score, risk_label, is_probable_agent, agent_token_id"
+    ).not_.is_(order_by, "null").order(order_by, desc=True).limit(limit).execute()
 
-    return {"count": len(rows), "wallets": [dict(r) for r in rows]}
-
+    return {"count": len(res.data), "wallets": res.data}
 
 def _handle_get_digest_stats(params: dict) -> dict:
     from database import get_digest_stats
@@ -176,7 +159,6 @@ def _handle_list_tools(params: dict) -> dict:
         ]
     }
 
-
 # ── Dispatcher ────────────────────────────────────────────────────────────────
 
 _HANDLERS = {
@@ -189,7 +171,6 @@ _HANDLERS = {
     "list_tools":         _handle_list_tools,
 }
 
-
 def handle_request(tool_name: str, params: dict) -> dict:
     """
     Main MCP request handler.
@@ -198,8 +179,8 @@ def handle_request(tool_name: str, params: dict) -> dict:
     """
     if tool_name not in _HANDLERS:
         return {
-            "error":            f"unknown tool: {tool_name}",
-            "available_tools":  list(TOOLS.keys()),
+            "error":           f"unknown tool: {tool_name}",
+            "available_tools": list(TOOLS.keys()),
         }
 
     try:
@@ -217,7 +198,7 @@ def handle_mcp_json(raw: str) -> str:
     Expected input: {"tool": "...", "params": {...}}
     """
     try:
-        req = json.loads(raw)
+        req    = json.loads(raw)
         tool   = req.get("tool", "")
         params = req.get("params", {})
         result = handle_request(tool, params)

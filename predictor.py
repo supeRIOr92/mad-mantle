@@ -78,8 +78,10 @@ def _prune_old_events() -> None:
         if _parse_ts(e.get("timestamp", "")) < cutoff:
             _event_store.popleft()
             arch = e.get("archetype", "UNKNOWN")
-            if e in _arch_index.get(arch, []):
+            try:
                 _arch_index[arch].remove(e)
+            except ValueError:
+                pass
         else:
             break
 

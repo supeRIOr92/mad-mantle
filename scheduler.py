@@ -21,7 +21,7 @@ from data_sources import moe_v2 as moe, fluxion, agni
 from data_sources.aave import fetch_pool_signal
 from data_sources.agents import fetch_all_agents, build_agent_map
 from detector import run_detection
-from scorer import score_and_persist, fetch_dexscreener_volumes
+from scorer import fetch_dexscreener_volumes
 from wallet_profiler import profile_top_wallets, flag_capital_flows
 from alerter import broadcast_signal, broadcast_digest
 from database import init_db
@@ -154,7 +154,8 @@ async def run_scan():
     """
     state.scan_count += 1
     now = datetime.now(timezone.utc)
-    since_ts = int(now.timestamp()) - (POLL_DEFAULT_MIN * 60)
+    interval = POLL_WATCH_MIN if state.watch_mode else POLL_DEFAULT_MIN
+    since_ts = int(now.timestamp()) - (interval * 60)
 
     logger.info(
         f"[scheduler] Scan #{state.scan_count} started — "
@@ -207,14 +208,15 @@ async def run_scan():
         ds_volumes = {}
 
     # Fetch Aave pool-level signal (v3.0)
+    def _get_current_block() -> int:
+        from web3 import Web3
+        from config import MANTLE_RPC_URL
+        return Web3(Web3.HTTPProvider(MANTLE_RPC_URL)).eth.block_number
+
     loop = asyncio.get_event_loop()
+    current_block = 0
     try:
-        current_block = await loop.run_in_executor(
-            None,
-            lambda: __import__("web3").Web3(
-                __import__("web3").Web3.HTTPProvider(__import__("config").MANTLE_RPC_URL)
-            ).eth.block_number
-        )
+        current_block = await loop.run_in_executor(None, _get_current_block)
         aave_data = await loop.run_in_executor(None, fetch_pool_signal, current_block)
     except Exception as e:
         logger.warning(f"[scheduler] Aave signal fetch failed: {e}")

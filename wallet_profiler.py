@@ -21,7 +21,6 @@ from config import (
     WASH_NET_FLOW_DIRECTIONAL,
     WASH_CONCENTRATION_THRESHOLD,
     ERC8004_HIGH_RISK_THRESHOLD,
-    AAVE_OPEN_BORROW_FRESH_MIN,
 )
 from data_sources.agents import get_agent_identity, get_agent_reputation
 from data_sources.mantlescan import get_wallet_roi
