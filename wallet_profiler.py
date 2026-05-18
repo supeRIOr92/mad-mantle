@@ -431,7 +431,7 @@ def profile_top_wallets(swaps: list[dict], anomaly_score: float, **score_kwargs)
                 aave_modifier = score_kwargs.get("aave_modifier", 1.0),
                 from_block = score_kwargs.get("from_block", 0),
                 to_block = score_kwargs.get("to_block", 0),
-                tx_per_minute = len(wswaps) / max(s core_kwargs.get("window_min", 15), 1),
+                tx_per_minute = len(wswaps) / max(score_kwargs.get("window_min", 15), 1),
             )
             profiles.append(profile)
         except Exception as e:
