@@ -356,7 +356,7 @@ export default function PanelAgentGraph() {
       setHoveredNode(hit?.id ?? null);
       setTooltip(hit ? { x: e.clientX - rect.left, y: e.clientY - rect.top, node: hit } : null);
     },
-    []
+    [dimensions]
   );
 
   const handleMouseLeave = useCallback(() => {
@@ -411,7 +411,7 @@ export default function PanelAgentGraph() {
       );
       setSelectedSignals(filtered.slice(0, 5) as Partial<Signal>[]);
     },
-    [mode]
+    [mode, dimensions]
   );
 
   return (
