@@ -342,8 +342,10 @@ export default function PanelAgentGraph() {
       const canvas = canvasRef.current;
       if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
-      const mx = e.clientX - rect.left;
-      const my = e.clientY - rect.top;
+      const scaleX = dimensions.width / rect.width;
+      const scaleY = dimensions.height / rect.height;
+      const mx = (e.clientX - rect.left) * scaleX;
+      const my = (e.clientY - rect.top) * scaleY;
 
       const hit = nodesRef.current.find((n) => {
         const dx = n.x - mx;
@@ -367,8 +369,10 @@ export default function PanelAgentGraph() {
       const canvas = canvasRef.current;
       if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
-      const mx = e.clientX - rect.left;
-      const my = e.clientY - rect.top;
+      const scaleX = dimensions.width / rect.width;
+      const scaleY = dimensions.height / rect.height;
+      const mx = (e.clientX - rect.left) * scaleX;
+      const my = (e.clientY - rect.top) * scaleY;
 
       const hit = nodesRef.current.find((n) => {
         const dx = n.x - mx;
