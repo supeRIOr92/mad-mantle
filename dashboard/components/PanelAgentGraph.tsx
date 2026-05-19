@@ -21,7 +21,7 @@ interface GraphNode {
 interface GraphEdge {
   source: string;
   target: string;
-  weight: number; // normalized co-occurrence score
+  weight: number;
   aaveOverlap: boolean;
 }
 
@@ -30,11 +30,11 @@ const MIN_SHARED_WINDOWS = 2;
 const WINDOW_MINUTES = 15;
 
 const AGENT_COLORS: Record<string, string> = {
-  "Registered Agent":     "#22d3ee", // cyan
-  "Probable Automation":  "#a78bfa", // violet
-  "Suspicious Coordination": "#f87171", // red
-  "SMART MONEY":          "#34d399", // green
-  "Unclassified":         "#64748b", // slate
+  "Registered Agent":        "#22d3ee",
+  "Probable Automation":     "#a78bfa",
+  "Suspicious Coordination": "#f87171",
+  "SMART MONEY":             "#34d399",
+  "Unclassified":            "#64748b",
 };
 
 const ARCHETYPE_COLORS: Record<string, string> = {
@@ -55,7 +55,6 @@ function buildGraph(signals: Signal[], wallets: Wallet[]): { nodes: GraphNode[];
   const walletMap = new Map<string, Wallet>();
   wallets.forEach((w) => walletMap.set(w.address.toLowerCase(), w));
 
-  // Count co-occurrences per wallet pair
   const coOccur = new Map<string, { count: number; windowSizes: number[]; aaveOverlap: boolean }>();
 
   signals.forEach((sig) => {
@@ -91,14 +90,12 @@ function buildGraph(signals: Signal[], wallets: Wallet[]): { nodes: GraphNode[];
     }
   });
 
-  // Filter pairs below MIN_SHARED_WINDOWS
   const validPairs = Array.from(coOccur.entries()).filter(
     ([, v]) => v.count >= MIN_SHARED_WINDOWS
   );
 
   if (validPairs.length === 0) return { nodes: [], edges: [] };
 
-  // Collect unique wallet addresses involved
   const activeAddresses = new Set<string>();
   validPairs.forEach(([key]) => {
     const [a, b] = key.split("|");
@@ -106,7 +103,6 @@ function buildGraph(signals: Signal[], wallets: Wallet[]): { nodes: GraphNode[];
     activeAddresses.add(b);
   });
 
-  // Build nodes
   const centerX = 400;
   const centerY = 300;
   const r = Math.min(220, 40 * activeAddresses.size);
@@ -128,19 +124,18 @@ function buildGraph(signals: Signal[], wallets: Wallet[]): { nodes: GraphNode[];
     };
   });
 
-  // Build edges with normalized weight
   const edges: GraphEdge[] = validPairs.map(([key, v]) => {
     const [source, target] = key.split("|");
     const avgWindowSize =
       v.windowSizes.reduce((s, x) => s + x, 0) / v.windowSizes.length;
-    const weight = v.count / avgWindowSize; // normalized: fewer wallets = stronger signal
+    const weight = v.count / avgWindowSize;
     return { source, target, weight, aaveOverlap: v.aaveOverlap };
   });
 
   return { nodes, edges };
 }
 
-// ── Force Layout (simple spring) ──────────────────────────────────────────
+// ── Force Layout ───────────────────────────────────────────────────────────
 function applyForces(nodes: GraphNode[], edges: GraphEdge[], width: number, height: number): GraphNode[] {
   const REPEL = 3000;
   const SPRING_K = 0.04;
@@ -150,7 +145,6 @@ function applyForces(nodes: GraphNode[], edges: GraphEdge[], width: number, heig
 
   const next = nodes.map((n) => ({ ...n }));
 
-  // Repulsion
   for (let i = 0; i < next.length; i++) {
     for (let j = i + 1; j < next.length; j++) {
       const dx = next[i].x - next[j].x;
@@ -164,7 +158,6 @@ function applyForces(nodes: GraphNode[], edges: GraphEdge[], width: number, heig
     }
   }
 
-  // Spring attraction
   const nodeIndex = new Map(next.map((n, i) => [n.id, i]));
   edges.forEach((e) => {
     const si = nodeIndex.get(e.source);
@@ -180,7 +173,6 @@ function applyForces(nodes: GraphNode[], edges: GraphEdge[], width: number, heig
     next[ti].vy -= (dy / dist) * force;
   });
 
-  // Center pull + damping + clamp
   next.forEach((n) => {
     n.vx += (width / 2 - n.x) * CENTER_PULL;
     n.vy += (height / 2 - n.y) * CENTER_PULL;
@@ -204,7 +196,6 @@ function renderGraph(
 ) {
   ctx.clearRect(0, 0, width, height);
 
-  // Edges
   const nodePos = new Map(nodes.map((n) => [n.id, n]));
   edges.forEach((e) => {
     const s = nodePos.get(e.source);
@@ -215,7 +206,6 @@ function renderGraph(
     const lineWidth = Math.min(3, 0.5 + e.weight);
 
     if (e.aaveOverlap) {
-      // Glow effect for Aave overlap
       ctx.save();
       ctx.shadowColor = "#22d3ee";
       ctx.shadowBlur = 8;
@@ -236,12 +226,10 @@ function renderGraph(
     }
   });
 
-  // Nodes
   nodes.forEach((n) => {
     const color = getNodeColor(n);
     const isHovered = n.id === hoveredNode;
 
-    // Outer glow on hover
     if (isHovered) {
       ctx.save();
       ctx.shadowColor = color;
@@ -253,7 +241,6 @@ function renderGraph(
       ctx.restore();
     }
 
-    // Node circle
     ctx.beginPath();
     ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
     ctx.fillStyle = color + (isHovered ? "ff" : "cc");
@@ -262,7 +249,6 @@ function renderGraph(
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    // Label
     ctx.fillStyle = isHovered ? "#ffffff" : "#94a3b8";
     ctx.font = isHovered ? "bold 10px monospace" : "9px monospace";
     ctx.textAlign = "center";
@@ -279,11 +265,13 @@ export default function PanelAgentGraph() {
   const edgesRef = useRef<GraphEdge[]>([]);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ x: number; y: number; node: GraphNode } | null>(null);
+  const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
+  const [selectedWallet, setSelectedWallet] = useState<Wallet | null>(null);
+  const [selectedSignals, setSelectedSignals] = useState<Partial<Signal>[]>([]);
   const [isEmpty, setIsEmpty] = useState(false);
   const [dimensions, setDimensions] = useState({ width: 800, height: 420 });
   const { mode } = useAppState();
 
-  // Fetch data
   useEffect(() => {
     const load = async () => {
       const [{ data: signals }, { data: wallets }] = await Promise.all([
@@ -315,7 +303,6 @@ export default function PanelAgentGraph() {
     return () => clearInterval(interval);
   }, [mode]);
 
-  // Resize observer
   useEffect(() => {
     if (!containerRef.current) return;
     const obs = new ResizeObserver((entries) => {
@@ -326,7 +313,6 @@ export default function PanelAgentGraph() {
     return () => obs.disconnect();
   }, []);
 
-  // Animation loop
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -351,7 +337,6 @@ export default function PanelAgentGraph() {
     return () => cancelAnimationFrame(animRef.current);
   }, [hoveredNode, dimensions]);
 
-  // Mouse interaction
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLCanvasElement>) => {
       const canvas = canvasRef.current;
@@ -377,6 +362,54 @@ export default function PanelAgentGraph() {
     setTooltip(null);
   }, []);
 
+  const handleClick = useCallback(
+    async (e: React.MouseEvent<HTMLCanvasElement>) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+
+      const hit = nodesRef.current.find((n) => {
+        const dx = n.x - mx;
+        const dy = n.y - my;
+        return Math.sqrt(dx * dx + dy * dy) <= n.radius + 4;
+      });
+
+      if (!hit) {
+        setSelectedNode(null);
+        setSelectedWallet(null);
+        setSelectedSignals([]);
+        return;
+      }
+
+      setSelectedNode(hit);
+
+      const { data: wData } = await supabase
+        .from("wallet_profile")
+        .select("*")
+        .eq("address", hit.id)
+        .limit(1);
+      setSelectedWallet(wData?.[0] ?? null);
+
+      const { data: sData } = await supabase
+        .from("signal_log")
+        .select("id,created_at,dex,pool_address,s_final,alert_level,volume_usd,top_wallets")
+        .eq("environment", mode)
+        .order("created_at", { ascending: false })
+        .limit(100);
+
+      const filtered = (sData ?? []).filter((sig: any) =>
+        (sig.top_wallets ?? []).some((w: any) => {
+          const addr = typeof w === "string" ? w : (w?.address ?? w?.id ?? w?.wallet ?? "");
+          return addr.toLowerCase() === hit.id;
+        })
+      );
+      setSelectedSignals(filtered.slice(0, 5) as Partial<Signal>[]);
+    },
+    [mode]
+  );
+
   return (
     <div className="bg-[#0D1117] border border-slate-800 rounded-lg p-4 space-y-3">
       {/* Header */}
@@ -390,7 +423,6 @@ export default function PanelAgentGraph() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          {/* Legend */}
           <div className="hidden sm:flex items-center gap-3">
             {Object.entries(AGENT_COLORS).slice(0, 3).map(([label, color]) => (
               <div key={label} className="flex items-center gap-1">
@@ -399,7 +431,10 @@ export default function PanelAgentGraph() {
               </div>
             ))}
             <div className="flex items-center gap-1">
-              <div className="w-8 h-0.5 rounded" style={{ background: "rgba(34,211,238,0.8)", boxShadow: "0 0 4px #22d3ee" }} />
+              <div
+                className="w-8 h-0.5 rounded"
+                style={{ background: "rgba(34,211,238,0.8)", boxShadow: "0 0 4px #22d3ee" }}
+              />
               <span className="text-[9px] text-slate-500">Aave overlap</span>
             </div>
           </div>
@@ -427,23 +462,83 @@ export default function PanelAgentGraph() {
               height={dimensions.height}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
+              onClick={handleClick}
               className="w-full cursor-crosshair"
             />
-            {/* Tooltip */}
-            {tooltip && (
-              <div
-                className="absolute pointer-events-none bg-slate-900 border border-slate-700 rounded px-3 py-2 text-[10px] space-y-1 z-10"
-                style={{ left: tooltip.x + 12, top: tooltip.y - 10 }}
-              >
-                <div className="font-mono text-slate-200">{tooltip.node.id.slice(0, 10)}…{tooltip.node.id.slice(-6)}</div>
-                <div className="text-slate-400">Type: <span className="text-slate-200">{tooltip.node.agentType}</span></div>
-                {tooltip.node.archetype && (
-                  <div className="text-slate-400">Archetype: <span className="text-yellow-400">{tooltip.node.archetype}</span></div>
+
+            {/* Selected node detail panel */}
+            {selectedNode && (
+              <div className="absolute top-2 right-2 w-56 bg-slate-900/95 border border-slate-700 rounded-lg p-3 text-[10px] space-y-2 z-20 backdrop-blur">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400 font-bold uppercase tracking-wide">Wallet Detail</span>
+                  <button
+                    onClick={() => { setSelectedNode(null); setSelectedWallet(null); setSelectedSignals([]); }}
+                    className="text-slate-500 hover:text-slate-300 text-xs"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div className="font-mono text-slate-200 break-all text-[9px]">{selectedNode.id}</div>
+                <div className="space-y-1 text-slate-400">
+                  <div>Type: <span className="text-slate-200">{selectedNode.agentType}</span></div>
+                  {selectedNode.archetype && (
+                    <div>Archetype: <span className="text-yellow-400">{selectedNode.archetype}</span></div>
+                  )}
+                  {selectedWallet && (
+                    <>
+                      <div>
+                        Wash Ratio:{" "}
+                        <span className={selectedWallet.wash_ratio > 10 ? "text-red-400" : "text-slate-200"}>
+                          {selectedWallet.wash_ratio?.toFixed(2) ?? "—"}
+                        </span>
+                      </div>
+                      {selectedWallet.roi_7d != null && (
+                        <div>
+                          ROI 7d:{" "}
+                          <span className={selectedWallet.roi_7d >= 0 ? "text-green-400" : "text-red-400"}>
+                            {selectedWallet.roi_7d.toFixed(1)}%
+                          </span>
+                        </div>
+                      )}
+                      {selectedWallet.smart_score != null && selectedWallet.smart_score > 0 && (
+                        <div>
+                          Smart Score: <span className="text-cyan-400">{selectedWallet.smart_score.toFixed(2)}</span>
+                        </div>
+                      )}
+                      <div>Risk: <span className="text-slate-200">{selectedWallet.risk_label ?? "—"}</span></div>
+                    </>
+                  )}
+                </div>
+                {selectedSignals.length > 0 && (
+                  <div className="space-y-1">
+                    <div className="text-slate-500 uppercase tracking-wide pt-1 border-t border-slate-800">
+                      Pool Activity
+                    </div>
+                    {selectedSignals.map((sig) => (
+                      <div key={sig.id} className="flex items-center justify-between gap-1">
+                        <span className="text-slate-400 font-mono">
+                          {sig.dex?.toUpperCase()} {sig.pool_address?.slice(0, 6)}..
+                        </span>
+                        <span
+                          className={`font-bold ${
+                            sig.alert_level === "alert" || sig.alert_level === "high_conf"
+                              ? "text-red-400"
+                              : sig.alert_level === "watching"
+                              ? "text-yellow-400"
+                              : "text-slate-500"
+                          }`}
+                        >
+                          {sig.s_final?.toFixed(1)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 )}
-                <div className="text-slate-400">Tx Count: <span className="text-slate-200">{tooltip.node.txCount}</span></div>
-                {tooltip.node.smartScore > 0 && (
-                  <div className="text-slate-400">Smart Score: <span className="text-cyan-400">{tooltip.node.smartScore.toFixed(1)}</span></div>
-                )}
+                
+                  <a href={`https://explorer.mantle.xyz/address/${selectedNode.id}`}
+                  target="_blank" rel="noopener noreferrer" className="block text-center text-cyan-500 hover:text-cyan-300 border border-slate-700 rounded py-1 mt-1">
+                  View on Explorer ↗
+                </a>
               </div>
             )}
           </>
