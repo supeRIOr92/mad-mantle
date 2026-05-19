@@ -251,24 +251,24 @@ async def run_scan():
     except Exception:
         pass
     
-   # Profile top wallets unconditional — populate wallet_profile table
-        try:
-            all_swaps = []
-            for r in all_results:
-                all_swaps.extend(r.get("swaps", []))
+# Profile top wallets unconditional — populate wallet_profile table
+    try:
+        all_swaps = []
+        for r in all_results:
+            all_swaps.extend(r.get("swaps", []))
 
-            _, _wash_info = l2_wash_ratio(all_swaps)
-            _wash_ratio_real = _wash_info.get("ratio", 0.0) if isinstance(_wash_info, dict) else 0.0
+        _, _wash_info = l2_wash_ratio(all_swaps)
+        _wash_ratio_real = _wash_info.get("ratio", 0.0) if isinstance(_wash_info, dict) else 0.0
 
-            profiles = profile_top_wallets(
-                swaps=all_swaps,
-                anomaly_score=s_final,
-                wash_ratio=_wash_ratio_real,
-                total_volume=best_result.get("volume_usd", 0),
-                from_block=current_block - 500,
-                to_block=current_block,
-            )
-            
+        profiles = profile_top_wallets(
+            swaps=all_swaps,
+            anomaly_score=s_final,
+            wash_ratio=_wash_ratio_real,
+            total_volume=best_result.get("volume_usd", 0),
+            from_block=current_block - 500,
+            to_block=current_block,
+        )
+
         for p in profiles:
             db.upsert_wallet(
                 address=p["wallet"],
