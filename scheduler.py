@@ -20,7 +20,7 @@ from config import (
 from data_sources import moe_v2 as moe, fluxion, agni
 from data_sources.aave import fetch_pool_signal
 from data_sources.agents import fetch_all_agents, build_agent_map
-from detector import run_detection
+from detector import run_detection, l2_wash_ratio
 from scorer import fetch_dexscreener_volumes
 from wallet_profiler import profile_top_wallets, flag_capital_flows
 from alerter import broadcast_signal, broadcast_digest
@@ -252,20 +252,23 @@ async def run_scan():
         pass
     
    # Profile top wallets unconditional — populate wallet_profile table
-    try:
-        all_swaps = []
-        for r in all_results:
-            all_swaps.extend(r.get("swaps", []))
+        try:
+            all_swaps = []
+            for r in all_results:
+                all_swaps.extend(r.get("swaps", []))
 
-        profiles = profile_top_wallets(
-            swaps=all_swaps,
-            anomaly_score=best_result.get("s_dex", 0),
-            wash_ratio=best_result.get("l2_score", 0) / 25.0,
-            total_volume=best_result.get("volume_usd", 0),
-            from_block=current_block - 500,
-            to_block=current_block,
-        )
+            _, _wash_info = l2_wash_ratio(all_swaps)
+            _wash_ratio_real = _wash_info.get("ratio", 0.0) if isinstance(_wash_info, dict) else 0.0
 
+            profiles = profile_top_wallets(
+                swaps=all_swaps,
+                anomaly_score=s_final,
+                wash_ratio=_wash_ratio_real,
+                total_volume=best_result.get("volume_usd", 0),
+                from_block=current_block - 500,
+                to_block=current_block,
+            )
+            
         for p in profiles:
             db.upsert_wallet(
                 address=p["wallet"],

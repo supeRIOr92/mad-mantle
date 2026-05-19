@@ -291,6 +291,7 @@ def compute_final_score(
     # Source factor — confidence cap
     # Moe only → 0.6 | Moe + Aave active → 1.0
     source_factor = 1.0 if aave_signal > 0.0 else 0.6
+    s_final = round(s_final * source_factor, 2)
 
     alert_level = get_alert_level(s_final, phase1=phase1)
 

@@ -104,11 +104,42 @@ def get_recent_signals(limit: int = 50, alert_level: Optional[str] = None, envir
 
 # ── Wallet Profile ────────────────────────────────────────────────────────────
 
+_AGENT_TYPE_RANK = {
+    "MANIPULATOR": 6,
+    "SMART MONEY": 4,
+    "CONFIRMED AGENT": 3,
+    "PROBABLE AGENT": 2,
+    "UNKNOWN WALLET": 1,
+}
+
 def upsert_wallet(address: str, **kwargs):
-    """Upsert wallet profile."""
+    """Upsert wallet profile — preserve peak values for key risk fields."""
     try:
-        row = {"address": address.lower(), **kwargs}
+        addr = address.lower()
+        row = {"address": addr, **kwargs}
         row["last_updated"] = datetime.now(timezone.utc).isoformat()
+
+        existing_res = get_client().table("wallet_profile").select(
+            "wash_ratio,smart_score,anomaly_score,agent_type"
+        ).eq("address", addr).limit(1).execute()
+
+        if existing_res.data:
+            ex = existing_res.data[0]
+
+            if (ex.get("wash_ratio") or 0) > (row.get("wash_ratio") or 0):
+                row["wash_ratio"] = ex["wash_ratio"]
+
+            if (ex.get("smart_score") or 0) > (row.get("smart_score") or 0):
+                row["smart_score"] = ex["smart_score"]
+
+            if (ex.get("anomaly_score") or 0) > (row.get("anomaly_score") or 0):
+                row["anomaly_score"] = ex["anomaly_score"]
+
+            ex_rank = _AGENT_TYPE_RANK.get(ex.get("agent_type", ""), 0)
+            new_rank = _AGENT_TYPE_RANK.get(row.get("agent_type", ""), 0)
+            if ex_rank > new_rank:
+                row["agent_type"] = ex["agent_type"]
+
         get_client().table("wallet_profile").upsert(row, on_conflict="address").execute()
     except Exception as e:
         logger.error("[db] upsert_wallet failed for %s: %s", address, e)
