@@ -265,6 +265,7 @@ export default function PanelAgentGraph() {
   const edgesRef = useRef<GraphEdge[]>([]);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ x: number; y: number; node: GraphNode } | null>(null);
+  const [pinnedNode, setPinnedNode] = useState<string | null>(null);
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
   const [selectedWallet, setSelectedWallet] = useState<Wallet | null>(null);
   const [selectedSignals, setSelectedSignals] = useState<Partial<Signal>[]>([]);
@@ -361,8 +362,10 @@ export default function PanelAgentGraph() {
 
   const handleMouseLeave = useCallback(() => {
     setHoveredNode(null);
-    setTooltip(null);
-  }, []);
+    if (!pinnedNode) {
+      setTooltip(null);
+    }
+  }, [pinnedNode]);
 
   const handleClick = useCallback(
     async (e: React.MouseEvent<HTMLDivElement>) => {
@@ -384,9 +387,12 @@ export default function PanelAgentGraph() {
         setSelectedNode(null);
         setSelectedWallet(null);
         setSelectedSignals([]);
+        setPinnedNode(null);
+        setTooltip(null);
         return;
       }
-      
+      setPinnedNode(hit.id);
+      setTooltip({ x: e.clientX - rect.left, y: e.clientY - rect.top, node: hit });
       setSelectedNode(hit);
 
       const { data: wData } = await supabase
@@ -480,7 +486,7 @@ export default function PanelAgentGraph() {
                 <div className="flex items-center justify-between">
                   <span className="text-slate-400 font-bold uppercase tracking-wide">Wallet Detail</span>
                   <button
-                    onClick={() => { setSelectedNode(null); setSelectedWallet(null); setSelectedSignals([]); }}
+                    onClick={() => { setSelectedNode(null); setSelectedWallet(null); setSelectedSignals([]); setPinnedNode(null); setTooltip(null); }}
                     className="text-slate-500 hover:text-slate-300 text-xs"
                   >
                     ✕
@@ -518,26 +524,41 @@ export default function PanelAgentGraph() {
                   )}
                 </div>
                 {selectedSignals.length > 0 && (
-                  <div className="space-y-1">
+                  <div className="space-y-2">
                     <div className="text-slate-500 uppercase tracking-wide pt-1 border-t border-slate-800">
-                      Pool Activity
+                      Pool Activity ({selectedSignals.length})
                     </div>
                     {selectedSignals.map((sig) => (
-                      <div key={sig.id} className="flex items-center justify-between gap-1">
-                        <span className="text-slate-400 font-mono">
-                          {sig.dex?.toUpperCase()} {sig.pool_address?.slice(0, 6)}..
-                        </span>
-                        <span
-                          className={`font-bold ${
-                            sig.alert_level === "alert" || sig.alert_level === "high_conf"
-                              ? "text-red-400"
-                              : sig.alert_level === "watching"
-                              ? "text-yellow-400"
-                              : "text-slate-500"
-                          }`}
+                      <div key={sig.id} className="space-y-0.5">
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="text-cyan-400 font-bold">
+                            {sig.dex?.toUpperCase()}
+                          </span>
+                          <span
+                            className={`font-bold text-[9px] ${
+                              sig.alert_level === "alert" || sig.alert_level === "high_conf"
+                                ? "text-red-400"
+                                : sig.alert_level === "watching"
+                                ? "text-yellow-400"
+                                : "text-slate-500"
+                            }`}
+                          >
+                            score {sig.s_final?.toFixed(1)} · {sig.alert_level}
+                          </span>
+                        </div>
+                        
+                          <a href={`https://explorer.mantle.xyz/address/${sig.pool_address}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-mono text-slate-400 hover:text-cyan-400 text-[9px] break-all block"
                         >
-                          {sig.s_final?.toFixed(1)}
-                        </span>
+                          {sig.pool_address}
+                        </a>
+                        {sig.volume_usd != null && (
+                          <div className="text-slate-500 text-[9px]">
+                            Vol: <span className="text-slate-300">${sig.volume_usd.toLocaleString()}</span>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
