@@ -338,7 +338,7 @@ export default function PanelAgentGraph() {
   }, [hoveredNode, dimensions]);
 
   const handleMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLCanvasElement>) => {
+    (e: React.MouseEvent<HTMLDivElement>) => {
       const canvas = canvasRef.current;
       if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
@@ -365,7 +365,7 @@ export default function PanelAgentGraph() {
   }, []);
 
   const handleClick = useCallback(
-    async (e: React.MouseEvent<HTMLCanvasElement>) => {
+    async (e: React.MouseEvent<HTMLDivElement>) => {
       const canvas = canvasRef.current;
       if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
@@ -460,15 +460,19 @@ export default function PanelAgentGraph() {
           </div>
         ) : (
           <>
+          <div
+            onClick={handleClick}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{ cursor: "crosshair" }}
+          >
             <canvas
               ref={canvasRef}
               width={dimensions.width}
               height={dimensions.height}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              onClick={handleClick}
-              className="w-full cursor-crosshair"
-            />
+              className="w-full"
+          />
+          </div>
 
             {/* Selected node detail panel */}
             {selectedNode && (
