@@ -379,14 +379,14 @@ export default function PanelAgentGraph() {
         const dy = n.y - my;
         return Math.sqrt(dx * dx + dy * dy) <= n.radius + 4;
       });
-
+      console.log("click mx/my:", mx, my, "hit:", hit?.id ?? "none", "nodes:", nodesRef.current.length);
       if (!hit) {
         setSelectedNode(null);
         setSelectedWallet(null);
         setSelectedSignals([]);
         return;
       }
-
+      
       setSelectedNode(hit);
 
       const { data: wData } = await supabase
